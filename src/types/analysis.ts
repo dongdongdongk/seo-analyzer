@@ -13,6 +13,35 @@ export interface AnalysisResult {
   url: string
   overallScore: number
   categories: SEOCategory[]
+  siteInfo?: {
+    domain: string
+    title: string
+    description: string
+    language: string
+    charset: string
+    socialTags: {
+      hasOpenGraph: boolean
+      hasTwitterCard: boolean
+      ogImage?: string
+      ogTitle?: string
+      ogDescription?: string
+    }
+    technicalInfo: {
+      hasViewport: boolean
+      hasStructuredData: boolean
+      robotsTag: string
+      canonicalUrl?: string
+      wordCount: number
+      imageCount: number
+      linkCount: number
+    }
+    estimated: {
+      loadTime: number
+      industry: string
+      targetAudience: string
+      competitiveness: 'low' | 'medium' | 'high'
+    }
+  }
   aiAdvice?: {
     overallAdvice: string
     priorityActions: string[]

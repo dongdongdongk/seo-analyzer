@@ -1,0 +1,27 @@
+{
+  "url": "https://www.naver.com/",
+  "timestamp": "2025-07-10T10:50:54.047Z",
+  "analysisType": "simple",
+  "performance": {
+    "score": 95,
+    "metrics": {
+      "firstContentfulPaint": 85,
+      "largestContentfulPaint": 127.5,
+      "totalBlockingTime": 0,
+      "cumulativeLayoutShift": 0.1,
+      "speedIndex": 102
+    }
+  },
+  "accessibility": {
+    "score": 85,
+    "issues": []
+  },
+  "bestPractices": {
+    "score": 80,
+    "issues": []
+  },
+  "seo": {
+    "score": 90,
+    "issues": []
+  }
+}

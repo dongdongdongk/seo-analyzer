@@ -1,0 +1,27 @@
+{
+  "url": "https://base64tool.roono.net/en",
+  "timestamp": "2025-07-10T11:22:41.548Z",
+  "analysisType": "lighthouse",
+  "performance": {
+    "score": 97,
+    "metrics": {
+      "firstContentfulPaint": 944.2335,
+      "largestContentfulPaint": 1155.2335,
+      "totalBlockingTime": 187.5,
+      "cumulativeLayoutShift": 0,
+      "speedIndex": 1209.5991865619135
+    }
+  },
+  "accessibility": {
+    "score": 95,
+    "issues": []
+  },
+  "bestPractices": {
+    "score": 79,
+    "issues": []
+  },
+  "seo": {
+    "score": 100,
+    "issues": []
+  }
+}

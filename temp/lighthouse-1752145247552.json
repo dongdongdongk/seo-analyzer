@@ -1,0 +1,27 @@
+{
+  "url": "https://www.naver.com/",
+  "timestamp": "2025-07-10T11:01:32.849Z",
+  "analysisType": "lighthouse",
+  "performance": {
+    "score": 30,
+    "metrics": {
+      "firstContentfulPaint": 9080.660499999998,
+      "largestContentfulPaint": 19544.584,
+      "totalBlockingTime": 1576.9999999999982,
+      "cumulativeLayoutShift": 0,
+      "speedIndex": 9080.660499999998
+    }
+  },
+  "accessibility": {
+    "score": 84,
+    "issues": []
+  },
+  "bestPractices": {
+    "score": 96,
+    "issues": []
+  },
+  "seo": {
+    "score": 85,
+    "issues": []
+  }
+}

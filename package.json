@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build-fast": "ESLINT_NO_DEV_ERRORS=true next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "pagespeed-test": "echo 'PageSpeed API는 웹 인터페이스에서 테스트하세요'"
   },
   "keywords": [
     "SEO",
@@ -24,8 +26,6 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "cheerio": "^1.1.0",
-    "chrome-launcher": "^1.2.0",
-    "lighthouse": "^12.7.1",
     "next": "^15.3.5",
     "openai": "^5.8.3",
     "puppeteer": "^24.12.1",

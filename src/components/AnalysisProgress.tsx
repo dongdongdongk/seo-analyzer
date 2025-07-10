@@ -46,7 +46,7 @@ export default function AnalysisProgress({ websiteUrl }: AnalysisProgressProps) 
       clearInterval(stepTimer)
       clearInterval(tipTimer)
     }
-  }, [])
+  }, [steps.length, tips.length])
 
   return (
     <div className="analysis-progress">

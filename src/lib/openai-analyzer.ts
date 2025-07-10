@@ -1,10 +1,20 @@
 import OpenAI from 'openai'
 import { AnalysisResult } from '@/types/analysis'
 
-// OpenAI 클라이언트 초기화
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// OpenAI 클라이언트 초기화 (API 키가 없으면 null)
+let openai: OpenAI | null = null
+
+try {
+  if (process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    })
+  } else {
+    console.warn('OPENAI_API_KEY가 설정되지 않았습니다. AI 기능이 비활성화됩니다.')
+  }
+} catch (error) {
+  console.warn('OpenAI 클라이언트 초기화 실패:', error)
+}
 
 // 사이트 타입 분석
 export function detectSiteType(pageData: any): string {
@@ -104,6 +114,11 @@ export async function generatePersonalizedAdvice(
   industrySpecificTips: string[]
   expectedResults: string
 }> {
+  // OpenAI가 사용 불가능한 경우 기본 조언 제공
+  if (!openai) {
+    return generateFallbackAdvice(analysisResult, pageData)
+  }
+  
   try {
     const siteType = detectSiteType(pageData)
     const businessType = detectBusinessType(pageData)
@@ -285,6 +300,11 @@ export async function generateKeywordSuggestions(
   pageData: any,
   businessType: string
 ): Promise<string[]> {
+  // OpenAI가 사용 불가능한 경우 기본 키워드 제공
+  if (!openai) {
+    return generateFallbackKeywords(businessType, pageData)
+  }
+  
   try {
     const prompt = `
 "${businessType}" 업종의 웹사이트를 위한 SEO 키워드를 5개 추천해주세요.
@@ -331,4 +351,20 @@ JSON 배열 형태로 응답: ["키워드1", "키워드2", ...]
     
     return defaultKeywords[businessType] || defaultKeywords['기타']
   }
+}
+
+// 기본 키워드 제안 (OpenAI 미사용시)
+function generateFallbackKeywords(businessType: string, pageData: any): string[] {
+  const defaultKeywords: { [key: string]: string[] } = {
+    '음식점': ['맛집', '음식점', '메뉴', '예약', '리뷰'],
+    '카페': ['카페', '커피', '디저트', '분위기', '와이파이'],
+    '미용실': ['미용실', '헤어', '파마', '염색', '예약'],
+    '쇼핑몰': ['쇼핑', '할인', '배송', '상품', '리뷰'],
+    '병원': ['병원', '의원', '치료', '진료', '예약'],
+    '교육': ['교육', '학원', '강의', '수업', '학습'],
+    '기술': ['개발', 'IT', '서비스', '솔루션', '컨설팅'],
+    '기타': ['서비스', '문의', '예약', '정보', '리뷰']
+  }
+  
+  return defaultKeywords[businessType] || defaultKeywords['기타']
 }
