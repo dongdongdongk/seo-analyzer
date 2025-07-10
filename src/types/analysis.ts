@@ -13,6 +13,15 @@ export interface AnalysisResult {
   url: string
   overallScore: number
   categories: SEOCategory[]
+  aiAdvice?: {
+    overallAdvice: string
+    priorityActions: string[]
+    industrySpecificTips: string[]
+    expectedResults: string
+  }
+  keywordSuggestions?: string[]
+  siteType?: string
+  businessType?: string
 }
 
 export interface AnalysisRequest {

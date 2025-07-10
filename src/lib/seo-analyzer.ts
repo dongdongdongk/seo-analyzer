@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio'
 import { AnalysisResult, SEOCategory } from '@/types/analysis'
 import { runLighthouseAnalysis, convertLighthouseToSEOCategory } from './lighthouse-analyzer'
+import { generatePersonalizedAdvice, generateKeywordSuggestions } from './openai-analyzer'
 
 // SEO 분석 인터페이스
 interface PageData {
@@ -181,7 +182,7 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
       analyzeContent(pageData)
     ]
     
-    // 3. Lighthouse 성능 분석 (병렬 실행)
+    // 3. Lighthouse 성능 분석
     let performanceCategories: SEOCategory[] = []
     try {
       const lighthouseResult = await runLighthouseAnalysis(url)
@@ -206,16 +207,107 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
       categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length
     )
     
-    return {
+    // 6. 기본 분석 결과 생성
+    const basicResult: AnalysisResult = {
       url,
       overallScore,
       categories
     }
     
+    // 7. AI 기반 맞춤 조언 및 키워드 제안 (병렬 실행)
+    try {
+      const [aiAdvice, keywordSuggestions] = await Promise.allSettled([
+        generatePersonalizedAdvice(basicResult, {
+          ...pageData,
+          url,
+          content: extractTextContent(html)
+        }),
+        generateKeywordSuggestions({
+          ...pageData,
+          content: extractTextContent(html)
+        }, detectBusinessType(pageData))
+      ])
+      
+      // AI 조언 결과 처리
+      if (aiAdvice.status === 'fulfilled') {
+        basicResult.aiAdvice = aiAdvice.value
+      }
+      
+      // 키워드 제안 결과 처리
+      if (keywordSuggestions.status === 'fulfilled') {
+        basicResult.keywordSuggestions = keywordSuggestions.value
+      }
+      
+      // 사이트 타입 및 업종 정보 추가
+      basicResult.siteType = detectSiteType({ ...pageData, url })
+      basicResult.businessType = detectBusinessType(pageData)
+      
+    } catch (aiError) {
+      console.error('AI 분석 실패:', aiError)
+      // AI 분석 실패해도 기본 분석 결과는 반환
+    }
+    
+    return basicResult
+    
   } catch (error) {
     console.error('SEO 분석 실패:', error)
     throw error
   }
+}
+
+// 텍스트 콘텐츠 추출 (AI 분석용)
+function extractTextContent(html: string): string {
+  const $ = cheerio.load(html)
+  
+  // 불필요한 태그 제거
+  $('script, style, nav, footer, aside').remove()
+  
+  // 주요 콘텐츠 추출
+  const content = $('body').text()
+    .replace(/\s+/g, ' ')
+    .trim()
+    .substring(0, 2000) // 처음 2000자만 사용
+  
+  return content
+}
+
+// 사이트 타입 감지 (간단 버전)
+function detectSiteType(pageData: any): string {
+  const title = pageData.title?.toLowerCase() || ''
+  const url = pageData.url?.toLowerCase() || ''
+  
+  if (title.includes('쇼핑') || title.includes('구매') || url.includes('shop')) {
+    return '온라인 쇼핑몰'
+  } else if (title.includes('블로그') || url.includes('blog') || url.includes('tistory')) {
+    return '개인 블로그'
+  } else if (title.includes('회사') || title.includes('기업')) {
+    return '기업 웹사이트'
+  } else if (title.includes('카페') || title.includes('음식점') || title.includes('미용실')) {
+    return '로컬 비즈니스'
+  } else if (title.includes('포트폴리오') || title.includes('작품')) {
+    return '포트폴리오'
+  }
+  
+  return '일반 웹사이트'
+}
+
+// 업종 감지 (간단 버전)
+function detectBusinessType(pageData: any): string {
+  const title = pageData.title?.toLowerCase() || ''
+  
+  if (title.includes('음식') || title.includes('맛집') || title.includes('식당')) {
+    return '음식점'
+  } else if (title.includes('카페') || title.includes('커피')) {
+    return '카페'
+  } else if (title.includes('미용실') || title.includes('헤어')) {
+    return '미용실'
+  } else if (title.includes('병원') || title.includes('의원')) {
+    return '병원'
+  } else if (title.includes('쇼핑') || title.includes('구매')) {
+    return '쇼핑몰'
+  }
+  
+  return '기타'
 }
 
 // 제목 태그 분석
