@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio'
 import { AnalysisResult, SEOCategory } from '@/types/analysis'
+import { runLighthouseAnalysis, convertLighthouseToSEOCategory } from './lighthouse-analyzer'
 
 // SEO 분석 인터페이스
 interface PageData {
@@ -167,14 +168,12 @@ function analyzeContentQuality(
 // SEO 분석 실행
 export async function analyzeSEO(url: string): Promise<AnalysisResult> {
   try {
-    // 1. 페이지 HTML 가져오기
+    // 1. 페이지 HTML 가져오기 및 데이터 추출
     const html = await fetchPageHTML(url)
-    
-    // 2. 페이지 데이터 추출
     const pageData = parsePageData(html, url)
     
-    // 3. 각 카테고리별 분석
-    const categories: SEOCategory[] = [
+    // 2. 기본 SEO 분석
+    const basicCategories: SEOCategory[] = [
       analyzeTitleTag(pageData),
       analyzeMetaDescription(pageData),
       analyzeImages(pageData),
@@ -182,7 +181,27 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
       analyzeContent(pageData)
     ]
     
-    // 4. 전체 점수 계산
+    // 3. Lighthouse 성능 분석 (병렬 실행)
+    let performanceCategories: SEOCategory[] = []
+    try {
+      const lighthouseResult = await runLighthouseAnalysis(url)
+      performanceCategories = [
+        convertLighthouseToSEOCategory(lighthouseResult, 'performance'),
+        convertLighthouseToSEOCategory(lighthouseResult, 'mobile')
+      ]
+    } catch (lighthouseError) {
+      console.error('Lighthouse 분석 실패:', lighthouseError)
+      // Lighthouse 실패 시 기본 성능 분석으로 대체
+      performanceCategories = [
+        createFallbackSpeedAnalysis(),
+        createFallbackMobileAnalysis(pageData)
+      ]
+    }
+    
+    // 4. 모든 카테고리 합치기
+    const categories = [...basicCategories, ...performanceCategories]
+    
+    // 5. 전체 점수 계산
     const overallScore = Math.round(
       categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length
     )
@@ -447,6 +466,56 @@ function analyzeContent(pageData: PageData): SEOCategory {
   return {
     id: 'content',
     name: '콘텐츠 품질',
+    status,
+    score,
+    description,
+    suggestions
+  }
+}
+
+// Lighthouse 실패 시 대체 속도 분석
+function createFallbackSpeedAnalysis(): SEOCategory {
+  return {
+    id: 'speed',
+    name: '사이트 속도',
+    status: 'warning',
+    score: 70,
+    description: '사이트 속도를 정확히 측정할 수 없었어요. 일반적인 개선 방법을 알려드릴게요.',
+    suggestions: [
+      '이미지 크기를 줄여보세요',
+      '사용하지 않는 플러그인을 제거해보세요',
+      '캐시 설정을 확인해보세요',
+      '호스팅 서비스 성능을 확인해보세요'
+    ]
+  }
+}
+
+// Lighthouse 실패 시 대체 모바일 분석
+function createFallbackMobileAnalysis(pageData: PageData): SEOCategory {
+  const { viewport } = pageData
+  
+  let score = 70
+  let status: 'good' | 'warning' | 'danger' = 'warning'
+  let description = ''
+  const suggestions: string[] = []
+  
+  if (viewport && viewport.includes('width=device-width')) {
+    score = 85
+    status = 'good'
+    description = '모바일 설정이 잘 되어 있어요! 정확한 측정은 어려웠지만 기본 설정은 좋습니다.'
+    suggestions.push('모바일 뷰포트가 잘 설정되어 있습니다')
+    suggestions.push('추가 모바일 최적화를 확인해보세요')
+  } else {
+    score = 50
+    status = 'danger'
+    description = '모바일 설정이 부족할 수 있어요. 핸드폰에서 잘 보이도록 설정을 확인해보세요.'
+    suggestions.push('모바일 뷰포트를 설정해보세요')
+    suggestions.push('반응형 디자인을 적용해보세요')
+  }
+  
+  return {
+    id: 'mobile',
+    name: '모바일 친화도',
     status,
     score,
     description,
