@@ -1,5 +1,8 @@
 'use client'
 
+import { useState } from 'react'
+import FeedbackModal from './FeedbackModal'
+
 
 interface AnalysisResultProps {
   data: {
@@ -27,6 +30,7 @@ interface AnalysisResultProps {
 }
 
 export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultProps) {
+  const [showFeedback, setShowFeedback] = useState(false)
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'good'
@@ -52,6 +56,35 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
   const goodCategories = data.categories.filter(cat => cat.status === 'good')
   const warningCategories = data.categories.filter(cat => cat.status === 'warning')
   const dangerCategories = data.categories.filter(cat => cat.status === 'danger')
+
+  const handleFeedbackSubmit = async (feedback: {
+    rating: number
+    helpful: boolean
+    comment?: string
+    suggestions?: string[]
+  }) => {
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...feedback,
+          url: data.url
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('피드백 전송 실패')
+      }
+
+      console.log('피드백 전송 성공')
+    } catch (error) {
+      console.error('피드백 전송 오류:', error)
+      throw error
+    }
+  }
 
   return (
     <div className="analysis-result">
@@ -309,6 +342,13 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
         >
           🔍 다른 사이트 분석하기
         </button>
+        <button 
+          onClick={() => setShowFeedback(true)}
+          className="btn btn-outline btn-lg"
+          style={{ marginRight: 'var(--spacing-md)' }}
+        >
+          📝 서비스 평가하기
+        </button>
         <button className="btn btn-outline btn-lg">
           📄 결과 저장하기
         </button>
@@ -326,6 +366,14 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           </span>
         </div>
       </div>
+
+      {/* 피드백 모달 */}
+      <FeedbackModal
+        isOpen={showFeedback}
+        onClose={() => setShowFeedback(false)}
+        analysisUrl={data.url}
+        onSubmit={handleFeedbackSubmit}
+      />
     </div>
   )
 }
