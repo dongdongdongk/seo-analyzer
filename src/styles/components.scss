@@ -1,0 +1,470 @@
+// 컴포넌트별 스타일 정의
+
+// 헤더 스타일
+.header {
+  background-color: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-gray-200);
+  padding: var(--spacing-md) 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  &__logo {
+    font-size: var(--font-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-decoration: none;
+    
+    @media (min-width: 768px) {
+      font-size: var(--font-xxl);
+    }
+  }
+  
+  &__nav {
+    display: none;
+    
+    @media (min-width: 768px) {
+      display: flex;
+      gap: var(--spacing-lg);
+    }
+  }
+  
+  &__nav-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: var(--color-primary);
+    }
+    
+    &.active {
+      color: var(--color-primary);
+    }
+  }
+}
+
+// 메인 분석 폼 스타일
+.analysis-form {
+  background-color: var(--color-bg-primary);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  margin: var(--spacing-xl) 0;
+  
+  @media (min-width: 768px) {
+    padding: var(--spacing-xxl);
+  }
+  
+  &__title {
+    font-size: var(--font-xxl);
+    font-weight: 700;
+    text-align: center;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+    
+    @media (min-width: 768px) {
+      font-size: var(--font-xxxl);
+    }
+  }
+  
+  &__subtitle {
+    font-size: var(--font-md);
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    line-height: 1.6;
+    
+    @media (min-width: 768px) {
+      font-size: var(--font-lg);
+    }
+  }
+  
+  &__input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+  
+  &__input {
+    flex: 1;
+    
+    label {
+      display: block;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    input {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 2px solid var(--color-gray-300);
+      border-radius: var(--radius-md);
+      font-size: var(--font-md);
+      transition: border-color 0.2s ease;
+      
+      &:focus {
+        outline: none;
+        border-color: var(--color-primary);
+      }
+      
+      &::placeholder {
+        color: var(--color-text-secondary);
+      }
+    }
+  }
+  
+  &__submit {
+    @media (max-width: 767px) {
+      width: 100%;
+    }
+    
+    @media (min-width: 768px) {
+      min-width: 140px;
+    }
+  }
+  
+  &__examples {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-200);
+    
+    &-title {
+      font-size: var(--font-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      
+      button {
+        background-color: var(--color-gray-100);
+        border: 1px solid var(--color-gray-300);
+        border-radius: var(--radius-sm);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-sm);
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: var(--color-gray-200);
+          color: var(--color-text-primary);
+        }
+      }
+    }
+  }
+}
+
+// 분석 진행 상태 스타일
+.analysis-progress {
+  background-color: var(--color-bg-primary);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  
+  &__icon {
+    font-size: 48px;
+    margin-bottom: var(--spacing-md);
+    
+    .loading {
+      width: 48px;
+      height: 48px;
+      border-width: 4px;
+    }
+  }
+  
+  &__title {
+    font-size: var(--font-xl);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  &__message {
+    font-size: var(--font-md);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.6;
+  }
+  
+  &__steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+  
+  &__step {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    
+    &.active {
+      background-color: var(--color-primary);
+      color: var(--color-text-white);
+    }
+    
+    &.completed {
+      background-color: var(--color-gray-100);
+      color: var(--color-text-secondary);
+    }
+    
+    &-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-gray-300);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-xs);
+      font-weight: 600;
+      
+      &.active {
+        background-color: var(--color-text-white);
+        color: var(--color-primary);
+      }
+      
+      &.completed {
+        background-color: var(--color-primary);
+        color: var(--color-text-white);
+      }
+    }
+    
+    &-text {
+      font-size: var(--font-sm);
+      font-weight: 500;
+      
+      @media (min-width: 768px) {
+        font-size: var(--font-md);
+      }
+    }
+  }
+}
+
+// 분석 결과 스타일
+.analysis-result {
+  &__header {
+    background-color: var(--color-bg-primary);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    
+    &-title {
+      font-size: var(--font-xxl);
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-sm);
+      
+      @media (min-width: 768px) {
+        font-size: var(--font-xxxl);
+      }
+    }
+    
+    &-url {
+      font-size: var(--font-md);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--spacing-lg);
+      word-break: break-all;
+    }
+    
+    &-summary {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      
+      @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+  }
+  
+  &__score {
+    background-color: var(--color-bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    
+    &-number {
+      font-size: var(--font-xxxl);
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+      
+      &.good { color: var(--color-primary); }
+      &.warning { color: var(--color-warning); }
+      &.danger { color: var(--color-danger); }
+    }
+    
+    &-label {
+      font-size: var(--font-sm);
+      color: var(--color-text-secondary);
+      font-weight: 500;
+    }
+  }
+  
+  &__categories {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @media (min-width: 1024px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  &__category {
+    background-color: var(--color-bg-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    
+    &-header {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    &-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-lg);
+      
+      &.good { background-color: var(--color-primary); color: var(--color-text-white); }
+      &.warning { background-color: var(--color-warning); color: var(--color-text-white); }
+      &.danger { background-color: var(--color-danger); color: var(--color-text-white); }
+    }
+    
+    &-title {
+      font-size: var(--font-lg);
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    &-status {
+      font-size: var(--font-sm);
+      font-weight: 500;
+      
+      &.good { color: var(--color-primary); }
+      &.warning { color: var(--color-warning); }
+      &.danger { color: var(--color-danger); }
+    }
+    
+    &-description {
+      font-size: var(--font-md);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    &-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      
+      button {
+        flex: 1;
+        padding: var(--spacing-sm);
+        border: 1px solid var(--color-gray-300);
+        border-radius: var(--radius-md);
+        background-color: var(--color-bg-primary);
+        color: var(--color-text-primary);
+        font-size: var(--font-sm);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: var(--color-gray-100);
+        }
+        
+        &.primary {
+          background-color: var(--color-primary);
+          color: var(--color-text-white);
+          border-color: var(--color-primary);
+          
+          &:hover {
+            background-color: #45a049;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 푸터 스타일
+.footer {
+  background-color: var(--color-bg-secondary);
+  padding: var(--spacing-xl) 0;
+  margin-top: var(--spacing-xxl);
+  border-top: 1px solid var(--color-gray-200);
+  
+  &__content {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: var(--font-sm);
+    
+    @media (min-width: 768px) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-align: left;
+    }
+  }
+  
+  &__links {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    
+    @media (min-width: 768px) {
+      margin-top: 0;
+    }
+    
+    a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--font-sm);
+      
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+}
