@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react'
 import FeedbackModal from './FeedbackModal'
@@ -49,6 +49,22 @@ interface AnalysisResultProps {
         wordCount: number
         imageCount: number
         linkCount: number
+      }
+      semanticMarkup: {
+        hasHeader: boolean
+        hasNav: boolean
+        hasMain: boolean
+        hasFooter: boolean
+        hasSection: boolean
+        hasArticle: boolean
+        hasAside: boolean
+        hasH1: boolean
+        headingStructure: boolean
+        ariaAttributes: number
+        roleAttributes: number
+        semanticScore: number
+        issues: string[]
+        suggestions: string[]
       }
       estimated: {
         loadTime: number
@@ -136,25 +152,6 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           value: `총 ${data.siteInfo.technicalInfo.imageCount}개`,
           detail: `이미지 최적화 상태를 확인해보세요.`
         }
-      case 'heading':
-        const headingCategory = data.categories.find(cat => cat.id === 'heading')
-        const headingStatus = headingCategory?.status || 'good'
-        return {
-          label: '페이지 제목 구성 (목차 만들기)',
-          value: headingStatus === 'good' ? '✅ 목차가 잘 만들어짐' : headingStatus === 'warning' ? '⚠️ 목차 순서 개선 필요' : '❌ 목차가 없거나 엉망',
-          detail: headingStatus === 'good' ? 
-            '🎉 웹페이지의 목차(제목)가 깔끔하게 정리되어 있어요! 방문자와 구글이 내용을 쉽게 이해할 수 있습니다.' : 
-            headingStatus === 'warning' ? 
-            '⚠️ 제목을 조금 더 체계적으로 정리하면 좋겠어요. 큰 제목→중간 제목→작은 제목 순서로 만들어보세요.' : 
-            '❌ 웹페이지에 제목이 없거나 순서가 뒤죽박죽이에요. 책의 목차처럼 큰 제목부터 차례대로 만들어주세요.',
-          structure: {
-            hasH1: headingStatus !== 'danger',
-            isLogical: headingStatus === 'good',
-            recommendation: headingStatus === 'good' ? 
-              '현재 목차 구성을 계속 유지하세요' : 
-              '큰 제목(H1) → 중간 제목(H2) → 작은 제목(H3) 순서로 만들어보세요'
-          }
-        } as any
       case 'content':
         return {
           label: '콘텐츠 길이',
@@ -188,14 +185,76 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           value: `모바일: ${data.siteInfo.technicalInfo.hasViewport ? '✓' : '✗'}, 구조화데이터: ${data.siteInfo.technicalInfo.hasStructuredData ? '✓' : '✗'}`,
           detail: '기술적 SEO는 검색엔진이 사이트를 제대로 읽을 수 있게 도와줍니다.'
         }
+      case 'links':
+        const totalLinks = data.siteInfo.technicalInfo.linkCount
+        const internalLinks = data.siteInfo.technicalInfo.internalLinkCount || 0
+        const externalLinks = data.siteInfo.technicalInfo.externalLinkCount || 0
+        
+        return {
+          label: '링크 구조',
+          value: `총 ${totalLinks}개 링크 발견`,
+          detail: `내부 링크: ${internalLinks}개, 외부 링크: ${externalLinks}개`,
+          linkBreakdown: {
+            total: totalLinks,
+            internal: internalLinks,
+            external: externalLinks,
+            analysis: (internalLinks >= 2 && externalLinks >= 1) ? 
+              '✅ 우수한 링크 구조입니다! 내부 링크로 사용자가 사이트를 더 오래 탐색하게 하고, 외부 링크로 신뢰도를 높이고 있어요.' :
+              (internalLinks >= 1 || externalLinks >= 1) ? 
+              '⚠️ 링크 구조가 아쉬워요. 내부 링크(2개 이상)와 외부 링크(1개 이상)를 적절히 섞어서 사용하면 SEO에 더 좋아요.' :
+              '❌ 링크가 거의 없어요. 관련된 내부 페이지나 신뢰할 수 있는 외부 사이트로의 링크를 추가해주세요.',
+            recommendations: [
+              internalLinks < 2 ? '내부 링크를 더 추가해보세요 (관련 페이지, 카테고리, 이전 글 등)' : '',
+              externalLinks < 1 ? '신뢰할 수 있는 외부 사이트로의 링크를 추가해보세요' : '',
+              totalLinks > 50 ? '링크가 너무 많아요. 중요한 링크만 남겨두세요' : ''
+            ].filter(Boolean)
+          }
+        }
+      case 'semantic-markup':
+        if (!data.siteInfo?.semanticMarkup) return null
+        const semantic = data.siteInfo.semanticMarkup
+        
+        return {
+          label: '시멘틱 마크업 (HTML 구조)',
+          value: `${semantic.semanticScore}점`,
+          detail: semantic.semanticScore >= 80 ? 
+            '✅ 시멘틱 마크업이 잘 구성되어 있어요! 검색엔진과 스크린 리더가 쉽게 이해할 수 있습니다.' :
+            semantic.semanticScore >= 60 ?
+            '⚠️ 시멘틱 마크업이 부분적으로 구성되어 있어요. 몇 가지 개선사항이 있습니다.' :
+            '❌ 시멘틱 마크업이 부족해요. 검색엔진 최적화와 접근성 향상이 필요합니다.',
+          semanticDetails: {
+            elements: {
+              header: semantic.hasHeader,
+              nav: semantic.hasNav,
+              main: semantic.hasMain,
+              footer: semantic.hasFooter,
+              section: semantic.hasSection,
+              article: semantic.hasArticle,
+              aside: semantic.hasAside,
+              h1: semantic.hasH1
+            },
+            structure: {
+              headingStructure: semantic.headingStructure,
+              ariaAttributes: semantic.ariaAttributes,
+              roleAttributes: semantic.roleAttributes
+            },
+            score: semantic.semanticScore,
+            issues: semantic.issues,
+            suggestions: semantic.suggestions
+          }
+        }
       default:
         return null
     }
   }
 
-  const goodCategories = data.categories.filter(cat => cat.status === 'good')
-  const warningCategories = data.categories.filter(cat => cat.status === 'warning')
-  const dangerCategories = data.categories.filter(cat => cat.status === 'danger')
+  // 점수 계산에 포함되는 주요 카테고리 (이미지 제외)
+  const mainCategories = data.categories.filter(cat => cat.id !== 'images')
+  const optionalCategories = data.categories.filter(cat => cat.id === 'images')
+  
+  const goodCategories = mainCategories.filter(cat => cat.status === 'good')
+  const warningCategories = mainCategories.filter(cat => cat.status === 'warning')
+  const dangerCategories = mainCategories.filter(cat => cat.status === 'danger')
 
   const handleFeedbackSubmit = async (feedback: {
     rating: number
@@ -204,22 +263,24 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
     suggestions?: string[]
   }) => {
     try {
-      const response = await fetch('/api/feedback', {
+      const response = await fetch('/api/send-feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...feedback,
-          url: data.url
+          feedback,
+          analysisUrl: data.url
         }),
       })
 
+      const result = await response.json()
+
       if (!response.ok) {
-        throw new Error('피드백 전송 실패')
+        throw new Error(result.error || '피드백 전송 실패')
       }
 
-      console.log('피드백 전송 성공')
+      console.log('피드백 전송 성공:', result.message)
     } catch (error) {
       console.error('피드백 전송 오류:', error)
       throw error
@@ -266,6 +327,9 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
               <div style={{ fontSize: '1.2rem', fontWeight: '600', opacity: '0.9' }}>
                 {getScoreText(data.overallScore)}
               </div>
+              <div className="analysis-section__subtitle" style={{ color: 'rgba(255, 255, 255, 0.8)', marginTop: 'var(--spacing-sm)' }}>
+                💡 완벽한 100점은 필요하지 않아요! 70점 이상이면 훌륭한 SEO입니다.
+              </div>
             </div>
             
             {/* 카테고리별 막대 그래프 */}
@@ -303,7 +367,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                   {goodCategories.length > 0 && (
                     <div style={{
                       background: 'linear-gradient(135deg, #10B981, #059669)',
-                      width: `${(goodCategories.length / data.categories.length) * 100}%`,
+                      width: `${(goodCategories.length / mainCategories.length) * 100}%`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -318,7 +382,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                   {warningCategories.length > 0 && (
                     <div style={{
                       background: 'linear-gradient(135deg, #F59E0B, #D97706)',
-                      width: `${(warningCategories.length / data.categories.length) * 100}%`,
+                      width: `${(warningCategories.length / mainCategories.length) * 100}%`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -333,7 +397,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                   {dangerCategories.length > 0 && (
                     <div style={{
                       background: 'linear-gradient(135deg, #EF4444, #DC2626)',
-                      width: `${(dangerCategories.length / data.categories.length) * 100}%`,
+                      width: `${(dangerCategories.length / mainCategories.length) * 100}%`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -352,7 +416,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                   textAlign: 'center', 
                   marginTop: 'var(--spacing-sm)' 
                 }}>
-                  총 {data.categories.length}개 항목 중 {goodCategories.length}개 우수, {warningCategories.length}개 보통, {dangerCategories.length}개 개선필요
+                  총 {mainCategories.length}개 주요 항목 중 {goodCategories.length}개 우수, {warningCategories.length}개 보통, {dangerCategories.length}개 개선필요
                 </div>
               </div>
               
@@ -392,80 +456,94 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-lg mb-lg">
             {/* 기본 정보 */}
-            <div className="metric-card">
-              <div className="metric-card__header">
-                <div className="metric-card__icon gradient-bg--info">
+            <div className="site-info-card">
+              <div className="site-info-card__header">
+                <div className="site-info-card__icon gradient-bg--info">
                   🏢
                 </div>
-                <div className="metric-card__title">웹사이트 기본 정보</div>
+                <div className="site-info-card__title">웹사이트 기본 정보</div>
               </div>
-              <div className="space-y-sm">
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">🌐 도메인 주소</div>
-                  <div className="font-sm font-weight-bold">{data.siteInfo.domain}</div>
+              <div className="site-info-card__content">
+                <div className="site-info-item">
+                  <div className="site-info-item__label">🌐 도메인 주소</div>
+                  <div className="site-info-item__value">{data.siteInfo.domain}</div>
                 </div>
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">🏷 추정 업종</div>
-                  <div className="font-sm font-weight-bold" style={{ color: 'var(--color-primary)' }}>{data.siteInfo.estimated.industry}</div>
-                  <div className="font-xs text-secondary mt-xs">AI가 분석한 사업 분야입니다</div>
+                
+                <div className="site-info-item site-info-item--highlight">
+                  <div className="site-info-item__label">🏷 추정 업종</div>
+                  <div className="site-info-item__value site-info-item__value--primary">
+                    {data.siteInfo.estimated.industry}
+                  </div>
+                  <div className="site-info-item__description">AI가 분석한 사업 분야입니다</div>
                 </div>
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">👥 주요 고객층</div>
-                  <div className="font-sm">{data.siteInfo.estimated.targetAudience}</div>
+                
+                <div className="site-info-item">
+                  <div className="site-info-item__label">👥 주요 고객층</div>
+                  <div className="site-info-item__value">{data.siteInfo.estimated.targetAudience}</div>
                 </div>
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">🌍 사용 언어</div>
-                  <div className="font-sm">{data.siteInfo.language}</div>
+                
+                <div className="site-info-item">
+                  <div className="site-info-item__label">🌍 사용 언어</div>
+                  <div className="site-info-item__value">{data.siteInfo.language}</div>
                 </div>
               </div>
             </div>
 
             {/* 기술적 정보 */}
-            <div className="metric-card">
-              <div className="metric-card__header">
-                <div className="metric-card__icon gradient-bg--secondary">
+            <div className="tech-seo-card">
+              <div className="tech-seo-card__header">
+                <div className="tech-seo-card__icon gradient-bg--secondary">
                   ⚙️
                 </div>
-                <div className="metric-card__title">기술적 SEO 분석</div>
+                <div className="tech-seo-card__title">기술적 SEO 분석</div>
               </div>
-              <div className="space-y-sm">
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">📝 콘텐츠 양</div>
-                  <div className="font-sm font-weight-bold">{data.siteInfo.technicalInfo.wordCount.toLocaleString()}단어</div>
-                  <div className="font-xs text-secondary mt-xs">
+              <div className="tech-seo-card__content">
+                <div className="tech-seo-item">
+                  <div className="tech-seo-item__label">📝 콘텐츠 양</div>
+                  <div className="tech-seo-item__value">{data.siteInfo.technicalInfo.wordCount.toLocaleString()}단어</div>
+                  <div className="tech-seo-item__status">
                     {data.siteInfo.technicalInfo.wordCount >= 300 ? '✓ 충분한 콘텐츠' : '⚠ 더 많은 콘텐츠 필요'}
                   </div>
                 </div>
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">🖼 이미지 & 📎 링크</div>
-                  <div className="font-sm">이미지 {data.siteInfo.technicalInfo.imageCount}개, 링크 {data.siteInfo.technicalInfo.linkCount}개</div>
+                
+                <div className="tech-seo-item">
+                  <div className="tech-seo-item__label">🖼 이미지 & 📎 링크</div>
+                  <div className="tech-seo-item__value">
+                    이미지 {data.siteInfo.technicalInfo.imageCount}개, 링크 {data.siteInfo.technicalInfo.linkCount}개
+                  </div>
                 </div>
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">📱 모바일 최적화</div>
-                  <div className={`font-sm flex items-center gap-xs ${data.siteInfo.technicalInfo.hasViewport ? 'text-success' : 'text-danger'}`}>
-                    <span className={`icon ${data.siteInfo.technicalInfo.hasViewport ? 'icon--success' : 'icon--danger'}`}>
+                
+                <div className="tech-seo-item">
+                  <div className="tech-seo-item__label">📱 모바일 최적화</div>
+                  <div className={`tech-seo-item__status-row ${data.siteInfo.technicalInfo.hasViewport ? 'tech-seo-item__status-row--success' : 'tech-seo-item__status-row--danger'}`}>
+                    <span className={`tech-seo-icon ${data.siteInfo.technicalInfo.hasViewport ? 'tech-seo-icon--success' : 'tech-seo-icon--danger'}`}>
                       {data.siteInfo.technicalInfo.hasViewport ? '✓' : '×'}
                     </span>
-                    {data.siteInfo.technicalInfo.hasViewport ? '뷰포트 설정됨' : '뷰포트 미설정'}
+                    <span className="tech-seo-item__value">
+                      {data.siteInfo.technicalInfo.hasViewport ? '뷰포트 설정됨' : '뷰포트 미설정'}
+                    </span>
                   </div>
-                  <div className="font-xs text-secondary mt-xs">
+                  <div className="tech-seo-item__description">
                     {data.siteInfo.technicalInfo.hasViewport ? '핸드폰에서 잘 보입니다' : '핸드폰에서 작게 보일 수 있어요'}
                   </div>
                 </div>
-                <div className="p-sm" style={{ backgroundColor: 'var(--color-bg-secondary)', borderRadius: 'var(--radius-sm)' }}>
-                  <div className="font-xs text-secondary mb-xs">🔍 구글에게 사이트 설명하기 (구조화 데이터)</div>
-                  <div className={`font-sm flex items-center gap-xs ${data.siteInfo.technicalInfo.hasStructuredData ? 'text-success' : 'text-danger'}`}>
-                    <span className={`icon ${data.siteInfo.technicalInfo.hasStructuredData ? 'icon--success' : 'icon--danger'}`}>
+                
+                <div className="tech-seo-item tech-seo-item--structured">
+                  <div className="tech-seo-item__label">🔍 구글에게 사이트 설명하기 (구조화 데이터)</div>
+                  <div className={`tech-seo-item__status-row ${data.siteInfo.technicalInfo.hasStructuredData ? 'tech-seo-item__status-row--success' : 'tech-seo-item__status-row--danger'}`}>
+                    <span className={`tech-seo-icon ${data.siteInfo.technicalInfo.hasStructuredData ? 'tech-seo-icon--success' : 'tech-seo-icon--danger'}`}>
                       {data.siteInfo.technicalInfo.hasStructuredData ? '✓' : '×'}
                     </span>
-                    {data.siteInfo.technicalInfo.hasStructuredData ? '구글이 잘 이해함' : '구글이 헷갈림'}
+                    <span className="tech-seo-item__value">
+                      {data.siteInfo.technicalInfo.hasStructuredData ? '구글이 잘 이해함' : '구글이 헷갈림'}
+                    </span>
                   </div>
-                  <div className="font-xs text-secondary mt-xs">
+                  <div className="tech-seo-item__description">
                     {data.siteInfo.technicalInfo.hasStructuredData ? 
                       '✅ Schema.org 마크업이 있어서 구글이 사이트를 정확히 파악해요! 검색 결과에 별점, 가격, 운영시간 등이 예쁘게 나올 수 있어요.' : 
                       '❌ 구조화 데이터가 없어요. 마치 가게 간판 없이 장사하는 것과 같아요. 구글에게 "우리는 ○○ 업체야, 연락처는 이거야" 하고 설명해주면 검색 결과에서 더 잘 보여요!'}
                   </div>
-                  <div className="font-xs text-secondary mt-xs" style={{ fontStyle: 'italic' }}>
+                  <div className="tech-seo-item__tip">
                     💡 <strong>구조화 데이터란?</strong> 구글에게 "우리 사이트는 카페야, 주소는 여기야, 전화번호는 이거야" 하고 친절하게 설명해주는 코드예요
                   </div>
                 </div>
@@ -494,9 +572,18 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           </h2>
         </div>
         
-        {/* 전체 SEO 카테고리 그리드 */}
+        {/* 주요 SEO 분석 결과 */}
+        <div className="analysis-section__header">
+          <div className="analysis-section__header-icon gradient-bg--primary">
+            📊
+          </div>
+          <h2 className="analysis-section__header-title">
+            주요 SEO 분석 결과 (점수 반영)
+          </h2>
+        </div>
+        
         <div className="seo-grid">
-          {data.categories.map(category => {
+            {mainCategories.map(category => {
             const currentValue = getCurrentValue(category.id)
             return (
               <div 
@@ -541,6 +628,73 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           })}
         </div>
       </div>
+
+      {/* 선택사항 분석 결과 */}
+      {optionalCategories.length > 0 && (
+        <div className="analysis-section">
+          <div className="analysis-section__header">
+            <div className="analysis-section__header-icon gradient-bg--secondary">
+              📋
+            </div>
+            <h2 className="analysis-section__header-title">
+              추가 분석 결과 (참고용)
+            </h2>
+            <p className="analysis-section__subtitle">
+              💡 이 항목들은 점수에 포함되지 않습니다. 광고 등으로 인해 정확하지 않을 수 있어요.
+            </p>
+          </div>
+          
+          <div className="seo-grid">
+            {optionalCategories.map(category => {
+              const currentValue = getCurrentValue(category.id)
+              return (
+                <div 
+                  key={category.id} 
+                  className={`seo-card seo-card--${category.status} seo-card--optional`}
+                  onClick={() => {
+                    setSelectedCategory(category.id)
+                    setShowDetailModal(true)
+                  }}
+                >
+                  <div className="seo-card__header">
+                    <div className={`seo-card__icon seo-card__icon--${category.status}`}>
+                      {getStatusIcon(category.status)}
+                    </div>
+                    <div className="seo-card__info">
+                      <h3 className="seo-card__title">
+                        {category.name}
+                        <span className="seo-card__optional-badge">참고용</span>
+                      </h3>
+                      <div className="seo-card__score">{category.score}점</div>
+                    </div>
+                  </div>
+                  
+                  {currentValue && (
+                    <div className="seo-card__current">
+                      <div className="seo-card__current-label">{currentValue.label}</div>
+                      <div className="seo-card__current-value">
+                        {currentValue.value}
+                        {currentValue.length !== undefined && (
+                          <span className="seo-card__current-length">({currentValue.length}자)</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="seo-card__description">
+                    {category.description.length > 60 ? category.description.substring(0, 60) + '...' : category.description}
+                  </div>
+                  
+                  <div className="seo-card__action">
+                    <span className="seo-card__action-text">자세히 보기</span>
+                    <span className="seo-card__action-arrow">→</span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       {/* AI 맞춤 조언 섹션 */}
       {data.aiAdvice && (
@@ -618,7 +772,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
               🏷
             </div>
             <h2 className="analysis-section__header-title">
-              추천 키워드
+              AI 추천 키워드
             </h2>
           </div>
           <p className="font-md text-secondary mb-md">
@@ -646,11 +800,10 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
       )}
 
       {/* 액션 버튼들 */}
-      <div className="text-center mb-xl">
+      <div className="action-buttons mb-xl">
         <button
           onClick={onNewAnalysis}
           className="btn btn-primary btn-lg"
-          style={{ marginRight: 'var(--spacing-md)' }}
         >
           <span className="icon icon--primary">🔍</span>
           다른 사이트 분석하기
@@ -658,15 +811,14 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
         <button 
           onClick={() => setShowFeedback(true)}
           className="btn btn-outline btn-lg"
-          style={{ marginRight: 'var(--spacing-md)' }}
         >
           <span className="icon icon--info">💬</span>
           서비스 평가하기
         </button>
-        <button className="btn btn-outline btn-lg">
+        {/* <button className="btn btn-outline btn-lg">
           <span className="icon icon--secondary">💾</span>
           결과 저장하기
-        </button>
+        </button> */}
       </div>
       
       {/* 모달들 */}
@@ -680,7 +832,9 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
 
       {showFeedback && (
         <FeedbackModal
+          isOpen={showFeedback}
           onClose={() => setShowFeedback(false)}
+          analysisUrl={data.url}
           onSubmit={handleFeedbackSubmit}
         />
       )}

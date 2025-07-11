@@ -52,14 +52,18 @@ export default function HomePage() {
       )}
       
       {currentStep === 'progress' && (
-        <AnalysisProgress websiteUrl={websiteUrl} />
+        <section role="status" aria-live="polite" aria-label="SEO 분석 진행 중">
+          <AnalysisProgress websiteUrl={websiteUrl} />
+        </section>
       )}
       
       {currentStep === 'result' && analysisData && (
-        <AnalysisResult 
-          data={analysisData} 
-          onNewAnalysis={handleNewAnalysis}
-        />
+        <section role="main" aria-label="SEO 분석 결과">
+          <AnalysisResult 
+            data={analysisData} 
+            onNewAnalysis={handleNewAnalysis}
+          />
+        </section>
       )}
     </div>
   )

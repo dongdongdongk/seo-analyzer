@@ -37,6 +37,22 @@ interface PageData {
     keywordDensity: number
     headingStructure: boolean
   }
+  semanticMarkup: {
+    hasHeader: boolean
+    hasNav: boolean
+    hasMain: boolean
+    hasFooter: boolean
+    hasSection: boolean
+    hasArticle: boolean
+    hasAside: boolean
+    hasH1: boolean
+    headingStructure: boolean
+    ariaAttributes: number
+    roleAttributes: number
+    semanticScore: number
+    issues: string[]
+    suggestions: string[]
+  }
 }
 
 // 웹페이지 HTML 가져오기
@@ -82,6 +98,9 @@ export async function fetchPageHTML(url: string): Promise<string> {
 // HTML 파싱 및 데이터 추출
 export function parsePageData(html: string, url: string): PageData {
   const $ = cheerio.load(html)
+
+  // 기본 광고 제거 (간단 버전)
+  $('.adsbygoogle, .revenue_unit_item, [class*="adsense"], ins.kakao_ad_area, div[id^="google_ads"]').remove();
   
   // 메타 태그 추출
   const title = $('title').text().trim() || ''
@@ -96,8 +115,26 @@ export function parsePageData(html: string, url: string): PageData {
   const h1Tags = $('h1').map((_, el) => $(el).text().trim()).get()
   const h2Tags = $('h2').map((_, el) => $(el).text().trim()).get()
   
-  // 이미지 분석
-  const images = $('img').map((_, el) => ({
+  // 이미지 분석 with enhanced filtering
+  // 이미지 분석 (간단한 필터링)
+  const images = $('img').filter((_, el) => {
+    const $img = $(el);
+    const width = parseInt($img.attr('width') || '0', 10);
+    const height = parseInt($img.attr('height') || '0', 10);
+    const src = $img.attr('src') || '';
+    
+    // 너무 작은 이미지 제외 (트래킹 픽셀)
+    if ((width > 0 && width < 20) || (height > 0 && height < 20)) {
+      return false;
+    }
+    
+    // 명백히 광고 관련 URL 제외
+    if (src.includes('googleads') || src.includes('doubleclick') || src.includes('googlesyndication')) {
+      return false;
+    }
+    
+    return true;
+  }).map((_, el) => ({
     src: $(el).attr('src') || '',
     alt: $(el).attr('alt') || '',
     title: $(el).attr('title') || ''
@@ -136,6 +173,9 @@ export function parsePageData(html: string, url: string): PageData {
   // 콘텐츠 품질 분석
   const contentQuality = analyzeContentQuality(textContent, h1Tags, h2Tags, title, description)
   
+  // 시멘틱 마크업 분석
+  const semanticMarkup = analyzeSemanticMarkup($)
+  
   return {
     title,
     description,
@@ -151,7 +191,179 @@ export function parsePageData(html: string, url: string): PageData {
     canonicalUrl,
     ogTags,
     structuredData,
-    contentQuality
+    contentQuality,
+    semanticMarkup
+  }
+}
+
+// 시멘틱 마크업 분석
+function analyzeSemanticMarkup($: cheerio.CheerioAPI) {
+  const issues: string[] = []
+  const suggestions: string[] = []
+  
+  // HTML5 시멘틱 요소 확인
+  const hasHeader = $('header').length > 0
+  const hasNav = $('nav').length > 0
+  const hasMain = $('main').length > 0
+  const hasFooter = $('footer').length > 0
+  const hasSection = $('section').length > 0
+  const hasArticle = $('article').length > 0
+  const hasAside = $('aside').length > 0
+  const hasH1 = $('h1').length > 0
+  
+  // 헤딩 구조 분석
+  const headings = $('h1, h2, h3, h4, h5, h6').toArray()
+  const headingLevels = headings.map(h => parseInt(h.tagName.charAt(1)))
+  const headingStructure = analyzeHeadingStructure(headingLevels)
+  
+  // ARIA 속성 개수
+  const ariaAttributes = $('[aria-label], [aria-labelledby], [aria-describedby], [aria-hidden], [aria-expanded], [aria-current]').length
+  
+  // Role 속성 개수
+  const roleAttributes = $('[role]').length
+  
+  // 시멘틱 점수 계산
+  let semanticScore = 0
+  const maxScore = 100
+  
+  // 기본 시멘틱 요소 체크 (각 10점)
+  if (hasHeader) semanticScore += 10
+  if (hasNav) semanticScore += 10
+  if (hasMain) semanticScore += 15 // main은 더 중요
+  if (hasFooter) semanticScore += 10
+  if (hasH1) semanticScore += 15 // H1은 더 중요
+  
+  // 콘텐츠 구조 요소 (각 5점)
+  if (hasSection) semanticScore += 5
+  if (hasArticle) semanticScore += 5
+  if (hasAside) semanticScore += 5
+  
+  // 헤딩 구조 (10점)
+  if (headingStructure) semanticScore += 10
+  
+  // 접근성 속성 (최대 15점)
+  semanticScore += Math.min(15, ariaAttributes + roleAttributes)
+  
+  // 이슈 및 제안 생성
+  if (!hasHeader) {
+    issues.push('페이지에 <header> 요소가 없습니다')
+    suggestions.push('페이지 상단에 <header> 태그를 추가하여 헤더 영역을 명확히 구분하세요')
+  }
+  
+  if (!hasNav) {
+    issues.push('페이지에 <nav> 요소가 없습니다')
+    suggestions.push('네비게이션 메뉴를 <nav> 태그로 감싸서 탐색 영역을 명확히 표시하세요')
+  }
+  
+  if (!hasMain) {
+    issues.push('페이지에 <main> 요소가 없습니다')
+    suggestions.push('주요 콘텐츠 영역을 <main> 태그로 감싸서 메인 콘텐츠를 명확히 표시하세요')
+  }
+  
+  if (!hasFooter) {
+    issues.push('페이지에 <footer> 요소가 없습니다')
+    suggestions.push('페이지 하단에 <footer> 태그를 추가하여 푸터 영역을 명확히 구분하세요')
+  }
+  
+  if (!hasH1) {
+    issues.push('페이지에 H1 태그가 없습니다')
+    suggestions.push('페이지의 주요 제목을 <h1> 태그로 설정하세요')
+  } else if ($('h1').length > 1) {
+    issues.push('페이지에 H1 태그가 여러 개 있습니다')
+    suggestions.push('H1 태그는 페이지당 하나만 사용하는 것이 좋습니다')
+  }
+  
+  if (!headingStructure) {
+    issues.push('헤딩 태그의 구조가 올바르지 않습니다')
+    suggestions.push('헤딩 태그(H1~H6)를 순서대로 사용하여 논리적인 구조를 만드세요')
+  }
+  
+  if (ariaAttributes < 3) {
+    issues.push('접근성을 위한 ARIA 속성이 부족합니다')
+    suggestions.push('버튼, 링크, 폼 요소에 aria-label이나 aria-describedby 속성을 추가하세요')
+  }
+  
+  if (!hasSection && !hasArticle) {
+    issues.push('콘텐츠 구조를 위한 시멘틱 요소가 부족합니다')
+    suggestions.push('콘텐츠를 <section>이나 <article> 태그로 의미있게 구분하세요')
+  }
+  
+  return {
+    hasHeader,
+    hasNav,
+    hasMain,
+    hasFooter,
+    hasSection,
+    hasArticle,
+    hasAside,
+    hasH1,
+    headingStructure,
+    ariaAttributes,
+    roleAttributes,
+    semanticScore,
+    issues,
+    suggestions
+  }
+}
+
+// 헤딩 구조 분석
+function analyzeHeadingStructure(levels: number[]): boolean {
+  if (levels.length === 0) return false
+  
+  // H1이 첫 번째여야 함
+  if (levels[0] !== 1) return false
+  
+  // 순서대로 증가해야 함 (1단계씩만 건너뛸 수 있음)
+  for (let i = 1; i < levels.length; i++) {
+    const diff = levels[i] - levels[i - 1]
+    if (diff > 1) return false
+  }
+  
+  return true
+}
+
+// 시멘틱 마크업 SEO 카테고리 분석
+function analyzeSemanticMarkupCategory(pageData: PageData): SEOCategory {
+  const semantic = pageData.semanticMarkup
+  const score = semantic.semanticScore
+  let status: 'good' | 'warning' | 'danger' = 'danger'
+  let description = ''
+  const suggestions: string[] = []
+
+  if (score >= 80) {
+    status = 'good'
+    description = '시멘틱 마크업이 잘 구성되어 있습니다. 검색엔진과 스크린 리더가 콘텐츠를 쉽게 이해할 수 있습니다.'
+  } else if (score >= 60) {
+    status = 'warning'
+    description = '시멘틱 마크업이 부분적으로 구성되어 있습니다. 몇 가지 개선사항이 있습니다.'
+  } else {
+    status = 'danger'
+    description = '시멘틱 마크업이 부족합니다. 검색엔진 최적화와 접근성 향상을 위해 개선이 필요합니다.'
+  }
+
+  // 구체적인 제안사항 추가
+  if (semantic.suggestions.length > 0) {
+    suggestions.push(...semantic.suggestions.slice(0, 3)) // 최대 3개까지
+  }
+
+  // 긍정적인 피드백도 추가
+  if (semantic.hasMain) {
+    suggestions.push('✅ 메인 콘텐츠 영역이 잘 구분되어 있습니다')
+  }
+  if (semantic.hasHeader && semantic.hasFooter) {
+    suggestions.push('✅ 헤더와 푸터 영역이 명확하게 구분되어 있습니다')
+  }
+  if (semantic.headingStructure) {
+    suggestions.push('✅ 헤딩 태그 구조가 논리적으로 잘 구성되어 있습니다')
+  }
+
+  return {
+    id: 'semantic-markup',
+    name: '시멘틱 마크업',
+    status,
+    score,
+    description,
+    suggestions
   }
 }
 
@@ -189,6 +401,120 @@ function analyzeContentQuality(
   }
 }
 
+// Helper to fetch text files like robots.txt or sitemap.xml
+async function fetchTextFile(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+    if (response.ok) {
+      return await response.text();
+    }
+    return null;
+  } catch (error) {
+    console.error(`Failed to fetch ${url}:`, error);
+    return null;
+  }
+}
+
+// robots.txt 분석
+async function analyzeRobotsTxt(url: string): Promise<SEOCategory> {
+  const urlObj = new URL(url);
+  const robotsUrl = `${urlObj.origin}/robots.txt`;
+  const robotsTxt = await fetchTextFile(robotsUrl);
+
+  let score = 0;
+  let status: 'good' | 'warning' | 'danger' = 'danger';
+  let description = '';
+  const suggestions: string[] = [];
+
+  if (robotsTxt) {
+    score = 90;
+    status = 'good';
+    description = 'robots.txt 파일이 존재합니다. 검색엔진이 사이트를 크롤링하는 방법을 제어할 수 있습니다.';
+    suggestions.push('robots.txt 파일이 모든 중요한 페이지의 크롤링을 허용하는지 확인하세요.');
+    if (!robotsTxt.includes('Sitemap:')) {
+      score -= 10;
+      status = 'warning';
+      suggestions.push('robots.txt에 사이트맵 위치를 추가하는 것이 좋습니다 (예: Sitemap: https://example.com/sitemap.xml).');
+    }
+  } else {
+    score = 40;
+    status = 'warning';
+    description = 'robots.txt 파일이 없습니다. 검색엔진 크롤링을 더 잘 제어하기 위해 추가하는 것이 좋습니다.';
+    suggestions.push('웹사이트 루트에 robots.txt 파일을 생성하세요.');
+  }
+
+  return {
+    id: 'robots',
+    name: 'robots.txt',
+    status,
+    score,
+    description,
+    suggestions,
+  };
+}
+
+// Sitemap 분석
+async function analyzeSitemap(url: string): Promise<SEOCategory> {
+    const urlObj = new URL(url);
+    // First check robots.txt for sitemap location
+    const robotsUrl = `${urlObj.origin}/robots.txt`;
+    const robotsTxt = await fetchTextFile(robotsUrl);
+    let sitemapUrl = `${urlObj.origin}/sitemap.xml`;
+    let foundInRobots = false;
+
+    if (robotsTxt) {
+        const sitemapLine = robotsTxt.split(/\r?\n/).find(line => line.toLowerCase().startsWith('sitemap:'));
+        if (sitemapLine) {
+            const colonIndex = sitemapLine.indexOf(':');
+            if (colonIndex > -1) {
+              sitemapUrl = sitemapLine.substring(colonIndex + 1).trim();
+            }
+            foundInRobots = true;
+        }
+    }
+
+    const sitemapXml = await fetchTextFile(sitemapUrl);
+
+    let score = 0;
+    let status: 'good' | 'warning' | 'danger' = 'danger';
+    let description = '';
+    const suggestions: string[] = [];
+
+    if (sitemapXml) {
+        score = 90;
+        status = 'good';
+        description = '사이트맵이 존재합니다. 검색엔진이 사이트의 모든 페이지를 쉽게 찾을 수 있습니다.';
+        suggestions.push('사이트맵이 최신 상태인지 정기적으로 확인하세요.');
+        if(foundInRobots) {
+            score = 95;
+            suggestions.push('robots.txt에 사이트맵 위치가 명시되어 있어 좋습니다.');
+        } else {
+            score = 85;
+            status = 'warning';
+            suggestions.push('robots.txt에 사이트맵 위치를 추가하는 것을 고려해보세요.');
+        }
+    } else {
+        score = 30;
+        status = 'danger';
+        description = '사이트맵이 없습니다. 검색엔진이 사이트의 모든 페이지를 발견하지 못할 수 있습니다.';
+        suggestions.push('sitemap.xml 파일을 생성하고 웹사이트 루트에 업로드하세요.');
+        suggestions.push('사이트맵 생성 도구를 사용하면 쉽게 만들 수 있습니다.');
+    }
+
+    return {
+        id: 'sitemap',
+        name: '사이트맵',
+        status,
+        score,
+        description,
+        suggestions,
+    };
+}
+
 // SEO 분석 실행
 export async function analyzeSEO(url: string): Promise<AnalysisResult> {
   try {
@@ -197,15 +523,27 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
     const pageData = parsePageData(html, url)
     
     // 2. 기본 SEO 분석 (확장됨)
+    const robotsAnalysis = await analyzeRobotsTxt(url);
+    const sitemapAnalysis = await analyzeSitemap(url);
+
     const basicCategories: SEOCategory[] = [
       analyzeTitleTag(pageData),
       analyzeMetaDescription(pageData),
-      analyzeImages(pageData),
-      analyzeHeadings(pageData),
       analyzeContent(pageData),
       analyzeSocialTags(html),
       analyzeStructuredData(html),
-      analyzeTechnicalSEO(pageData)
+      analyzeTechnicalSEO(pageData),
+      analyzeHttpsSecurity(url),
+      analyzeLinkStructure(pageData),
+      analyzeKeywordOptimization(pageData),
+      analyzeSemanticMarkupCategory(pageData),
+      robotsAnalysis,
+      sitemapAnalysis
+    ]
+    
+    // 선택사항 분석 (점수에 포함되지 않음)
+    const optionalCategories: SEOCategory[] = [
+      analyzeImages(pageData)
     ]
     
     // 3. PageSpeed Insights 성능 분석
@@ -231,10 +569,11 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
       performanceImprovements = ['기본적인 이미지 최적화', '캐시 설정 확인', '호스팅 성능 점검']
     }
     
-    // 4. 모든 카테고리 합치기
+    // 4. 모든 카테고리 합치기 (점수 계산용은 기본+성능만)
     const categories = [...basicCategories, ...performanceCategories]
+    const allCategories = [...categories, ...optionalCategories]
     
-    // 5. 전체 점수 계산
+    // 5. 전체 점수 계산 (선택사항 제외)
     const overallScore = Math.round(
       categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length
     )
@@ -246,44 +585,95 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
     const basicResult: AnalysisResult = {
       url,
       overallScore,
-      categories,
+      categories: allCategories, // 모든 카테고리 포함 (표시용)
       siteInfo
     }
     
     // 7. AI 기반 맞춤 조언 및 키워드 제안 (병렬 실행)
+    console.log('🤖 AI 분석 시작 - URL:', url)
+    console.log('📊 기본 분석 결과:', {
+      overallScore: basicResult.overallScore,
+      categoriesCount: basicResult.categories.length,
+      categoriesStatus: basicResult.categories.map(c => ({ name: c.name, status: c.status, score: c.score }))
+    })
+    
     try {
+      const businessType = detectBusinessType(pageData)
+      const siteType = detectSiteType({ ...pageData, url })
+      const textContent = extractTextContent(html)
+      
+      console.log('🔍 사이트 분석 정보:', {
+        businessType,
+        siteType,
+        contentLength: textContent.length,
+        pageDataKeys: Object.keys(pageData)
+      })
+      
+      console.log('📝 AI 분석용 데이터 준비 완료')
+      
       const [aiAdvice, keywordSuggestions] = await Promise.allSettled([
         generatePersonalizedAdvice(basicResult, {
           ...pageData,
           url,
-          content: extractTextContent(html)
+          content: textContent
         }),
         generateKeywordSuggestions({
           ...pageData,
-          content: extractTextContent(html)
-        }, detectBusinessType(pageData))
+          content: textContent
+        }, businessType)
       ])
+      
+      console.log('⚡ AI 분석 완료:', {
+        aiAdviceStatus: aiAdvice.status,
+        keywordSuggestionsStatus: keywordSuggestions.status
+      })
       
       // AI 조언 결과 처리
       if (aiAdvice.status === 'fulfilled') {
-        (basicResult as any).aiAdvice = aiAdvice.value
+        console.log('✅ AI 조언 성공:', {
+          hasOverallAdvice: !!aiAdvice.value?.overallAdvice,
+          overallAdviceLength: aiAdvice.value?.overallAdvice?.length || 0,
+          priorityActionsCount: aiAdvice.value?.priorityActions?.length || 0,
+          industryTipsCount: aiAdvice.value?.industrySpecificTips?.length || 0,
+          hasExpectedResults: !!aiAdvice.value?.expectedResults
+        })
+        console.log('🎯 AI 조언 내용:', aiAdvice.value)
+        ;(basicResult as any).aiAdvice = aiAdvice.value
+      } else {
+        console.error('❌ AI 조언 실패:', aiAdvice.reason)
       }
       
       // 키워드 제안 결과 처리
       if (keywordSuggestions.status === 'fulfilled') {
-        (basicResult as any).keywordSuggestions = keywordSuggestions.value
+        console.log('✅ 키워드 제안 성공:', {
+          keywordCount: keywordSuggestions.value?.length || 0,
+          keywords: keywordSuggestions.value
+        })
+        ;(basicResult as any).keywordSuggestions = keywordSuggestions.value
+      } else {
+        console.error('❌ 키워드 제안 실패:', keywordSuggestions.reason)
       }
       
       // 사이트 타입 및 업종 정보 추가
-      (basicResult as any).siteType = detectSiteType({ ...pageData, url })
-      ;(basicResult as any).businessType = detectBusinessType(pageData)
+      ;(basicResult as any).siteType = siteType
+      ;(basicResult as any).businessType = businessType
       
       // PageSpeed 관련 정보 추가
       ;(basicResult as any).hasFieldData = hasFieldData
       ;(basicResult as any).performanceImprovements = performanceImprovements
       
+      console.log('📋 최종 분석 결과:', {
+        hasAiAdvice: !!(basicResult as any).aiAdvice,
+        hasKeywordSuggestions: !!(basicResult as any).keywordSuggestions,
+        siteType: (basicResult as any).siteType,
+        businessType: (basicResult as any).businessType,
+        hasFieldData: (basicResult as any).hasFieldData
+      })
+      
     } catch (aiError) {
-      console.error('AI 분석 실패:', aiError)
+      console.error('💥 AI 분석 실패:', aiError)
+      console.error('🔍 AI 분석 실패 스택:', aiError instanceof Error ? aiError.stack : 'No stack trace')
+      console.error('📊 AI 분석 실패 시점 기본 결과:', basicResult)
       // AI 분석 실패해도 기본 분석 결과는 반환
     }
     
@@ -336,6 +726,10 @@ function analyzeSiteInfo(html: string, url: string, pageData: PageData): any {
     ogDescription: $('meta[property="og:description"]').attr('content')
   }
   
+  // 링크 구조 분석
+  const internalLinks = pageData.links.filter(link => !link.isExternal)
+  const externalLinks = pageData.links.filter(link => link.isExternal)
+  
   // 기술적 정보 분석
   const technicalInfo = {
     hasViewport: !!pageData.viewport,
@@ -344,8 +738,13 @@ function analyzeSiteInfo(html: string, url: string, pageData: PageData): any {
     canonicalUrl: pageData.canonicalUrl,
     wordCount: extractTextContent(html).split(/\s+/).filter(word => word.length > 0).length,
     imageCount: pageData.images.length,
-    linkCount: $('a[href]').length
+    linkCount: pageData.links.length,
+    internalLinkCount: internalLinks.length,
+    externalLinkCount: externalLinks.length
   }
+
+  // 시멘틱 마크업 정보 추가
+  const semanticMarkup = pageData.semanticMarkup
   
   // 산업 및 대상 추정
   const content = pageData.title + ' ' + pageData.description + ' ' + extractTextContent(html)
@@ -364,6 +763,7 @@ function analyzeSiteInfo(html: string, url: string, pageData: PageData): any {
     charset: pageData.charset || 'UTF-8',
     socialTags,
     technicalInfo,
+    semanticMarkup,
     estimated
   }
 }
@@ -630,63 +1030,6 @@ function analyzeImages(pageData: PageData): SEOCategory {
 }
 
 // 헤딩 구조 분석
-function analyzeHeadings(pageData: PageData): SEOCategory {
-  const { h1Tags, h2Tags } = pageData
-  
-  let score = 0
-  let status: 'good' | 'warning' | 'danger' = 'danger'
-  let description = ''
-  const suggestions: string[] = []
-  
-  if (h1Tags.length === 0) {
-    score = 30
-    status = 'danger'
-    description = '큰 제목(H1)이 없어요! 페이지의 주제를 명확히 해주세요.'
-    suggestions.push('페이지에 큰 제목을 하나 추가해보세요')
-    suggestions.push('큰 제목은 페이지의 가장 중요한 내용이에요')
-  } else if (h1Tags.length > 1) {
-    score = 60
-    status = 'warning'
-    description = '큰 제목이 너무 많아요. 하나만 있는 것이 좋아요.'
-    suggestions.push('큰 제목을 하나로 줄여보세요')
-    suggestions.push('나머지는 작은 제목으로 바꿔보세요')
-  } else {
-    // H1이 정확히 1개
-    if (h2Tags.length === 0) {
-      score = 75
-      status = 'warning'
-      description = '큰 제목은 좋아요! 작은 제목도 추가하면 더 좋을 거예요.'
-      suggestions.push('내용을 구분할 수 있는 작은 제목을 추가해보세요')
-      suggestions.push('제목 구조가 있으면 읽기 쉬워요')
-    } else {
-      score = 95
-      status = 'good'
-      description = '제목 구조가 완벽해요! 읽기 쉽고 검색에도 좋아요.'
-      suggestions.push('제목 구조가 잘 되어 있습니다')
-      suggestions.push('고객이 내용을 쉽게 찾을 수 있어요')
-    }
-  }
-  
-  return {
-    id: 'heading',
-    name: '제목 구조',
-    status,
-    score,
-    description,
-    suggestions,
-    currentValue: {
-      label: '제목 구조 상태',
-      value: h1Tags.length === 1 ? 'H1 태그 1개 사용' : h1Tags.length === 0 ? 'H1 태그 없음' : `H1 태그 ${h1Tags.length}개 사용`,
-      detail: h2Tags.length > 0 ? `H2 태그 ${h2Tags.length}개 사용` : 'H2 태그 없음',
-      structure: {
-        hasH1: h1Tags.length === 1,
-        isLogical: h1Tags.length === 1 && h2Tags.length > 0,
-        recommendation: h1Tags.length === 1 && h2Tags.length > 0 ? '완벽한 제목 구조입니다' : h1Tags.length === 1 ? '소제목을 추가하면 더 좋습니다' : 'H1 태그를 하나 추가해주세요'
-      }
-    }
-  }
-}
-
 // 콘텐츠 분석
 function analyzeContent(pageData: PageData): SEOCategory {
   const { wordCount, contentQuality } = pageData
@@ -752,37 +1095,108 @@ function analyzeContent(pageData: PageData): SEOCategory {
 function analyzeSocialTags(html: string): SEOCategory {
   const $ = cheerio.load(html)
   
-  const ogTags = $('meta[property^="og:"]').length
-  const twitterTags = $('meta[name^="twitter:"]').length
-  const hasOgImage = $('meta[property="og:image"]').attr('content')
-  const hasOgTitle = $('meta[property="og:title"]').attr('content')
-  const hasOgDescription = $('meta[property="og:description"]').attr('content')
+  // 필수 Open Graph 태그들
+  const ogTitle = $('meta[property="og:title"]').attr('content')?.trim() || ''
+  const ogDescription = $('meta[property="og:description"]').attr('content')?.trim() || ''
+  const ogImage = $('meta[property="og:image"]').attr('content')?.trim() || ''
+  const ogUrl = $('meta[property="og:url"]').attr('content')?.trim() || ''
+  const ogSiteName = $('meta[property="og:site_name"]').attr('content')?.trim() || ''
+  const ogType = $('meta[property="og:type"]').attr('content')?.trim() || ''
+  
+  // Twitter Card 태그들
+  const twitterCard = $('meta[name="twitter:card"]').attr('content')?.trim() || ''
+  const twitterTitle = $('meta[name="twitter:title"]').attr('content')?.trim() || ''
+  const twitterDescription = $('meta[name="twitter:description"]').attr('content')?.trim() || ''
+  const twitterImage = $('meta[name="twitter:image"]').attr('content')?.trim() || ''
   
   let score = 0
   let status: 'good' | 'warning' | 'danger' = 'danger'
   let description = ''
   const suggestions: string[] = []
   
-  if (ogTags >= 4 && twitterTags >= 2 && hasOgImage) {
-    score = 95
+  // 필수 태그별 점수 계산 (총 80점)
+  if (ogTitle && ogTitle.length > 0) {
+    score += 20
+    if (ogTitle.length >= 15 && ogTitle.length <= 60) score += 5 // 적절한 길이 보너스
+  } else {
+    suggestions.push('og:title 태그를 추가해보세요 (페이스북 공유 제목)')
+  }
+  
+  if (ogDescription && ogDescription.length > 0) {
+    score += 20
+    if (ogDescription.length >= 50 && ogDescription.length <= 160) score += 5 // 적절한 길이 보너스
+  } else {
+    suggestions.push('og:description 태그를 추가해보세요 (페이스북 공유 설명)')
+  }
+  
+  if (ogImage && ogImage.length > 0) {
+    score += 25
+    // 이미지 URL이 유효한지 간단 체크
+    if (ogImage.startsWith('http')) score += 5 // 절대 URL 보너스
+  } else {
+    suggestions.push('og:image 태그를 추가해보세요 (공유 시 표시될 이미지)')
+  }
+  
+  if (ogUrl && ogUrl.length > 0) {
+    score += 15
+  } else {
+    suggestions.push('og:url 태그를 추가해보세요 (페이지 정확한 주소)')
+  }
+  
+  // 추가 최적화 점수 (총 20점)
+  if (twitterCard && twitterCard.length > 0) {
+    score += 10
+    if (twitterCard === 'summary_large_image') score += 2 // 권장 카드 타입 보너스
+  } else {
+    suggestions.push('twitter:card 태그를 추가해보세요 (트위터 공유 최적화)')
+  }
+  
+  if (ogSiteName && ogSiteName.length > 0) {
+    score += 5
+  }
+  
+  if (ogType && ogType.length > 0) {
+    score += 3
+  }
+  
+  if (twitterImage && twitterImage.length > 0) {
+    score += 2
+  }
+  
+  // 최종 점수 제한
+  score = Math.min(score, 100)
+  
+  // 상태 및 설명 설정
+  if (score >= 85) {
     status = 'good'
     description = '소셜 미디어 공유 최적화가 완벽해요! 페이스북, 트위터에서 예쁘게 보일 거예요.'
-    suggestions.push('현재 소셜 미디어 설정이 완벽합니다')
-    suggestions.push('정기적으로 공유 이미지를 업데이트하세요')
-  } else if (ogTags >= 2 || twitterTags >= 1) {
-    score = 65
+    if (suggestions.length === 0) {
+      suggestions.push('현재 소셜 미디어 설정이 완벽합니다')
+      suggestions.push('정기적으로 공유 이미지를 업데이트하세요')
+    }
+  } else if (score >= 60) {
     status = 'warning'
-    description = '소셜 미디어 설정이 부분적으로 되어 있어요. 조금 더 보완하면 좋을 거예요.'
-    suggestions.push('Open Graph 이미지를 추가해보세요')
-    suggestions.push('트위터 카드 설정을 추가해보세요')
-    suggestions.push('소셜 미디어 제목과 설명을 최적화하세요')
+    description = '소셜 미디어 설정이 어느 정도 되어 있어요. 조금 더 보완하면 완벽할 거예요.'
+    if (suggestions.length === 0) {
+      suggestions.push('추가 최적화를 통해 더 나은 공유 경험을 제공할 수 있어요')
+    }
   } else {
-    score = 30
     status = 'danger'
-    description = '소셜 미디어 공유 설정이 없어요. 페이스북이나 카카오톡에서 공유할 때 보기 안 좋을 수 있어요.'
-    suggestions.push('Open Graph 태그를 추가해보세요')
-    suggestions.push('공유용 이미지를 설정해보세요')
-    suggestions.push('소셜 미디어용 제목과 설명을 작성해보세요')
+    description = '소셜 미디어 공유 설정이 부족해요. 페이스북이나 카카오톡에서 공유할 때 보기 안 좋을 수 있어요.'
+    if (suggestions.length === 0) {
+      suggestions.push('기본 Open Graph 태그부터 설정해보세요')
+    }
+  }
+  
+  // 품질 관련 추가 제안
+  if (ogTitle && ogTitle.length > 60) {
+    suggestions.push('공유 제목이 너무 길어요. 60자 이내로 줄여보세요')
+  }
+  if (ogDescription && ogDescription.length > 160) {
+    suggestions.push('공유 설명이 너무 길어요. 160자 이내로 줄여보세요')
+  }
+  if (ogImage && !ogImage.startsWith('http')) {
+    suggestions.push('공유 이미지는 절대 URL (https://)로 설정해보세요')
   }
   
   return {
@@ -885,52 +1299,356 @@ function analyzeTechnicalSEO(pageData: PageData): SEOCategory {
   }
 }
 
-// Lighthouse 실패 시 대체 속도 분석
-function createFallbackSpeedAnalysis(): SEOCategory {
-  return {
-    id: 'speed',
-    name: '사이트 속도',
-    status: 'warning',
-    score: 70,
-    description: '사이트 속도를 정확히 측정할 수 없었어요. 일반적인 개선 방법을 알려드릴게요.',
-    suggestions: [
-      '이미지 크기를 줄여보세요',
-      '사용하지 않는 플러그인을 제거해보세요',
-      '캐시 설정을 확인해보세요',
-      '호스팅 서비스 성능을 확인해보세요'
-    ]
-  }
+
+// ===============================
+// Enhanced Ad Filtering Functions
+// ===============================
+
+/**
+ * Comprehensive ad content removal for Korean blog platforms
+ * Removes ads, affiliate content, and promotional sections
+ */
+function removeAdContent($: cheerio.CheerioAPI): void {
+  // Basic Google AdSense removal
+  $('.adsbygoogle, .revenue_unit_item, [class*="adsense"], ins.kakao_ad_area, div[id^="google_ads"]').remove();
+  
+  // Kakao AdFit and Tistory-specific ads
+  $('[class*="kakao_ad"], [class*="adfit"], [id*="kakao_ad"], [id*="adfit"]').remove();
+  $('[class*="dable"], [class*="sponsored"], [class*="recommend"]').remove();
+  
+  // Tistory-specific ad containers
+  $('.tt_article_useless_p_margin, .another_category, .blogRelated').remove();
+  $('[class*="related_article"], [class*="popular_article"]').remove();
+  
+  // Affiliate and promotional content sections
+  $('.affiliate, [class*="affiliate"], [data-affiliate]').remove();
+  $('[class*="promotion"], [class*="banner"], [class*="sponsor"]').remove();
+  
+  // Common Korean ad networks
+  $('[class*="criteo"], [class*="tenmax"], [class*="recopick"]').remove();
+  $('[data-ad], [data-adunit], [data-ad-client]').remove();
+  
+  // Remove by text content patterns (Korean promotional phrases)
+  $('div:contains("광고"), div:contains("후원"), div:contains("제휴")').each((_, el) => {
+    const text = $(el).text().trim();
+    if (text.length < 50 && (text.includes('광고') || text.includes('후원') || text.includes('제휴'))) {
+      $(el).remove();
+    }
+  });
+  
+  // Remove tracking pixels and analytics images
+  $('img[width="1"], img[height="1"], img[src*="analytics"], img[src*="tracking"]').remove();
+  
+  // Remove iframes that commonly contain ads
+  $('iframe[src*="googleads"], iframe[src*="doubleclick"], iframe[src*="adsystem"]').remove();
+  $('iframe[src*="adnxs"], iframe[src*="adsafeprotected"]').remove();
 }
 
-// Lighthouse 실패 시 대체 모바일 분석
-function createFallbackMobileAnalysis(pageData: PageData): SEOCategory {
-  const { viewport } = pageData
+/**
+ * Determines if an image is likely content (not an ad)
+ * Uses multiple filtering criteria including URL patterns, container context, and image attributes
+ */
+function isContentImage($: cheerio.CheerioAPI, el: cheerio.Element): boolean {
+  const $img = $(el);
+  const src = $img.attr('src') || '';
+  const alt = $img.attr('alt') || '';
+  const className = $img.attr('class') || '';
   
-  let score = 70
-  let status: 'good' | 'warning' | 'danger' = 'warning'
+  // Basic size filtering (remove tiny tracking pixels)
+  const width = parseInt($img.attr('width') || '0', 10);
+  const height = parseInt($img.attr('height') || '0', 10);
+  if ((width > 0 && width < 50) || (height > 0 && height < 50)) {
+    return false;
+  }
+  
+  // Filter by source URL patterns
+  if (isAdImageUrl(src)) {
+    return false;
+  }
+  
+  // Filter by CSS classes
+  if (isAdImageClass(className)) {
+    return false;
+  }
+  
+  // Filter by alt text patterns
+  if (isAdImageAlt(alt)) {
+    return false;
+  }
+  
+  // Filter by parent container context
+  if (isInAdContainer($, el)) {
+    return false;
+  }
+  
+  // Additional filtering for affiliate/promotional content
+  if (isAffiliateImage($, el)) {
+    return false;
+  }
+  
+  return true;
+}
+
+/**
+ * Checks if image URL suggests it's an advertisement
+ */
+function isAdImageUrl(src: string): boolean {
+  const adUrlPatterns = [
+    // Google ads
+    /googleads|doubleclick|googlesyndication|adsystem/i,
+    // Kakao ads
+    /kakao.*ad|adfit|daumcdn.*ad/i,
+    // Common ad networks
+    /criteo|tenmax|recopick|adnxs|adsafeprotected/i,
+    // Generic ad patterns
+    /banner|sponsor|promo|affiliate/i,
+    // Tracking pixels
+    /tracking|analytics|pixel|beacon/i,
+    // Common ad image sizes in URLs
+    /\d+x\d+.*\.(gif|png|jpg).*ad/i
+  ];
+  
+  return adUrlPatterns.some(pattern => pattern.test(src));
+}
+
+/**
+ * Checks if image CSS classes suggest it's an advertisement
+ */
+function isAdImageClass(className: string): boolean {
+  const adClassPatterns = [
+    /ad|advertisement|adsense|adfit/i,
+    /banner|sponsor|promo|affiliate/i,
+    /tracking|analytics|pixel/i,
+    /related|recommend|popular/i, // Often used for promotional content
+    /dable|outbrain|taboola/i // Content recommendation networks
+  ];
+  
+  return adClassPatterns.some(pattern => pattern.test(className));
+}
+
+/**
+ * Checks if image alt text suggests it's an advertisement
+ */
+function isAdImageAlt(alt: string): boolean {
+  const adAltPatterns = [
+    /광고|후원|제휴|협찬/i, // Korean: ad, sponsor, affiliate, sponsorship
+    /ad|advertisement|sponsor|banner/i,
+    /프로모션|할인|쿠폰|이벤트/i, // Korean: promotion, discount, coupon, event
+    /추천|인기|관련/i // Korean: recommend, popular, related
+  ];
+  
+  return adAltPatterns.some(pattern => pattern.test(alt));
+}
+
+/**
+ * Checks if image is contained within an ad container
+ */
+function isInAdContainer($: cheerio.CheerioAPI, el: cheerio.Element): boolean {
+  const $img = $(el);
+  
+  // Check parent containers for ad-related classes/IDs
+  const adContainerSelectors = [
+    '.adsbygoogle, .revenue_unit_item, [class*="adsense"]',
+    '[class*="kakao_ad"], [class*="adfit"], [id*="kakao_ad"]',
+    '[class*="dable"], [class*="sponsored"], [class*="recommend"]',
+    '.affiliate, [class*="affiliate"], [data-affiliate]',
+    '[class*="promotion"], [class*="banner"], [class*="sponsor"]',
+    '[class*="related_article"], [class*="popular_article"]',
+    '[data-ad], [data-adunit], [data-ad-client]'
+  ];
+  
+  // Check if image is inside any ad container
+  for (const selector of adContainerSelectors) {
+    if ($img.closest(selector).length > 0) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+/**
+ * Checks if image is part of affiliate/promotional content
+ */
+function isAffiliateImage($: cheerio.CheerioAPI, el: cheerio.Element): boolean {
+  const $img = $(el);
+  
+  // Check if image is inside a link that looks like affiliate content
+  const $link = $img.closest('a[href]');
+  if ($link.length > 0) {
+    const href = $link.attr('href') || '';
+    
+    // Common affiliate and promotional link patterns
+    const affiliatePatterns = [
+      /affiliate|aff_|ref=|referrer/i,
+      /ad\.|\?ad=|&ad=/i,
+      /promotion|promo|event/i,
+      /redirect|track|click/i,
+      // Korean affiliate platforms
+      /coupang|gmarket|11st|auction/i,
+      /naver.*shop|smartstore/i
+    ];
+    
+    if (affiliatePatterns.some(pattern => pattern.test(href))) {
+      return true;
+    }
+  }
+  
+  // Check if image is in a container with promotional text
+  const $container = $img.closest('div, section, article');
+  if ($container.length > 0) {
+    const containerText = $container.text().toLowerCase();
+    const promoKeywords = ['광고', '후원', '제휴', '협찬', '할인', '쿠폰', '이벤트', '추천'];
+    
+    // If container is small and contains promotional keywords, likely an ad
+    if (containerText.length < 200 && promoKeywords.some(keyword => containerText.includes(keyword))) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+// HTTPS 보안 분석
+function analyzeHttpsSecurity(url: string): SEOCategory {
+  const isHttps = url.startsWith('https://')
+  
+  let score = 0
+  let status: 'good' | 'warning' | 'danger' = 'danger'
   let description = ''
   const suggestions: string[] = []
   
-  if (viewport && viewport.includes('width=device-width')) {
-    score = 85
+  if (isHttps) {
+    score = 95
     status = 'good'
-    description = '모바일 설정이 잘 되어 있어요! 정확한 측정은 어려웠지만 기본 설정은 좋습니다.'
-    suggestions.push('모바일 뷰포트가 잘 설정되어 있습니다')
-    suggestions.push('추가 모바일 최적화를 확인해보세요')
+    description = '사이트가 안전한 HTTPS로 보호되고 있어요! 고객 정보가 안전하게 전송됩니다.'
+    suggestions.push('HTTPS 보안이 적용되어 있습니다')
+    suggestions.push('SSL 인증서가 정상적으로 설치되어 있습니다')
   } else {
-    score = 50
+    score = 30
     status = 'danger'
-    description = '모바일 설정이 부족할 수 있어요. 핸드폰에서 잘 보이도록 설정을 확인해보세요.'
-    suggestions.push('모바일 뷰포트를 설정해보세요')
-    suggestions.push('반응형 디자인을 적용해보세요')
+    description = '사이트가 HTTP로 되어 있어요. 고객 정보가 안전하지 않을 수 있고, 검색 순위에도 영향을 줄 수 있어요.'
+    suggestions.push('HTTPS로 변경해보세요')
+    suggestions.push('SSL 인증서를 설치해보세요')
+    suggestions.push('호스팅 업체에 HTTPS 설정을 문의해보세요')
   }
   
   return {
-    id: 'mobile',
-    name: '모바일 친화도',
+    id: 'https',
+    name: 'HTTPS 보안',
     status,
     score,
     description,
+    suggestions
+  }
+}
+
+// 링크 구조 분석
+function analyzeLinkStructure(pageData: PageData): SEOCategory {
+  const { links } = pageData
+  const totalLinks = links.length
+  const internalLinks = links.filter(link => !link.isExternal).length
+  const externalLinks = links.filter(link => link.isExternal).length
+  
+  let score = 0
+  let status: 'good' | 'warning' | 'danger' = 'danger'
+  let description = ''
+  const suggestions: string[] = []
+  
+  if (totalLinks === 0) {
+    score = 50
+    status = 'warning'
+    description = '링크가 없어요. 관련 페이지나 유용한 사이트로 연결하면 더 좋을 거예요.'
+    suggestions.push('관련 페이지로 연결하는 링크를 추가해보세요')
+    suggestions.push('유용한 외부 사이트로 연결해보세요')
+  } else if (internalLinks >= 2 && externalLinks >= 1) {
+    score = 95
+    status = 'good'
+    description = '링크 구조가 완벽해요! 내부 페이지와 외부 사이트로 잘 연결되어 있습니다.'
+    suggestions.push('내부 링크와 외부 링크가 잘 균형을 이루고 있습니다')
+    suggestions.push('링크 텍스트가 명확한지 확인해보세요')
+  } else if (internalLinks >= 1 || externalLinks >= 1) {
+    score = 75
+    status = 'warning'
+    description = '링크가 있어서 좋아요! 내부 페이지와 외부 사이트로 더 연결하면 더 좋을 거예요.'
+    if (internalLinks === 0) {
+      suggestions.push('사이트 내 다른 페이지로 연결하는 링크를 추가해보세요')
+    }
+    if (externalLinks === 0) {
+      suggestions.push('신뢰할 수 있는 외부 사이트로 연결해보세요')
+    }
+    suggestions.push('관련성 있는 링크를 추가해보세요')
+  } else {
+    score = 60
+    status = 'warning'
+    description = '링크가 부족해요. 관련 페이지나 유용한 사이트로 연결하면 SEO에 도움이 될 거예요.'
+    suggestions.push('내부 페이지로 연결하는 링크를 추가해보세요')
+    suggestions.push('관련 있는 외부 사이트로 연결해보세요')
+  }
+  
+  return {
+    id: 'links',
+    name: '링크 구조',
+    status,
+    score,
+    description,
+    suggestions
+  }
+}
+
+// 키워드 최적화 분석
+function analyzeKeywordOptimization(pageData: PageData): SEOCategory {
+  const { title, description, wordCount, h1Tags, h2Tags } = pageData
+  
+  let score = 0
+  let status: 'good' | 'warning' | 'danger' = 'danger'
+  let desc = ''
+  const suggestions: string[] = []
+  
+  // 키워드 일관성 확인 (간단한 방법)
+  const titleWords = title.toLowerCase().split(' ').filter(w => w.length > 2)
+  const hasKeywordInTitle = titleWords.length > 0
+  const hasKeywordInDescription = description && titleWords.some(word => description.toLowerCase().includes(word))
+  const hasKeywordInH1 = h1Tags.length > 0 && titleWords.some(word => h1Tags[0].toLowerCase().includes(word))
+  
+  let keywordScore = 0
+  if (hasKeywordInTitle) keywordScore += 30
+  if (hasKeywordInDescription) keywordScore += 25
+  if (hasKeywordInH1) keywordScore += 25
+  if (wordCount > 300) keywordScore += 20 // 충분한 콘텐츠 양
+  
+  score = keywordScore
+  
+  if (score >= 80) {
+    status = 'good'
+    desc = '키워드 최적화가 잘 되어 있어요! 제목, 설명, 내용에 키워드가 자연스럽게 들어가 있습니다.'
+    suggestions.push('키워드가 자연스럽게 배치되어 있습니다')
+    suggestions.push('제목과 내용의 일관성이 좋습니다')
+  } else if (score >= 60) {
+    status = 'warning'
+    desc = '키워드 최적화가 어느 정도 되어 있어요. 조금 더 자연스럽게 키워드를 배치하면 더 좋을 거예요.'
+    if (!hasKeywordInDescription) {
+      suggestions.push('페이지 설명에 주요 키워드를 자연스럽게 포함해보세요')
+    }
+    if (!hasKeywordInH1) {
+      suggestions.push('큰 제목에 주요 키워드를 포함해보세요')
+    }
+    suggestions.push('키워드를 억지로 넣지 말고 자연스럽게 사용하세요')
+  } else {
+    status = 'danger'
+    desc = '키워드 최적화가 부족해요. 제목, 설명, 내용에 일관된 키워드를 사용하면 검색에 도움이 될 거예요.'
+    suggestions.push('페이지 제목에 주요 키워드를 포함해보세요')
+    suggestions.push('페이지 설명에도 같은 키워드를 자연스럽게 사용해보세요')
+    suggestions.push('내용에 키워드를 자연스럽게 반복해보세요')
+    suggestions.push('키워드는 자연스럽게 사용하는 것이 중요해요')
+  }
+  
+  return {
+    id: 'keywords',
+    name: '키워드 최적화',
+    status,
+    score,
+    description: desc,
     suggestions
   }
 }

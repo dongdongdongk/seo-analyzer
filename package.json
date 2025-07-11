@@ -4,7 +4,7 @@
   "description": "초보자 맞춤 AI SEO 분석 서비스",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "WATCHPACK_POLLING=true next dev",
     "build": "next build",
     "build-fast": "ESLINT_NO_DEV_ERRORS=true next build",
     "start": "next start",
@@ -23,10 +23,12 @@
   "dependencies": {
     "@types/cheerio": "^0.22.35",
     "@types/node": "^24.0.12",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "cheerio": "^1.1.0",
     "next": "^15.3.5",
+    "nodemailer": "^7.0.5",
     "openai": "^5.8.3",
     "puppeteer": "^24.12.1",
     "react": "^19.1.0",

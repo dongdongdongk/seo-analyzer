@@ -5,27 +5,37 @@ import { SEOCategory } from '@/types/analysis'
 
 // PageSpeed Insights API 결과 타입
 interface PageSpeedResult {
-  performance: {
-    score: number
-    metrics: {
-      firstContentfulPaint: number
-      largestContentfulPaint: number
-      totalBlockingTime: number
-      cumulativeLayoutShift: number
-      speedIndex: number
+  labData: {
+    performance: {
+      score: number
+      metrics: {
+        firstContentfulPaint: number
+        largestContentfulPaint: number
+        totalBlockingTime: number
+        cumulativeLayoutShift: number
+        speedIndex: number
+      }
+    }
+    accessibility: {
+      score: number
+      issues: string[]
+    }
+    bestPractices: {
+      score: number
+      issues: string[]
+    }
+    seo: {
+      score: number
+      issues: string[]
     }
   }
-  accessibility: {
-    score: number
-    issues: string[]
-  }
-  bestPractices: {
-    score: number
-    issues: string[]
-  }
-  seo: {
-    score: number
-    issues: string[]
+  fieldData?: {
+    // CrUX 실제 사용자 데이터
+    firstContentfulPaint?: { percentile: number, category: string }
+    largestContentfulPaint?: { percentile: number, category: string }
+    cumulativeLayoutShift?: { percentile: number, category: string }
+    firstInputDelay?: { percentile: number, category: string }
+    overallCategory?: string
   }
   analysisType: 'pagespeed' | 'simple'
   hasFieldData: boolean // 실제 사용자 데이터 존재 여부
@@ -86,30 +96,58 @@ export async function runPageSpeedAnalysis(url: string): Promise<PageSpeedResult
       improvements.push('렌더링을 차단하는 리소스 제거')
     }
     
+    // CrUX 데이터 파싱 (실제 사용자 데이터)
+    let fieldData: PageSpeedResult['fieldData'] = undefined
+    if (hasFieldData && loadingExperience.metrics) {
+      const metrics = loadingExperience.metrics
+      fieldData = {
+        firstContentfulPaint: metrics.FIRST_CONTENTFUL_PAINT_MS ? {
+          percentile: metrics.FIRST_CONTENTFUL_PAINT_MS.percentile,
+          category: metrics.FIRST_CONTENTFUL_PAINT_MS.category
+        } : undefined,
+        largestContentfulPaint: metrics.LARGEST_CONTENTFUL_PAINT_MS ? {
+          percentile: metrics.LARGEST_CONTENTFUL_PAINT_MS.percentile,
+          category: metrics.LARGEST_CONTENTFUL_PAINT_MS.category
+        } : undefined,
+        cumulativeLayoutShift: metrics.CUMULATIVE_LAYOUT_SHIFT_SCORE ? {
+          percentile: metrics.CUMULATIVE_LAYOUT_SHIFT_SCORE.percentile,
+          category: metrics.CUMULATIVE_LAYOUT_SHIFT_SCORE.category
+        } : undefined,
+        firstInputDelay: metrics.FIRST_INPUT_DELAY_MS ? {
+          percentile: metrics.FIRST_INPUT_DELAY_MS.percentile,
+          category: metrics.FIRST_INPUT_DELAY_MS.category
+        } : undefined,
+        overallCategory: loadingExperience.overall_category
+      }
+    }
+
     // 결과 파싱
     const result: PageSpeedResult = {
-      performance: {
-        score: Math.round((lhr.categories.performance?.score || 0) * 100),
-        metrics: {
-          firstContentfulPaint: lhr.audits['first-contentful-paint']?.numericValue || 0,
-          largestContentfulPaint: lhr.audits['largest-contentful-paint']?.numericValue || 0,
-          totalBlockingTime: lhr.audits['total-blocking-time']?.numericValue || 0,
-          cumulativeLayoutShift: lhr.audits['cumulative-layout-shift']?.numericValue || 0,
-          speedIndex: lhr.audits['speed-index']?.numericValue || 0,
+      labData: {
+        performance: {
+          score: Math.round((lhr.categories.performance?.score || 0) * 100),
+          metrics: {
+            firstContentfulPaint: lhr.audits['first-contentful-paint']?.numericValue || 0,
+            largestContentfulPaint: lhr.audits['largest-contentful-paint']?.numericValue || 0,
+            totalBlockingTime: lhr.audits['total-blocking-time']?.numericValue || 0,
+            cumulativeLayoutShift: lhr.audits['cumulative-layout-shift']?.numericValue || 0,
+            speedIndex: lhr.audits['speed-index']?.numericValue || 0,
+          }
+        },
+        accessibility: {
+          score: Math.round((lhr.categories.accessibility?.score || 0) * 100),
+          issues: []
+        },
+        bestPractices: {
+          score: Math.round((lhr.categories['best-practices']?.score || 0) * 100),
+          issues: []
+        },
+        seo: {
+          score: Math.round((lhr.categories.seo?.score || 0) * 100),
+          issues: []
         }
       },
-      accessibility: {
-        score: Math.round((lhr.categories.accessibility?.score || 0) * 100),
-        issues: []
-      },
-      bestPractices: {
-        score: Math.round((lhr.categories['best-practices']?.score || 0) * 100),
-        issues: []
-      },
-      seo: {
-        score: Math.round((lhr.categories.seo?.score || 0) * 100),
-        issues: []
-      },
+      fieldData,
       analysisType: 'pagespeed',
       hasFieldData: hasFieldData || false,
       improvements
@@ -145,28 +183,31 @@ async function runSimplePerformanceAnalysis(url: string): Promise<PageSpeedResul
     console.log(`⚡ 응답 시간: ${responseTime}ms, 성능 점수: ${performanceScore}점`)
     
     return {
-      performance: {
-        score: performanceScore,
-        metrics: {
-          firstContentfulPaint: responseTime,
-          largestContentfulPaint: responseTime * 1.5,
-          totalBlockingTime: 0,
-          cumulativeLayoutShift: 0.1,
-          speedIndex: responseTime * 1.2
+      labData: {
+        performance: {
+          score: performanceScore,
+          metrics: {
+            firstContentfulPaint: responseTime,
+            largestContentfulPaint: responseTime * 1.5,
+            totalBlockingTime: 0,
+            cumulativeLayoutShift: 0.1,
+            speedIndex: responseTime * 1.2
+          }
+        },
+        accessibility: {
+          score: 85, // 기본값
+          issues: []
+        },
+        bestPractices: {
+          score: 80, // 기본값
+          issues: []
+        },
+        seo: {
+          score: 90, // 기본값
+          issues: []
         }
       },
-      accessibility: {
-        score: 85, // 기본값
-        issues: []
-      },
-      bestPractices: {
-        score: 80, // 기본값
-        issues: []
-      },
-      seo: {
-        score: 90, // 기본값
-        issues: []
-      },
+      fieldData: undefined, // 간단한 분석에서는 CrUX 데이터 없음
       analysisType: 'simple',
       hasFieldData: false,
       improvements: [
@@ -180,28 +221,31 @@ async function runSimplePerformanceAnalysis(url: string): Promise<PageSpeedResul
     
     // 에러 시 기본값 반환
     return {
-      performance: {
-        score: 70,
-        metrics: {
-          firstContentfulPaint: 2000,
-          largestContentfulPaint: 3000,
-          totalBlockingTime: 100,
-          cumulativeLayoutShift: 0.1,
-          speedIndex: 2500
+      labData: {
+        performance: {
+          score: 70,
+          metrics: {
+            firstContentfulPaint: 2000,
+            largestContentfulPaint: 3000,
+            totalBlockingTime: 100,
+            cumulativeLayoutShift: 0.1,
+            speedIndex: 2500
+          }
+        },
+        accessibility: {
+          score: 85,
+          issues: []
+        },
+        bestPractices: {
+          score: 80,
+          issues: []
+        },
+        seo: {
+          score: 90,
+          issues: []
         }
       },
-      accessibility: {
-        score: 85,
-        issues: []
-      },
-      bestPractices: {
-        score: 80,
-        issues: []
-      },
-      seo: {
-        score: 90,
-        issues: []
-      },
+      fieldData: undefined,
       analysisType: 'simple',
       hasFieldData: false,
       improvements: [
@@ -221,21 +265,71 @@ function calculatePerformanceScore(responseTime: number): number {
   return 50
 }
 
+// Lab Data와 Field Data를 구분해서 표시하는 헬퍼 함수
+function formatMetrics(result: PageSpeedResult): { labData: string, fieldData: string } {
+  const labMetrics = result.labData.performance.metrics
+  const fcp = Math.round(labMetrics.firstContentfulPaint)
+  const lcp = Math.round(labMetrics.largestContentfulPaint)
+  const cls = labMetrics.cumulativeLayoutShift.toFixed(3)
+  const tbt = Math.round(labMetrics.totalBlockingTime)
+  
+  let labData = `Lab Data (테스트 환경): FCP ${fcp}ms, LCP ${lcp}ms, CLS ${cls}, TBT ${tbt}ms`
+  
+  let fieldData = ''
+  if (result.fieldData && result.hasFieldData) {
+    const fd = result.fieldData
+    const fcpField = fd.firstContentfulPaint ? `${fd.firstContentfulPaint.percentile}ms (${getCategoryText(fd.firstContentfulPaint.category)})` : 'N/A'
+    const lcpField = fd.largestContentfulPaint ? `${fd.largestContentfulPaint.percentile}ms (${getCategoryText(fd.largestContentfulPaint.category)})` : 'N/A'
+    fieldData = `Field Data (실제 사용자): FCP ${fcpField}, LCP ${lcpField}`
+  } else {
+    fieldData = 'Field Data: 실제 사용자 데이터가 충분하지 않습니다 (사이트 방문자가 적음)'
+  }
+  
+  return { labData, fieldData }
+}
+
+function getCategoryText(category: string): string {
+  switch (category) {
+    case 'FAST': return '빠름'
+    case 'AVERAGE': return '보통'
+    case 'SLOW': return '느림'
+    default: return category
+  }
+}
+
 // PageSpeed 결과를 SEO 카테고리로 변환
 export function convertPageSpeedToSEOCategory(
   result: PageSpeedResult, 
   type: 'performance' | 'mobile'
 ): SEOCategory {
   if (type === 'performance') {
-    const score = result.performance.score
-    const status = score >= 80 ? 'good' : score >= 60 ? 'warning' : 'danger'
-    const fcp = Math.round(result.performance.metrics.firstContentfulPaint)
-    const lcp = Math.round(result.performance.metrics.largestContentfulPaint)
-    const cls = result.performance.metrics.cumulativeLayoutShift.toFixed(3)
-    const tbt = Math.round(result.performance.metrics.totalBlockingTime)
+    let score = result.labData.performance.score
+    let status: 'good' | 'warning' | 'danger' = score >= 80 ? 'good' : score >= 60 ? 'warning' : 'danger'
+    let primaryDataSource = 'Lab Data'
+    
+    // Field Data가 있고 빠른 경우 우선 사용
+    if (result.hasFieldData && result.fieldData?.overallCategory) {
+      console.log('🏆 Field Data 우선 사용:', result.fieldData.overallCategory)
+      
+      if (result.fieldData.overallCategory === 'FAST') {
+        score = 95
+        status = 'good'
+        primaryDataSource = 'Field Data (실제 사용자)'
+      } else if (result.fieldData.overallCategory === 'AVERAGE') {
+        score = 75
+        status = 'warning'
+        primaryDataSource = 'Field Data (실제 사용자)'
+      } else if (result.fieldData.overallCategory === 'SLOW') {
+        score = 50
+        status = 'danger'
+        primaryDataSource = 'Field Data (실제 사용자)'
+      }
+    }
+    
+    const { labData, fieldData } = formatMetrics(result)
     
     // PageSpeed 데이터 여부 확인
-    const isPageSpeedData = fcp < 10000 && lcp < 20000 // 실제 PageSpeed 데이터인지 확인
+    const isPageSpeedData = result.analysisType === 'pagespeed'
     
     return {
       id: 'speed',
@@ -243,26 +337,21 @@ export function convertPageSpeedToSEOCategory(
       status,
       score,
       description: score >= 80 
-        ? `사이트가 빨라요! 고객들이 기다리지 않고 바로 볼 수 있어요. ${isPageSpeedData ? `(FCP: ${fcp}ms, LCP: ${lcp}ms)` : `(응답시간: ${fcp}ms)`}`
+        ? `사이트가 빨라요! 고객들이 기다리지 않고 바로 볼 수 있어요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`
         : score >= 60 
-        ? `속도가 보통이에요. 조금 더 빠르게 만들면 고객들이 더 좋아할 거예요. ${isPageSpeedData ? `(FCP: ${fcp}ms, LCP: ${lcp}ms)` : `(응답시간: ${fcp}ms)`}`
-        : `사이트가 느려요. 고객들이 기다리다가 떠날 수 있어요. ${isPageSpeedData ? `(FCP: ${fcp}ms, LCP: ${lcp}ms)` : `(응답시간: ${fcp}ms)`}`,
-      suggestions: score >= 80 
-        ? [
-            '현재 속도가 좋아요! 이 상태를 유지하세요',
-            isPageSpeedData ? `CLS: ${cls} (좋음)` : '정기적으로 속도를 확인해보세요',
-            isPageSpeedData ? `TBT: ${tbt}ms` : ''
-          ].filter(Boolean)
-        : [
-            '이미지 크기를 줄여보세요',
-            '사용하지 않는 플러그인을 제거해보세요',
-            '캐시 설정을 확인해보세요',
-            isPageSpeedData ? `CLS 개선 필요: ${cls}` : '호스팅 서비스 성능을 확인해보세요'
-          ]
+        ? `속도가 보통이에요. 조금 더 빠르게 만들면 고객들이 더 좋아할 거예요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`
+        : `사이트가 느려요. 고객들이 기다리다가 떠날 수 있어요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`,
+      suggestions: [
+        result.hasFieldData ? `🎯 ${primaryDataSource} 기준 점수 사용` : '',
+        ...result.improvements,
+        isPageSpeedData ? `📊 ${labData}` : '',
+        isPageSpeedData ? `👥 ${fieldData}` : '',
+        result.hasFieldData ? '✅ 실제 사용자 데이터 기반 분석 (신뢰도 높음)' : '⚠️ 참고용 - 실제 사용자 데이터 부족'
+      ].filter(Boolean)
     }
   } else {
     // 모바일 친화도
-    const accessibilityScore = result.accessibility.score
+    const accessibilityScore = result.labData.accessibility.score
     const status = accessibilityScore >= 80 ? 'good' : accessibilityScore >= 60 ? 'warning' : 'danger'
     
     return {

@@ -134,30 +134,67 @@ export async function generatePersonalizedAdvice(
       .map(cat => cat.name)
       .join(', ')
 
-    const prompt = `
-당신은 초보자도 이해할 수 있는 SEO 전문가입니다. 다음 웹사이트의 분석 결과를 바탕으로 맞춤형 조언을 해주세요.
+    // 페이지 구체적 정보 추출
+    const pageTitle = pageData.title || '제목 없음'
+    const pageDescription = pageData.description || '설명 없음'
+    const headings = [...(pageData.h1Tags || []), ...(pageData.h2Tags || [])].slice(0, 5)
+    const imageCount = pageData.images?.length || 0
+    const linkCount = pageData.links?.length || 0
+    const wordCount = pageData.wordCount || 0
+    const hasOpenGraph = pageData.ogTags?.title || pageData.ogTags?.description
+    const mainContent = pageData.content?.substring(0, 300) || '내용을 확인할 수 없습니다'
+    
+    // 실제 페이지 요소들을 분석해서 구체적인 문제점 파악
+    const specificIssues = []
+    if (!pageTitle || pageTitle.length < 30) {
+      specificIssues.push(`현재 페이지 제목이 "${pageTitle}"인데, 너무 짧아서 고객이 찾기 어려워요`)
+    }
+    if (!pageDescription || pageDescription.length < 120) {
+      specificIssues.push(`페이지 설명이 "${pageDescription}"인데, 더 자세히 써야 클릭률이 올라가요`)
+    }
+    if (imageCount > 0 && pageData.images?.filter((img: any) => !img.alt).length > 0) {
+      specificIssues.push(`${imageCount}개의 이미지 중 일부에 설명이 없어서 검색에 노출되지 않아요`)
+    }
+    if (headings.length === 0) {
+      specificIssues.push('페이지에 소제목(H1, H2)이 없어서 내용 구조가 불분명해요')
+    }
+    
+    const specificIssuesText = specificIssues.length > 0 ? specificIssues.join('\n') : '페이지 구조가 전반적으로 잘 되어있어요'
 
-## 웹사이트 정보
+    const prompt = `
+당신은 초보자도 이해할 수 있는 SEO 전문가입니다. 다음 웹사이트를 실제로 분석한 결과를 바탕으로 맞춤형 조언을 해주세요.
+
+## 실제 분석한 웹사이트 정보
 - URL: ${analysisResult.url}
 - 사이트 유형: ${siteType}
 - 업종: ${businessType}
 - 전체 점수: ${analysisResult.overallScore}점
+- 페이지 제목: "${pageTitle}"
+- 페이지 설명: "${pageDescription}"
+- 주요 내용: "${mainContent}"
+- 소제목들: ${headings.length > 0 ? headings.join(', ') : '없음'}
+- 이미지 개수: ${imageCount}개
+- 링크 개수: ${linkCount}개
+- 글자 수: ${wordCount}자
+- 소셜 미디어 최적화: ${hasOpenGraph ? '설정됨' : '설정되지 않음'}
 
-## 문제점
-${problemAreas || '특별한 문제점이 발견되지 않았습니다.'}
+## 실제 발견된 구체적인 문제점
+${specificIssuesText}
 
-## 잘하고 있는 부분
-${goodAreas || '없음'}
+## 기존 분석 결과
+문제점: ${problemAreas || '특별한 문제점이 발견되지 않았습니다.'}
+잘하고 있는 부분: ${goodAreas || '없음'}
 
 ## 요청사항
-다음 4가지를 초보자도 이해할 수 있는 쉬운 말로 작성해주세요:
+위의 실제 페이지 내용을 바탕으로 다음 4가지를 구체적이고 맞춤형으로 작성해주세요:
 
-1. **전체적인 조언 (2-3문장)**: 현재 상태를 요약하고 격려 메시지
-2. **우선순위 개선 작업 (3-5개)**: 가장 중요한 것부터 순서대로
-3. **업종별 특화 팁 (2-3개)**: ${businessType} 업종에 특화된 SEO 팁
-4. **예상 결과 (1-2문장)**: 개선 후 기대할 수 있는 효과
+1. **전체적인 조언 (2-3문장)**: 실제 페이지 내용을 언급하며 현재 상태를 요약하고 격려 메시지
+2. **우선순위 개선 작업 (3-5개)**: 실제 페이지 요소들을 구체적으로 언급하며 개선 방법 제시
+3. **업종별 특화 팁 (2-3개)**: ${businessType} 업종과 현재 페이지 내용을 고려한 특화된 SEO 팁
+4. **예상 결과 (1-2문장)**: 개선 후 기대할 수 있는 구체적인 효과
 
 ## 작성 규칙
+- 반드시 실제 페이지 내용(제목, 설명, 소제목 등)을 구체적으로 언급하기
 - 전문용어 금지 (SEO, 메타태그 등 → 쉬운 말로 설명)
 - 구체적이고 실행 가능한 방법 제시
 - 긍정적이고 격려하는 톤
@@ -174,7 +211,7 @@ JSON 형식으로 응답해주세요:
 `
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
@@ -222,20 +259,25 @@ function generateFallbackAdvice(
   industrySpecificTips: string[]
   expectedResults: string
 } {
-  const siteType = detectSiteType(pageData)
   const businessType = detectBusinessType(pageData)
   const score = analysisResult.overallScore
   
+  // 실제 페이지 정보를 활용한 구체적인 조언 생성
+  const pageTitle = pageData.title || '제목 없음'
+  const pageDescription = pageData.description || '설명 없음'
+  const imageCount = pageData.images?.length || 0
+  const wordCount = pageData.wordCount || 0
+  
   let overallAdvice = ""
   if (score >= 80) {
-    overallAdvice = "웹사이트가 매우 잘 관리되고 있어요! 현재 상태를 유지하면서 조금씩 개선해나가면 완벽할 거예요."
+    overallAdvice = `"${pageTitle}" 페이지가 매우 잘 관리되고 있어요! ${businessType} 사이트로서 현재 상태를 유지하면서 조금씩 개선해나가면 완벽할 거예요.`
   } else if (score >= 60) {
-    overallAdvice = "웹사이트가 괜찮은 상태예요! 몇 가지만 개선하면 훨씬 더 많은 고객이 찾아올 수 있어요."
+    overallAdvice = `"${pageTitle}" 페이지가 괜찮은 상태예요! 몇 가지만 개선하면 ${businessType} 고객들이 훨씬 더 많이 찾아올 수 있어요.`
   } else {
-    overallAdvice = "개선할 부분이 있지만 걱정하지 마세요! 하나씩 차근차근 개선해나가면 분명 좋아질 거예요."
+    overallAdvice = `"${pageTitle}" 페이지에 개선할 부분이 있지만 걱정하지 마세요! ${businessType} 사이트로서 하나씩 차근차근 개선해나가면 분명 좋아질 거예요.`
   }
   
-  // 문제 영역 기반 우선순위 생성
+  // 문제 영역 기반 우선순위 생성 (실제 페이지 내용을 반영)
   const problemCategories = analysisResult.categories
     .filter(cat => cat.status === 'danger' || cat.status === 'warning')
     .sort((a, b) => a.score - b.score) // 점수가 낮은 것부터
@@ -243,15 +285,15 @@ function generateFallbackAdvice(
   const priorityActions = problemCategories.slice(0, 4).map(cat => {
     switch (cat.id) {
       case 'title':
-        return '페이지 제목을 더 매력적이고 구체적으로 만들어보세요'
+        return `현재 제목 "${pageTitle}"을 더 매력적이고 구체적으로 만들어보세요 (${businessType}에 맞는 키워드 포함)`
       case 'description':
-        return '페이지 설명을 고객이 클릭하고 싶게 자세히 작성해보세요'
+        return `페이지 설명을 "${pageDescription.substring(0, 50)}..."에서 ${businessType} 고객이 클릭하고 싶게 자세히 작성해보세요`
       case 'images':
-        return '이미지마다 간단한 설명을 추가해보세요'
+        return `${imageCount}개의 이미지마다 간단한 설명을 추가해보세요 (${businessType}에 맞는 설명으로)`
       case 'speed':
-        return '이미지 크기를 줄이고 불필요한 플러그인을 제거해보세요'
+        return `${imageCount}개의 이미지 크기를 줄이고 불필요한 플러그인을 제거해보세요`
       case 'mobile':
-        return '모바일에서 보기 편하도록 버튼과 글자 크기를 조정해보세요'
+        return `모바일에서 "${pageTitle}" 페이지를 보기 편하도록 버튼과 글자 크기를 조정해보세요`
       default:
         return cat.suggestions[0] || '해당 영역을 개선해보세요'
     }
@@ -261,27 +303,27 @@ function generateFallbackAdvice(
     priorityActions.push('현재 상태가 좋으니 꾸준히 콘텐츠를 업데이트해보세요')
   }
   
-  // 업종별 팁
+  // 업종별 팁 (실제 페이지 내용을 반영)
   const industryTips: { [key: string]: string[] } = {
     '음식점': [
-      '메뉴 사진을 고화질로 올리고 가격 정보를 명확히 표시하세요',
-      '영업시간과 위치 정보를 홈페이지 상단에 눈에 잘 보이게 배치하세요'
+      `"${pageTitle}"에서 메뉴 사진을 고화질로 올리고 가격 정보를 명확히 표시하세요`,
+      `현재 ${wordCount}자의 내용에 영업시간과 위치 정보를 추가해서 고객이 쉽게 찾을 수 있게 하세요`
     ],
     '카페': [
-      '분위기가 느껴지는 매장 사진과 시그니처 메뉴를 강조하세요',
-      '인스타그램 연동으로 최신 사진들을 보여주세요'
+      `"${pageTitle}" 페이지에 분위기가 느껴지는 매장 사진과 시그니처 메뉴를 강조하세요`,
+      `현재 ${imageCount}개의 이미지 외에 인스타그램 연동으로 최신 사진들을 보여주세요`
     ],
     '미용실': [
-      '전후 변화 사진과 스타일별 가격표를 명확히 보여주세요',
-      '예약 버튼을 크고 눈에 띄게 만들어 쉽게 예약할 수 있게 하세요'
+      `"${pageTitle}" 페이지에 전후 변화 사진과 스타일별 가격표를 명확히 보여주세요`,
+      `현재 내용에 예약 버튼을 크고 눈에 띄게 만들어 쉽게 예약할 수 있게 하세요`
     ],
     '쇼핑몰': [
-      '상품 사진을 여러 각도에서 보여주고 상세 설명을 충분히 작성하세요',
-      '고객 후기와 평점을 잘 보이는 곳에 배치하세요'
+      `현재 ${imageCount}개의 상품 사진을 여러 각도에서 보여주고 상세 설명을 충분히 작성하세요`,
+      `"${pageTitle}" 페이지에 고객 후기와 평점을 잘 보이는 곳에 배치하세요`
     ],
     '기타': [
-      '고객이 자주 묻는 질문들을 정리해서 홈페이지에 올려보세요',
-      '연락처와 위치 정보를 쉽게 찾을 수 있게 만드세요'
+      `"${pageTitle}" 관련해서 고객이 자주 묻는 질문들을 정리해서 홈페이지에 올려보세요`,
+      `현재 ${wordCount}자의 내용에 연락처와 위치 정보를 쉽게 찾을 수 있게 만드세요`
     ]
   }
   
@@ -291,7 +333,7 @@ function generateFallbackAdvice(
     overallAdvice,
     priorityActions,
     industrySpecificTips: tips,
-    expectedResults: "이런 개선사항들을 하나씩 적용하면 검색에서 더 잘 보이고 고객들이 더 많이 찾아올 거예요!"
+    expectedResults: `"${pageTitle}" 페이지의 이런 개선사항들을 하나씩 적용하면 ${businessType} 고객들이 검색에서 더 잘 찾을 수 있고, 더 많은 방문자가 실제 고객으로 전환될 거예요!`
   }
 }
 
@@ -309,14 +351,19 @@ export async function generateKeywordSuggestions(
     const prompt = `
 "${businessType}" 업종의 웹사이트를 위한 SEO 키워드를 5개 추천해주세요.
 
-현재 페이지 정보:
-- 제목: ${pageData.title}
-- 내용 일부: ${pageData.content?.substring(0, 200)}
+현재 페이지 상세 정보:
+- 제목: "${pageData.title}"
+- 설명: "${pageData.description || '없음'}"
+- 주요 내용: "${pageData.content?.substring(0, 300) || '내용 없음'}"
+- 소제목들: ${pageData.h1Tags?.concat(pageData.h2Tags || []).slice(0, 3).join(', ') || '없음'}
+- 이미지 수: ${pageData.images?.length || 0}개
+- 글자 수: ${pageData.wordCount || 0}자
 
 요구사항:
-- 고객이 실제로 검색할 만한 키워드
+- 위 페이지 내용을 바탕으로 고객이 실제로 검색할 만한 키워드
 - 경쟁이 너무 심하지 않은 키워드
 - 지역명이 들어간 키워드도 포함 (가능한 경우)
+- 실제 페이지 제목과 내용에 맞는 키워드
 - 초보자도 이해할 수 있는 설명과 함께
 
 JSON 배열 형태로 응답: ["키워드1", "키워드2", ...]
@@ -355,6 +402,9 @@ JSON 배열 형태로 응답: ["키워드1", "키워드2", ...]
 
 // 기본 키워드 제안 (OpenAI 미사용시)
 function generateFallbackKeywords(businessType: string, pageData: any): string[] {
+  const pageTitle = pageData.title || ''
+  const titleWords = pageTitle.split(' ').filter((word: string) => word.length > 1)
+  
   const defaultKeywords: { [key: string]: string[] } = {
     '음식점': ['맛집', '음식점', '메뉴', '예약', '리뷰'],
     '카페': ['카페', '커피', '디저트', '분위기', '와이파이'],
@@ -366,5 +416,12 @@ function generateFallbackKeywords(businessType: string, pageData: any): string[]
     '기타': ['서비스', '문의', '예약', '정보', '리뷰']
   }
   
-  return defaultKeywords[businessType] || defaultKeywords['기타']
+  let keywords = defaultKeywords[businessType] || defaultKeywords['기타']
+  
+  // 페이지 제목에서 의미있는 단어들을 추가
+  if (titleWords.length > 0) {
+    keywords = [...keywords.slice(0, 3), ...titleWords.slice(0, 2)]
+  }
+  
+  return keywords.slice(0, 5)
 }

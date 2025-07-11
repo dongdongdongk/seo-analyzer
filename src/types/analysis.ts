@@ -34,6 +34,24 @@ export interface AnalysisResult {
       wordCount: number
       imageCount: number
       linkCount: number
+      internalLinkCount?: number
+      externalLinkCount?: number
+    }
+    semanticMarkup: {
+      hasHeader: boolean
+      hasNav: boolean
+      hasMain: boolean
+      hasFooter: boolean
+      hasSection: boolean
+      hasArticle: boolean
+      hasAside: boolean
+      hasH1: boolean
+      headingStructure: boolean
+      ariaAttributes: number
+      roleAttributes: number
+      semanticScore: number
+      issues: string[]
+      suggestions: string[]
     }
     estimated: {
       loadTime: number

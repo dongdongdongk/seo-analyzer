@@ -78,79 +78,77 @@ export default function FeedbackModal({ isOpen, onClose, analysisUrl, onSubmit }
     setRating(selectedRating)
   }
 
+  if (!isOpen) return null
+
   return (
-    <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-      onClick={onClose}
-    >
-      <div 
-        className="bg-white rounded-lg p-xl mx-md max-w-md w-full max-h-screen overflow-y-auto"
-        style={{ backgroundColor: 'var(--color-bg-primary)', maxHeight: '90vh' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex justify-between items-center mb-lg">
-          <h2 className="font-xl font-weight-bold">📝 서비스 평가</h2>
+    <div className="feedback-inline">
+      {/* 헤더 섹션 */}
+      <div className="feedback-inline__header">
+        <div className="feedback-inline__header-content">
+          <div className="feedback-inline__header-info">
+            <h2 className="feedback-inline__title">🌟 서비스 평가</h2>
+            <p className="feedback-inline__subtitle">소중한 의견을 들려주세요!</p>
+          </div>
           <button 
             onClick={onClose}
-            className="font-xxl text-secondary"
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+            className="feedback-inline__close"
+            type="button"
           >
             ×
           </button>
         </div>
+      </div>
+
+      {/* 본문 섹션 */}
+      <div className="feedback-inline__content">
         
         <form onSubmit={handleSubmit}>
           {/* 별점 평가 */}
-          <div className="mb-lg">
-            <label className="block font-md font-weight-bold mb-sm">
-              전체적으로 몇 점을 주시겠어요? ⭐
+          <div className="feedback-section feedback-section--rating">
+            <label className="feedback-section__label">
+              ⭐ 전체적으로 몇 점을 주시겠어요?
             </label>
-            <div className="flex gap-xs">
+            <div className="rating-stars">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
                   key={star}
                   type="button"
                   onClick={() => handleRatingClick(star)}
-                  className="font-xxl"
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    cursor: 'pointer',
-                    color: star <= rating ? '#FFD700' : '#DDD'
-                  }}
+                  className={`rating-star ${star <= rating ? 'rating-star--active' : ''}`}
                 >
                   ⭐
                 </button>
               ))}
             </div>
-            <p className="font-sm text-secondary mt-xs">
-              {rating === 0 && '별점을 선택해주세요'}
-              {rating === 1 && '😞 많이 아쉬워요'}
-              {rating === 2 && '😐 아쉬워요'}
-              {rating === 3 && '😊 괜찮아요'}
-              {rating === 4 && '😄 좋아요'}
-              {rating === 5 && '🤩 최고예요!'}
-            </p>
+            <div className={`rating-feedback ${rating > 0 ? 'rating-feedback--active' : ''}`}>
+              <p>
+                {rating === 0 && '별점을 선택해주세요'}
+                {rating === 1 && '😞 많이 아쉬워요'}
+                {rating === 2 && '😐 아쉬워요'}
+                {rating === 3 && '😊 괜찮아요'}
+                {rating === 4 && '😄 좋아요'}
+                {rating === 5 && '🤩 최고예요!'}
+              </p>
+            </div>
           </div>
 
           {/* 도움 여부 */}
-          <div className="mb-lg">
-            <label className="block font-md font-weight-bold mb-sm">
-              분석 결과가 도움이 되었나요? 🤔
+          <div className="feedback-section feedback-section--helpful">
+            <label className="feedback-section__label">
+              🤔 분석 결과가 도움이 되었나요?
             </label>
-            <div className="flex gap-md">
+            <div className="helpful-buttons">
               <button
                 type="button"
                 onClick={() => setHelpful(true)}
-                className={`btn ${helpful === true ? 'btn-primary' : 'btn-secondary'}`}
+                className={`helpful-btn ${helpful === true ? 'helpful-btn--active helpful-btn--positive' : ''}`}
               >
                 😊 네, 도움되었어요
               </button>
               <button
                 type="button"
                 onClick={() => setHelpful(false)}
-                className={`btn ${helpful === false ? 'btn-primary' : 'btn-secondary'}`}
+                className={`helpful-btn ${helpful === false ? 'helpful-btn--active helpful-btn--negative' : ''}`}
               >
                 😔 아니요, 별로였어요
               </button>
@@ -158,68 +156,74 @@ export default function FeedbackModal({ isOpen, onClose, analysisUrl, onSubmit }
           </div>
 
           {/* 추가 의견 */}
-          <div className="mb-lg">
-            <label htmlFor="comment" className="block font-md font-weight-bold mb-sm">
-              추가로 하고 싶은 말이 있다면? 💬 (선택사항)
+          <div className="feedback-section feedback-section--comment">
+            <label htmlFor="comment" className="feedback-section__label">
+              💬 추가로 하고 싶은 말이 있다면? <span className="feedback-section__optional">(선택사항)</span>
             </label>
             <textarea
               id="comment"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="예: 결과가 정확했어요! / 설명이 이해하기 쉬웠어요 / 더 빨랐으면 좋겠어요"
-              className="input"
-              rows={3}
-              style={{ resize: 'vertical', minHeight: '80px' }}
+              className="feedback-textarea"
+              rows={4}
             />
           </div>
 
           {/* 개선 제안 */}
-          <div className="mb-lg">
-            <label className="block font-md font-weight-bold mb-sm">
-              이런 기능이 있으면 좋겠어요! 💡 (복수 선택 가능)
+          <div className="feedback-section feedback-section--suggestions">
+            <label className="feedback-section__label">
+              💡 이런 기능이 있으면 좋겠어요! <span className="feedback-section__optional">(복수 선택 가능)</span>
             </label>
-            <div className="flex flex-col gap-xs">
+            <div className="suggestions-list">
               {suggestionOptions.map((suggestion, index) => (
-                <label key={index} className="flex items-center gap-sm cursor-pointer">
+                <label 
+                  key={index} 
+                  className={`suggestion-item ${suggestions.includes(suggestion) ? 'suggestion-item--active' : ''}`}
+                >
                   <input
                     type="checkbox"
                     checked={suggestions.includes(suggestion)}
                     onChange={() => handleSuggestionToggle(suggestion)}
-                    className="cursor-pointer"
+                    className="suggestion-checkbox"
                   />
-                  <span className="font-sm">{suggestion}</span>
+                  <span className="suggestion-text">
+                    {suggestion}
+                  </span>
                 </label>
               ))}
             </div>
           </div>
 
           {/* 제출 버튼 */}
-          <div className="flex gap-md">
+          <div className="feedback-buttons">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-secondary flex-1"
               disabled={isSubmitting}
+              className={`feedback-btn feedback-btn--cancel ${isSubmitting ? 'feedback-btn--disabled' : ''}`}
             >
               취소
             </button>
             <button
               type="submit"
-              className="btn btn-primary flex-1"
               disabled={isSubmitting}
+              className={`feedback-btn feedback-btn--submit ${isSubmitting ? 'feedback-btn--loading' : ''}`}
             >
               {isSubmitting ? (
                 <>
-                  <span className="loading"></span>
+                  <div className="loading-spinner" />
                   전송 중...
                 </>
               ) : (
-                '📤 의견 보내기'
+                <>
+                  📤 의견 보내기
+                </>
               )}
             </button>
           </div>
         </form>
-      </div>
+        </div>
     </div>
   )
 }

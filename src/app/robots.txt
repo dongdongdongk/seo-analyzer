@@ -1,0 +1,38 @@
+User-agent: *
+Allow: /
+
+# SEO 가이드 페이지 허용
+Allow: /seo-guide
+Allow: /about
+Allow: /faq
+
+# API 엔드포인트 크롤링 제한
+Disallow: /api/
+
+# 시스템 파일 크롤링 제한
+Disallow: /_next/
+Disallow: /favicon.ico
+Disallow: /robots.txt
+
+# 사이트맵 위치 지정
+Sitemap: https://seo-analyzer.com/sitemap.xml
+
+# 크롤링 빈도 제한 (1초 대기)
+Crawl-delay: 1
+
+# 검색엔진별 최적화
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: NaverBot
+Allow: /
+Crawl-delay: 1
+
+User-agent: DaumBot
+Allow: /
+Crawl-delay: 1

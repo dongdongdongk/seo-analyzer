@@ -11,10 +11,8 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const exampleUrls = [
-    'https://example.com',
-    'https://blog.example.com',
-    'https://shop.example.com',
-    'https://company.example.com'
+    'https://jsonformatter.roono.net/en',
+    'https://base64tool.roono.net/en',
   ]
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -41,20 +39,23 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
   }
 
   return (
-    <section className="analysis-form">
-      <h1 className="analysis-form__title">
-        🔍 내 웹사이트 SEO 점수는?
-      </h1>
-      <p className="analysis-form__subtitle">
-        웹사이트 주소만 입력하면 3분 만에 SEO 상태를 쉽게 확인할 수 있어요!<br />
-        전문 용어 없이 누구나 이해할 수 있게 설명해드릴게요.
-      </p>
+    <main className="analysis-form" role="main">
+      <header className="analysis-form__header">
+        <h1 className="analysis-form__title">
+          <img src="/icon.png" alt="SEO 분석 아이콘" className="title-icon" />
+          내 웹사이트 검색엔진 최적화 점수는?
+        </h1>
+        <p className="analysis-form__subtitle">
+          웹사이트 주소만 입력하면 3분 만에 SEO 상태를 쉽게 확인할 수 있어요!<br />
+          전문 용어 없이 누구나 이해할 수 있게 설명해드릴게요.
+        </p>
+      </header>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} role="form" aria-label="SEO 분석 요청 폼">
         <div className="analysis-form__input-group">
           <div className="analysis-form__input">
             <label htmlFor="website-url">
-              웹사이트 주소 입력
+              
             </label>
             <input
               id="website-url"
@@ -86,26 +87,27 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
         </div>
       </form>
 
-      <div className="analysis-form__examples">
-        <p className="analysis-form__examples-title">
+      <section className="analysis-form__examples" aria-labelledby="examples-title">
+        <h2 id="examples-title" className="analysis-form__examples-title">
           💡 예시 주소로 체험해보기:
-        </p>
-        <div className="analysis-form__examples-list">
+        </h2>
+        <div className="analysis-form__examples-list" role="group" aria-label="예시 웹사이트 목록">
           {exampleUrls.map((exampleUrl, index) => (
             <button
               key={index}
               type="button"
               onClick={() => handleExampleClick(exampleUrl)}
               disabled={isLoading}
+              aria-label={`예시 웹사이트 ${exampleUrl} 선택`}
             >
               {exampleUrl}
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="card mt-xl">
-        <h2 className="font-lg mb-md">🎯 이런 것들을 확인해드려요</h2>
+      <section className="card mt-xl" aria-labelledby="features-title">
+        <h2 id="features-title" className="font-lg mb-md">🎯 이런 것들을 확인해드려요</h2>
         <div style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
@@ -128,7 +130,33 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
             <p className="font-sm text-secondary">사진들이 검색에 잘 나타나는지 체크해요</p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      {/* 추가 정보 섹션 */}
+      <section className="card mt-xl" aria-labelledby="more-info-title">
+        <h2 id="more-info-title" className="font-lg mb-md">📚 더 알아보기</h2>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
+          gap: 'var(--spacing-md)' 
+        }}>
+          <div className="p-md" style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+            <h3 className="font-md mb-sm">📖 SEO 기초 가이드</h3>
+            <p className="font-sm text-secondary mb-md">SEO가 처음이신가요? 기초부터 차근차근 배워보세요!</p>
+            <a href="/seo-guide" className="btn btn-outline">가이드 보기</a>
+          </div>
+          <div className="p-md" style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+            <h3 className="font-md mb-sm">❓ 자주 묻는 질문</h3>
+            <p className="font-sm text-secondary mb-md">궁금한 점이 있으시다면 FAQ를 확인해보세요!</p>
+            <a href="/faq" className="btn btn-outline">FAQ 보기</a>
+          </div>
+          <div className="p-md" style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+            <h3 className="font-md mb-sm">🎯 서비스 소개</h3>
+            <p className="font-sm text-secondary mb-md">이 서비스가 어떻게 만들어졌는지 알아보세요!</p>
+            <a href="/about" className="btn btn-outline">소개 보기</a>
+          </div>
+        </div>
+      </section>
+    </main>
   )
 }
