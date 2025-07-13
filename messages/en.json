@@ -1334,6 +1334,33 @@
           "goodInRobots": "Good that sitemap location is specified in robots.txt.",
           "addToRobots": "Consider adding sitemap location to robots.txt."
         }
+      },
+      "mobile": {
+        "name": "Mobile Optimization",
+        "description": "Usability and accessibility on mobile devices",
+        "missingViewport": "Mobile viewport setting is missing.",
+        "poorMobileExperience": "Mobile user experience is lacking.",
+        "suggestions": {
+          "optimizationGood": "Mobile optimization is well implemented",
+          "maintainState": "Maintain the current state",
+          "makeButtonsEasy": "Make buttons and links easy to tap with fingers",
+          "adjustTextSize": "Adjust text size to be easily readable on mobile",
+          "adjustScreenSize": "Set screen to adjust to mobile screen size",
+          "setViewport": "Set mobile viewport",
+          "applyResponsive": "Apply responsive design"
+        }
+      },
+      "speed": {
+        "name": "Site Speed",
+        "description": "Website loading speed and performance",
+        "slow": "Site loading speed is slow.",
+        "needsOptimization": "Performance optimization is needed.",
+        "suggestions": {
+          "optimizeImages": "Reduce image sizes",
+          "removeUnusedPlugins": "Remove unused plugins",
+          "configureCache": "Check cache settings",
+          "checkHosting": "Check hosting service performance"
+        }
       }
     },
     "siteTypes": {

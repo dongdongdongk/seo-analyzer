@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Header from '@/components/Header'
 import StructuredData from '@/components/StructuredData'
+import { AnalysisProvider } from '@/contexts/AnalysisContext'
 import { locales } from '@/i18n/config'
 
 type Props = {
@@ -101,11 +102,13 @@ export default async function LocaleLayout({
       </head>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <Header />
-          
-          <main role="main">
-            {children}
-          </main>
+          <AnalysisProvider>
+            <Header />
+            
+            <main role="main">
+              {children}
+            </main>
+          </AnalysisProvider>
           
           <footer className="footer" role="contentinfo">
             <div className="container">

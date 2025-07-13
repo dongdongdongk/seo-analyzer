@@ -1334,6 +1334,33 @@
           "goodInRobots": "robots.txt에 사이트맵 위치가 명시되어 있어 좋습니다.",
           "addToRobots": "robots.txt에 사이트맵 위치를 추가하는 것을 고려해보세요."
         }
+      },
+      "mobile": {
+        "name": "모바일 최적화",
+        "description": "모바일 기기에서의 사용성과 접근성",
+        "missingViewport": "모바일 뷰포트 설정이 없습니다.",
+        "poorMobileExperience": "모바일 사용자 경험이 부족합니다.",
+        "suggestions": {
+          "optimizationGood": "모바일 최적화가 잘 되어 있어요",
+          "maintainState": "현재 상태를 유지하세요",
+          "makeButtonsEasy": "버튼과 링크를 손가락으로 누르기 쉽게 만들어보세요",
+          "adjustTextSize": "글자 크기를 핸드폰에서 읽기 쉽게 조정해보세요",
+          "adjustScreenSize": "화면이 핸드폰 크기에 맞게 조정되도록 설정해보세요",
+          "setViewport": "모바일 뷰포트를 설정해보세요",
+          "applyResponsive": "반응형 디자인을 적용해보세요"
+        }
+      },
+      "speed": {
+        "name": "사이트 속도",
+        "description": "웹사이트 로딩 속도 및 성능",
+        "slow": "사이트 로딩 속도가 느립니다.",
+        "needsOptimization": "성능 최적화가 필요합니다.",
+        "suggestions": {
+          "optimizeImages": "이미지 크기를 줄여보세요",
+          "removeUnusedPlugins": "사용하지 않는 플러그인을 제거해보세요",
+          "configureCache": "캐시 설정을 확인해보세요",
+          "checkHosting": "호스팅 서비스 성능을 확인해보세요"
+        }
       }
     },
     "siteTypes": {

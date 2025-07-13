@@ -6,9 +6,11 @@ import Image from 'next/image'
 import { usePathname, useRouter, useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { localeNames, localeFlags } from '@/i18n/config'
+import { useAnalysis } from '@/contexts/AnalysisContext'
 import type { Locale } from '@/i18n/config'
 
 export default function Header() {
+  const { isAnalyzing, hasAnalysisResult } = useAnalysis()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
   const pathname = usePathname()
@@ -22,8 +24,11 @@ export default function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
-  // 언어 메뉴 토글
+  // 언어 메뉴 토글 (분석 중이거나 결과가 있을 때 비활성화)
   const toggleLanguageMenu = () => {
+    if (isAnalyzing || hasAnalysisResult) {
+      return // 분석 중이거나 결과가 있을 때는 언어 변경 불가
+    }
     setIsLanguageMenuOpen(!isLanguageMenuOpen)
   }
 
@@ -41,8 +46,11 @@ export default function Header() {
     setIsMobileMenuOpen(false)
   }
 
-  // 언어 변경 함수
+  // 언어 변경 함수 (분석 중이거나 결과가 있을 때 비활성화)
   const changeLanguage = (newLocale: Locale) => {
+    if (isAnalyzing || hasAnalysisResult) {
+      return // 분석 중이거나 결과가 있을 때는 언어 변경 불가
+    }
     const currentPath = pathname.replace(`/${locale}`, '')
     router.push(`/${newLocale}${currentPath}`)
     setIsLanguageMenuOpen(false)
@@ -135,9 +143,16 @@ export default function Header() {
           <div className="header__language-dropdown">
             <button 
               onClick={toggleLanguageMenu}
-              className="header__language-btn"
+              className={`header__language-btn ${(isAnalyzing || hasAnalysisResult) ? 'header__language-btn--disabled' : ''}`}
               aria-label="Language selection"
               aria-expanded={isLanguageMenuOpen}
+              disabled={isAnalyzing || hasAnalysisResult}
+              title={isAnalyzing ? 
+                (locale === 'ko' ? '분석 중에는 언어를 변경할 수 없습니다' : 'Cannot change language during analysis') :
+                hasAnalysisResult ? 
+                (locale === 'ko' ? '결과 확인 중에는 언어를 변경할 수 없습니다' : 'Cannot change language while viewing results') :
+                undefined
+              }
             >
               <span className="language-flag">
                 {localeFlags[locale]}
@@ -149,7 +164,7 @@ export default function Header() {
                 {isLanguageMenuOpen ? '▲' : '▼'}
               </span>
             </button>
-            {isLanguageMenuOpen && (
+            {isLanguageMenuOpen && !isAnalyzing && !hasAnalysisResult && (
               <div className="header__language-menu">
                 <button 
                   onClick={() => changeLanguage('ko')}
@@ -220,10 +235,19 @@ export default function Header() {
             {/* 모바일 언어 변경 */}
             <button 
               onClick={() => {
-                changeLanguage(locale === 'ko' ? 'en' : 'ko')
-                setIsMobileMenuOpen(false)
+                if (!isAnalyzing && !hasAnalysisResult) {
+                  changeLanguage(locale === 'ko' ? 'en' : 'ko')
+                  setIsMobileMenuOpen(false)
+                }
               }}
-              className="header__mobile-nav-link header__mobile-language-btn"
+              className={`header__mobile-nav-link header__mobile-language-btn ${(isAnalyzing || hasAnalysisResult) ? 'header__mobile-language-btn--disabled' : ''}`}
+              disabled={isAnalyzing || hasAnalysisResult}
+              title={isAnalyzing ? 
+                (locale === 'ko' ? '분석 중에는 언어를 변경할 수 없습니다' : 'Cannot change language during analysis') :
+                hasAnalysisResult ? 
+                (locale === 'ko' ? '결과 확인 중에는 언어를 변경할 수 없습니다' : 'Cannot change language while viewing results') :
+                undefined
+              }
             >
               {locale === 'ko' ? 'English' : '한국어'}
             </button>

@@ -266,42 +266,70 @@ function calculatePerformanceScore(responseTime: number): number {
 }
 
 // Lab Data와 Field Data를 구분해서 표시하는 헬퍼 함수
-function formatMetrics(result: PageSpeedResult): { labData: string, fieldData: string } {
+function formatMetrics(result: PageSpeedResult, locale: string = 'ko'): { labData: string, fieldData: string } {
   const labMetrics = result.labData.performance.metrics
   const fcp = Math.round(labMetrics.firstContentfulPaint)
   const lcp = Math.round(labMetrics.largestContentfulPaint)
   const cls = labMetrics.cumulativeLayoutShift.toFixed(3)
   const tbt = Math.round(labMetrics.totalBlockingTime)
   
-  let labData = `Lab Data (테스트 환경): FCP ${fcp}ms, LCP ${lcp}ms, CLS ${cls}, TBT ${tbt}ms`
+  let labData, fieldData;
   
-  let fieldData = ''
-  if (result.fieldData && result.hasFieldData) {
-    const fd = result.fieldData
-    const fcpField = fd.firstContentfulPaint ? `${fd.firstContentfulPaint.percentile}ms (${getCategoryText(fd.firstContentfulPaint.category)})` : 'N/A'
-    const lcpField = fd.largestContentfulPaint ? `${fd.largestContentfulPaint.percentile}ms (${getCategoryText(fd.largestContentfulPaint.category)})` : 'N/A'
-    fieldData = `Field Data (실제 사용자): FCP ${fcpField}, LCP ${lcpField}`
+  if (locale === 'ko') {
+    labData = `Lab Data (테스트 환경): FCP ${fcp}ms, LCP ${lcp}ms, CLS ${cls}, TBT ${tbt}ms`
+    console.log(`🧪 Korean Lab Data: ${labData}`);
+    
+    if (result.fieldData && result.hasFieldData) {
+      const fd = result.fieldData
+      const fcpField = fd.firstContentfulPaint ? `${fd.firstContentfulPaint.percentile}ms (${getCategoryText(fd.firstContentfulPaint.category, locale)})` : 'N/A'
+      const lcpField = fd.largestContentfulPaint ? `${fd.largestContentfulPaint.percentile}ms (${getCategoryText(fd.largestContentfulPaint.category, locale)})` : 'N/A'
+      fieldData = `Field Data (실제 사용자): FCP ${fcpField}, LCP ${lcpField}`
+    } else {
+      fieldData = 'Field Data: 실제 사용자 데이터가 충분하지 않습니다 (사이트 방문자가 적음)'
+    }
+    console.log(`👥 Korean Field Data: ${fieldData}`);
   } else {
-    fieldData = 'Field Data: 실제 사용자 데이터가 충분하지 않습니다 (사이트 방문자가 적음)'
+    labData = `Lab Data (Test Environment): FCP ${fcp}ms, LCP ${lcp}ms, CLS ${cls}, TBT ${tbt}ms`
+    
+    if (result.fieldData && result.hasFieldData) {
+      const fd = result.fieldData
+      const fcpField = fd.firstContentfulPaint ? `${fd.firstContentfulPaint.percentile}ms (${getCategoryText(fd.firstContentfulPaint.category, locale)})` : 'N/A'
+      const lcpField = fd.largestContentfulPaint ? `${fd.largestContentfulPaint.percentile}ms (${getCategoryText(fd.largestContentfulPaint.category, locale)})` : 'N/A'
+      fieldData = `Field Data (Real Users): FCP ${fcpField}, LCP ${lcpField}`
+    } else {
+      fieldData = 'Field Data: Insufficient real user data (low site traffic)'
+    }
+    console.log(`👥 English Field Data: ${fieldData}`);
   }
   
   return { labData, fieldData }
 }
 
-function getCategoryText(category: string): string {
-  switch (category) {
-    case 'FAST': return '빠름'
-    case 'AVERAGE': return '보통'
-    case 'SLOW': return '느림'
-    default: return category
+function getCategoryText(category: string, locale: string = 'ko'): string {
+  if (locale === 'ko') {
+    switch (category) {
+      case 'FAST': return '빠름'
+      case 'AVERAGE': return '보통'
+      case 'SLOW': return '느림'
+      default: return category
+    }
+  } else {
+    switch (category) {
+      case 'FAST': return 'Fast'
+      case 'AVERAGE': return 'Average'
+      case 'SLOW': return 'Slow'
+      default: return category
+    }
   }
 }
 
 // PageSpeed 결과를 SEO 카테고리로 변환
 export function convertPageSpeedToSEOCategory(
   result: PageSpeedResult, 
-  type: 'performance' | 'mobile'
+  type: 'performance' | 'mobile',
+  locale: string = 'ko'
 ): SEOCategory {
+  console.log(`🌍 PageSpeed analyzer received locale: ${locale}`);
   if (type === 'performance') {
     let score = result.labData.performance.score
     let status: 'good' | 'warning' | 'danger' = score >= 80 ? 'good' : score >= 60 ? 'warning' : 'danger'
@@ -314,40 +342,54 @@ export function convertPageSpeedToSEOCategory(
       if (result.fieldData.overallCategory === 'FAST') {
         score = 95
         status = 'good'
-        primaryDataSource = 'Field Data (실제 사용자)'
+        primaryDataSource = locale === 'ko' ? 'Field Data (실제 사용자)' : 'Field Data (Real Users)'
       } else if (result.fieldData.overallCategory === 'AVERAGE') {
         score = 75
         status = 'warning'
-        primaryDataSource = 'Field Data (실제 사용자)'
+        primaryDataSource = locale === 'ko' ? 'Field Data (실제 사용자)' : 'Field Data (Real Users)'
       } else if (result.fieldData.overallCategory === 'SLOW') {
         score = 50
         status = 'danger'
-        primaryDataSource = 'Field Data (실제 사용자)'
+        primaryDataSource = locale === 'ko' ? 'Field Data (실제 사용자)' : 'Field Data (Real Users)'
       }
     }
     
-    const { labData, fieldData } = formatMetrics(result)
+    const { labData, fieldData } = formatMetrics(result, locale)
     
     // PageSpeed 데이터 여부 확인
     const isPageSpeedData = result.analysisType === 'pagespeed'
     
     return {
       id: 'speed',
-      name: isPageSpeedData ? '사이트 속도 (PageSpeed 측정)' : '사이트 속도 (간단 측정)',
+      name: locale === 'ko' ? 
+        (isPageSpeedData ? '사이트 속도 (PageSpeed 측정)' : '사이트 속도 (간단 측정)') :
+        (isPageSpeedData ? 'Site Speed (PageSpeed Analysis)' : 'Site Speed (Simple Analysis)'),
       status,
       score,
-      description: score >= 80 
-        ? `사이트가 빨라요! 고객들이 기다리지 않고 바로 볼 수 있어요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`
-        : score >= 60 
-        ? `속도가 보통이에요. 조금 더 빠르게 만들면 고객들이 더 좋아할 거예요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`
-        : `사이트가 느려요. 고객들이 기다리다가 떠날 수 있어요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`,
-      suggestions: [
-        result.hasFieldData ? `🎯 ${primaryDataSource} 기준 점수 사용` : '',
-        ...result.improvements,
-        isPageSpeedData ? `📊 ${labData}` : '',
-        isPageSpeedData ? `👥 ${fieldData}` : '',
-        result.hasFieldData ? '✅ 실제 사용자 데이터 기반 분석 (신뢰도 높음)' : '⚠️ 참고용 - 실제 사용자 데이터 부족'
-      ].filter(Boolean)
+      description: locale === 'ko' ? 
+        (score >= 80 
+          ? `사이트가 빨라요! 고객들이 기다리지 않고 바로 볼 수 있어요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`
+          : score >= 60 
+          ? `속도가 보통이에요. 조금 더 빠르게 만들면 고객들이 더 좋아할 거예요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`
+          : `사이트가 느려요. 고객들이 기다리다가 떠날 수 있어요. ${result.hasFieldData ? '(실제 사용자 기준)' : ''}`) :
+        (score >= 80 
+          ? `Site is fast! Visitors can view it immediately without waiting. ${result.hasFieldData ? '(Based on real user data)' : ''}`
+          : score >= 60 
+          ? `Site speed is average. Making it faster would improve visitor satisfaction. ${result.hasFieldData ? '(Based on real user data)' : ''}`
+          : `Site is slow. Visitors may leave due to waiting. ${result.hasFieldData ? '(Based on real user data)' : ''}`),
+      suggestions: (() => {
+        const suggestions = [
+          result.hasFieldData ? (locale === 'ko' ? `🎯 ${primaryDataSource} 기준 점수 사용` : `🎯 Use ${primaryDataSource} based scoring`) : '',
+          ...result.improvements,
+          isPageSpeedData ? `📊 ${labData}` : '',
+          isPageSpeedData ? `👥 ${fieldData}` : '',
+          result.hasFieldData ? 
+            (locale === 'ko' ? '✅ 실제 사용자 데이터 기반 분석 (신뢰도 높음)' : '✅ Real user data based analysis (high reliability)') : 
+            (locale === 'ko' ? '⚠️ 참고용 - 실제 사용자 데이터 부족' : '⚠️ Reference only - Insufficient real user data')
+        ].filter(Boolean);
+        console.log(`💡 Generated suggestions for locale ${locale}:`, suggestions);
+        return suggestions;
+      })()
     }
   } else {
     // 모바일 친화도
@@ -356,66 +398,109 @@ export function convertPageSpeedToSEOCategory(
     
     return {
       id: 'mobile',
-      name: '모바일 친화도',
+      name: locale === 'ko' ? '모바일 친화도' : 'Mobile Friendliness',
       status,
       score: accessibilityScore,
-      description: accessibilityScore >= 80 
-        ? '모바일에서 보기 편해요! 핸드폰 사용자들이 쉽게 이용할 수 있어요.'
-        : accessibilityScore >= 60 
-        ? '모바일에서 봐도 괜찮아요. 조금 더 개선하면 더 좋을 거예요.'
-        : '모바일에서 보기 어려울 수 있어요. 핸드폰 사용자를 위해 개선이 필요해요.',
+      description: locale === 'ko' ? 
+        (accessibilityScore >= 80 
+          ? '모바일에서 보기 편해요! 핸드폰 사용자들이 쉽게 이용할 수 있어요.'
+          : accessibilityScore >= 60 
+          ? '모바일에서 봐도 괜찮아요. 조금 더 개선하면 더 좋을 거예요.'
+          : '모바일에서 보기 어려울 수 있어요. 핸드폰 사용자를 위해 개선이 필요해요.') :
+        (accessibilityScore >= 80 
+          ? 'Easy to view on mobile! Mobile users can use it easily.'
+          : accessibilityScore >= 60 
+          ? 'Acceptable on mobile. Further improvement would be better.'
+          : 'May be difficult to view on mobile. Improvement needed for mobile users.'),
       suggestions: accessibilityScore >= 80 
         ? [
-            '모바일 최적화가 잘 되어 있어요',
-            '현재 상태를 유지하세요'
+            'seoAnalyzer.categories.mobile.suggestions.optimizationGood',
+            'seoAnalyzer.categories.mobile.suggestions.maintainState'
           ]
         : [
-            '버튼과 링크를 손가락으로 누르기 쉽게 만들어보세요',
-            '글자 크기를 핸드폰에서 읽기 쉽게 조정해보세요',
-            '화면이 핸드폰 크기에 맞게 조정되도록 설정해보세요'
+            'seoAnalyzer.categories.mobile.suggestions.makeButtonsEasy',
+            'seoAnalyzer.categories.mobile.suggestions.adjustTextSize',
+            'seoAnalyzer.categories.mobile.suggestions.adjustScreenSize'
           ]
     }
   }
 }
 
 // PageSpeed 분석 실패 시 대체 카테고리 생성
-export function createFallbackSpeedAnalysis(): SEOCategory {
-  return {
-    id: 'speed',
-    name: '사이트 속도',
-    status: 'warning',
-    score: 70,
-    description: '사이트 속도를 정확히 측정할 수 없었어요. 일반적인 개선 방법을 알려드릴게요.',
-    suggestions: [
-      '이미지 크기를 줄여보세요',
-      '사용하지 않는 플러그인을 제거해보세요',
-      '캐시 설정을 확인해보세요',
-      '호스팅 서비스 성능을 확인해보세요'
-    ]
+export function createFallbackSpeedAnalysis(locale: string = 'ko'): SEOCategory {
+  if (locale === 'ko') {
+    return {
+      id: 'speed',
+      name: '사이트 속도',
+      status: 'warning',
+      score: 70,
+      description: '사이트 속도를 정확히 측정할 수 없었어요. 일반적인 개선 방법을 알려드릴게요.',
+      suggestions: [
+        'seoAnalyzer.categories.speed.suggestions.optimizeImages',
+        'seoAnalyzer.categories.speed.suggestions.removeUnusedPlugins',
+        'seoAnalyzer.categories.speed.suggestions.configureCache',
+        'seoAnalyzer.categories.speed.suggestions.checkHosting'
+      ]
+    }
+  } else {
+    return {
+      id: 'speed',
+      name: 'Site Speed',
+      status: 'warning',
+      score: 70,
+      description: 'Could not accurately measure site speed. Here are general improvement methods.',
+      suggestions: [
+        'seoAnalyzer.categories.speed.suggestions.optimizeImages',
+        'seoAnalyzer.categories.speed.suggestions.removeUnusedPlugins',
+        'seoAnalyzer.categories.speed.suggestions.configureCache',
+        'seoAnalyzer.categories.speed.suggestions.checkHosting'
+      ]
+    }
   }
 }
 
-export function createFallbackMobileAnalysis(pageData: any): SEOCategory {
+export function createFallbackMobileAnalysis(pageData: any, locale: string = 'ko'): SEOCategory {
   const hasViewport = pageData.viewport && pageData.viewport.length > 0
   const score = hasViewport ? 70 : 50
   const status = hasViewport ? 'warning' : 'danger'
   
-  return {
-    id: 'mobile',
-    name: '모바일 친화도',
-    status,
-    score,
-    description: hasViewport 
-      ? '모바일 설정이 있어요. 조금 더 최적화하면 더 좋을 거예요.'
-      : '모바일 설정이 부족할 수 있어요. 핸드폰에서 잘 보이도록 설정을 확인해보세요.',
-    suggestions: hasViewport 
-      ? [
-          '버튼과 링크를 손가락으로 누르기 쉽게 만들어보세요',
-          '글자 크기를 핸드폰에서 읽기 쉽게 조정해보세요'
-        ]
-      : [
-          '모바일 뷰포트를 설정해보세요',
-          '반응형 디자인을 적용해보세요'
-        ]
+  if (locale === 'ko') {
+    return {
+      id: 'mobile',
+      name: '모바일 친화도',
+      status,
+      score,
+      description: hasViewport 
+        ? '모바일 설정이 있어요. 조금 더 최적화하면 더 좋을 거예요.'
+        : '모바일 설정이 부족할 수 있어요. 핸드폰에서 잘 보이도록 설정을 확인해보세요.',
+      suggestions: hasViewport 
+        ? [
+            'seoAnalyzer.categories.mobile.suggestions.makeButtonsEasy',
+            'seoAnalyzer.categories.mobile.suggestions.adjustTextSize'
+          ]
+        : [
+            'seoAnalyzer.categories.mobile.suggestions.setViewport',
+            'seoAnalyzer.categories.mobile.suggestions.applyResponsive'
+          ]
+    }
+  } else {
+    return {
+      id: 'mobile',
+      name: 'Mobile Friendliness',
+      status,
+      score,
+      description: hasViewport 
+        ? 'Mobile settings exist. Further optimization would be better.'
+        : 'Mobile settings may be insufficient. Check settings for better mobile display.',
+      suggestions: hasViewport 
+        ? [
+            'seoAnalyzer.categories.mobile.suggestions.makeButtonsEasy',
+            'seoAnalyzer.categories.mobile.suggestions.adjustTextSize'
+          ]
+        : [
+            'seoAnalyzer.categories.mobile.suggestions.setViewport',
+            'seoAnalyzer.categories.mobile.suggestions.applyResponsive'
+          ]
+    }
   }
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 
 interface SeoDetailModalProps {
   isOpen: boolean
@@ -71,11 +71,19 @@ interface SeoDetailModalProps {
   }
 }
 
+let renderCount = 0;
+
 export default function SeoDetailModal({ isOpen, onClose, category, currentValue, siteInfo }: SeoDetailModalProps) {
+  renderCount++;
+  const locale = useLocale()
   const t = useTranslations('seoModal')
   const tCommon = useTranslations('common')
   const tSeoAnalyzer = useTranslations('seoAnalyzer')
   const tAnalysis = useTranslations('analysis')
+  
+  // 현재 로케일과 번역 상태 확인
+  console.log(`🔄 Modal render #${renderCount} - Locale: ${locale}, isOpen: ${isOpen}`)
+  console.log('🌍 URL:', typeof window !== 'undefined' ? window.location.pathname : 'server-side')
   
   // 하드코딩된 한국어 텍스트를 영어로 번역하는 함수
   const translateKoreanHardcodedText = (text: string): string => {
@@ -87,6 +95,8 @@ export default function SeoDetailModal({ isOpen, onClose, category, currentValue
       '사용하지 않는 CSS 제거': 'Remove unused CSS',
       '렌더링을 차단하는 리소스 제거': 'Remove render-blocking resources',
       '✅ 실제 사용자 데이터 기반 분석 (신뢰도 높음)': '✅ Real user data based analysis (high reliability)',
+      '📊 Lab Data (테스트 환경): PageSpeed 시뮬레이션 데이터': '📊 Lab Data (Test Environment): PageSpeed simulation data',
+      '👥 Field Data (실제 사용자): 실제 사용자 데이터가 충분하지 않습니다': '👥 Field Data (Real Users): Insufficient real user data',
       
       // Mobile related
       '모바일 최적화가 잘 되어 있어요': 'Mobile optimization is well implemented',
@@ -407,11 +417,19 @@ export default function SeoDetailModal({ isOpen, onClose, category, currentValue
               {category.name.includes('PageSpeed') && (
                 <div className="mt-sm">
                   <p className="font-xs text-secondary mb-xs">📊 {t('speed.measurementData')}</p>
-                  {category.suggestions.filter(s => s.includes('Lab Data') || s.includes('Field Data')).map((suggestion, index) => (
-                    <div key={index} className="font-xs text-secondary mb-xs" style={{ fontFamily: 'monospace', backgroundColor: '#f8f9fa', padding: 'var(--spacing-xs)', borderRadius: 'var(--radius-sm)' }}>
-                      {suggestion.replace('📊 ', '').replace('👥 ', '')}
-                    </div>
-                  ))}
+                  {category.suggestions.filter(s => s.includes('Lab Data') || s.includes('Field Data')).map((suggestion, index) => {
+                    console.log(`📊 PageSpeed data: ${suggestion}`);
+                    const cleanText = suggestion.replace('📊 ', '').replace('👥 ', '');
+                    console.log(`📊 Clean text: ${cleanText}`);
+                    // 한국어 로케일일 때는 번역하지 않고 그대로 사용
+                    const processedText = locale === 'ko' ? cleanText : translateKoreanHardcodedText(cleanText);
+                    console.log(`📊 Final text: ${processedText}`);
+                    return (
+                      <div key={index} className="font-xs text-secondary mb-xs" style={{ fontFamily: 'monospace', backgroundColor: '#f8f9fa', padding: 'var(--spacing-xs)', borderRadius: 'var(--radius-sm)' }}>
+                        {processedText}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -1097,7 +1115,7 @@ export default function SeoDetailModal({ isOpen, onClose, category, currentValue
               {category.suggestions.filter((suggestion, index, arr) => 
                 arr.indexOf(suggestion) === index // 중복 제거
               ).map((suggestion, index) => {
-                // console.log(`🔧 Processing suggestion ${index + 1}:`, suggestion)
+                console.log(`🔧 Processing suggestion ${index + 1}:`, suggestion)
                 
                 // 번역 키인지 확인하고 번역 처리
                 let translatedSuggestion;
@@ -1105,7 +1123,9 @@ export default function SeoDetailModal({ isOpen, onClose, category, currentValue
                   const key = suggestion.replace('seoAnalyzer.', '');
                   try {
                     translatedSuggestion = tSeoAnalyzer(key);
+                    console.log(`✅ Translation key: ${key} -> ${translatedSuggestion}`);
                   } catch (error) {
+                    console.log(`❌ Translation key not found: ${key}`, error);
                     translatedSuggestion = suggestion;
                   }
                 } else if (suggestion.includes('메인 콘텐츠 영역')) {
@@ -1127,26 +1147,32 @@ export default function SeoDetailModal({ isOpen, onClose, category, currentValue
                     translatedSuggestion = suggestion;
                   }
                 } else {
-                  // 포괄적인 한국어 텍스트 번역 처리 (특별한 케이스들 포함)
-                  if (suggestion.includes('모바일 최적화가 잘 되어 있어요')) {
-                    translatedSuggestion = "Mobile optimization is well implemented";
-                  } else if (suggestion.includes('현재 상태를 유지하세요')) {
-                    translatedSuggestion = "Maintain the current state";
-                  } else if (suggestion.includes('Lab Data') && suggestion.includes('테스트 환경')) {
-                    translatedSuggestion = suggestion.replace('테스트 환경', 'Test Environment');
-                  } else if (suggestion.includes('Field Data') && suggestion.includes('실제 사용자 데이터가 충분하지 않습니다')) {
-                    translatedSuggestion = "👥 Field Data: Insufficient real user data (low site traffic)";
-                  } else if (suggestion.includes('참고용 - 실제 사용자 데이터 부족')) {
-                    translatedSuggestion = "⚠️ Reference only - Insufficient real user data";
-                  } else if (suggestion.includes('사용하지 않는 JavaScript 제거')) {
-                    translatedSuggestion = "Remove unused JavaScript";
-                  } else if (suggestion.includes('서버 응답 시간 개선')) {
-                    translatedSuggestion = "Improve server response time";
+                  console.log(`🌐 Processing hardcoded text for locale ${locale}: ${suggestion}`);
+                  // 한국어 로케일일 때는 번역하지 않고 그대로 사용
+                  if (locale === 'ko') {
+                    translatedSuggestion = suggestion;
+                    console.log(`🇰🇷 Korean locale - keeping original: ${translatedSuggestion}`);
                   } else {
-                    // 일반적인 한국어 텍스트 번역 처리
-                    translatedSuggestion = translateKoreanHardcodedText(suggestion);
-                    
-                    // Translate Korean hardcoded text silently
+                    // 영어 로케일일 때만 번역 적용
+                    if (suggestion.includes('모바일 최적화가 잘 되어 있어요')) {
+                      translatedSuggestion = "Mobile optimization is well implemented";
+                    } else if (suggestion.includes('현재 상태를 유지하세요')) {
+                      translatedSuggestion = "Maintain the current state";
+                    } else if (suggestion.includes('Lab Data') && suggestion.includes('테스트 환경')) {
+                      translatedSuggestion = suggestion.replace('테스트 환경', 'Test Environment');
+                    } else if (suggestion.includes('Field Data') && suggestion.includes('실제 사용자 데이터가 충분하지 않습니다')) {
+                      translatedSuggestion = "👥 Field Data: Insufficient real user data (low site traffic)";
+                    } else if (suggestion.includes('참고용 - 실제 사용자 데이터 부족')) {
+                      translatedSuggestion = "⚠️ Reference only - Insufficient real user data";
+                    } else if (suggestion.includes('사용하지 않는 JavaScript 제거')) {
+                      translatedSuggestion = "Remove unused JavaScript";
+                    } else if (suggestion.includes('서버 응답 시간 개선')) {
+                      translatedSuggestion = "Improve server response time";
+                    } else {
+                      // 일반적인 한국어 텍스트 번역 처리
+                      translatedSuggestion = translateKoreanHardcodedText(suggestion);
+                    }
+                    console.log(`🇺🇸 English locale - translated: ${suggestion} -> ${translatedSuggestion}`);
                   }
                 }
                 

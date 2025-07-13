@@ -62,6 +62,28 @@
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
+
+  // 비활성화 상태
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      &::before {
+        left: -100%;
+      }
+
+      .dropdown-arrow {
+        transform: none;
+      }
+    }
+  }
 }
 
 .language-flag {
@@ -188,6 +210,19 @@
   &:hover {
     background: var(--color-bg-secondary);
     color: var(--color-primary-dark) !important;
+  }
+
+  // 모바일 언어 버튼 비활성화 상태
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    color: var(--color-text-secondary) !important;
+
+    &:hover {
+      background: none;
+      color: var(--color-text-secondary) !important;
+    }
   }
 }
 

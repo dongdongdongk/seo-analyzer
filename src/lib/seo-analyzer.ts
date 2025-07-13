@@ -624,8 +624,8 @@ export async function analyzeSEO(url: string, locale: string = 'ko'): Promise<An
     try {
       const pageSpeedResult = await runPageSpeedAnalysis(url)
       performanceCategories = [
-        convertPageSpeedToSEOCategory(pageSpeedResult, 'performance'),
-        convertPageSpeedToSEOCategory(pageSpeedResult, 'mobile')
+        convertPageSpeedToSEOCategory(pageSpeedResult, 'performance', locale),
+        convertPageSpeedToSEOCategory(pageSpeedResult, 'mobile', locale)
       ]
       hasFieldData = pageSpeedResult.hasFieldData
       performanceImprovements = pageSpeedResult.improvements
@@ -633,8 +633,8 @@ export async function analyzeSEO(url: string, locale: string = 'ko'): Promise<An
       console.error('PageSpeed 분석 실패:', pageSpeedError)
       // PageSpeed 실패 시 기본 성능 분석으로 대체
       performanceCategories = [
-        createFallbackSpeedAnalysis(),
-        createFallbackMobileAnalysis(pageData)
+        createFallbackSpeedAnalysis(locale),
+        createFallbackMobileAnalysis(pageData, locale)
       ]
       hasFieldData = false
       performanceImprovements = ['기본적인 이미지 최적화', '캐시 설정 확인', '호스팅 성능 점검']
