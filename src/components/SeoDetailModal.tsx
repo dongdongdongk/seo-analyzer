@@ -836,11 +836,26 @@ export default function SeoDetailModal({ isOpen, onClose, category, currentValue
               <div className="p-md" style={{ backgroundColor: '#F0FDF4', borderRadius: 'var(--radius-md)' }}>
                 <h4 className="font-md mb-sm" style={{ color: '#166534' }}>💡 {tCommon('suggestions')}</h4>
                 <ul style={{ paddingLeft: 'var(--spacing-md)', color: '#166534' }}>
-                  {semanticData.suggestions.slice(0, 5).map((suggestion: string, index: number) => (
-                    <li key={index} className="mb-xs font-sm">
-                      {suggestion}
-                    </li>
-                  ))}
+                  {semanticData.suggestions.slice(0, 5).map((suggestion: string, index: number) => {
+                    // 번역 키를 실제 번역된 텍스트로 변환 (다른 suggestions와 동일한 방식 사용)
+                    let translatedSuggestion;
+                    if (suggestion.startsWith('seoAnalyzer.')) {
+                      const key = suggestion.replace('seoAnalyzer.', '');
+                      try {
+                        translatedSuggestion = tSeoAnalyzer(key);
+                      } catch (error) {
+                        translatedSuggestion = suggestion;
+                      }
+                    } else {
+                      translatedSuggestion = suggestion;
+                    }
+                    
+                    return (
+                      <li key={index} className="mb-xs font-sm">
+                        {translatedSuggestion}
+                      </li>
+                    )
+                  })}
                 </ul>
               </div>
             )}
