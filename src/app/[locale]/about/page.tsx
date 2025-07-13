@@ -1,9 +1,13 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 export default function AboutPage() {
   const t = useTranslations('about')
+  const params = useParams()
+  const locale = params.locale
   return (
     <div className="page-wrapper">
       <div className="container">
@@ -278,20 +282,20 @@ export default function AboutPage() {
               {t('cta.description')}
             </p>
             <div className="action-buttons">
-              <a 
-                href="/" 
+              <Link 
+                href={`/${locale}`}
                 className="btn btn-primary"
               >
                 <span className="icon">🔍</span>
                 {t('cta.startAnalysis')}
-              </a>
-              <a 
-                href="/seo-guide" 
+              </Link>
+              <Link 
+                href={`/${locale}/seo-guide`}
                 className="btn btn-outline"
               >
                 <span className="icon">📚</span>
                 {t('cta.viewGuide')}
-              </a>
+              </Link>
             </div>
           </div>
         </div>

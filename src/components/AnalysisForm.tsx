@@ -2,6 +2,9 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useParams } from 'next/navigation'
 
 interface AnalysisFormProps {
   onAnalysisStart: (url: string) => void
@@ -11,6 +14,8 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
   const [url, setUrl] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const t = useTranslations('home')
+  const params = useParams()
+  const locale = params.locale
 
   const exampleUrls = [
     'https://jsonformatter.roono.net/en',
@@ -44,7 +49,7 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
     <main className="analysis-form" role="main">
       <header className="analysis-form__header">
         <h1 className="analysis-form__title">
-          <img src="/icon.png" alt="SEO 분석 아이콘" className="title-icon" />
+          <Image src="/icon.png" alt="SEO 분석 아이콘" className="title-icon" width={48} height={48} priority />
           {t('title')}
         </h1>
         <p className="analysis-form__subtitle" dangerouslySetInnerHTML={{
@@ -144,17 +149,17 @@ export default function AnalysisForm({ onAnalysisStart }: AnalysisFormProps) {
           <div className="p-md" style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
             <h3 className="font-md mb-sm">{t('moreInfo.guide.title')}</h3>
             <p className="font-sm text-secondary mb-md">{t('moreInfo.guide.description')}</p>
-            <a href="/seo-guide" className="btn btn-outline">{t('moreInfo.guide.button')}</a>
+            <Link href={`/${locale}/seo-guide`} className="btn btn-outline">{t('moreInfo.guide.button')}</Link>
           </div>
           <div className="p-md" style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
             <h3 className="font-md mb-sm">{t('moreInfo.faq.title')}</h3>
             <p className="font-sm text-secondary mb-md">{t('moreInfo.faq.description')}</p>
-            <a href="/faq" className="btn btn-outline">{t('moreInfo.faq.button')}</a>
+            <Link href={`/${locale}/faq`} className="btn btn-outline">{t('moreInfo.faq.button')}</Link>
           </div>
           <div className="p-md" style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
             <h3 className="font-md mb-sm">{t('moreInfo.about.title')}</h3>
             <p className="font-sm text-secondary mb-md">{t('moreInfo.about.description')}</p>
-            <a href="/about" className="btn btn-outline">{t('moreInfo.about.button')}</a>
+            <Link href={`/${locale}/about`} className="btn btn-outline">{t('moreInfo.about.button')}</Link>
           </div>
         </div>
       </section>

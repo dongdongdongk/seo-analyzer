@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter, useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { localeNames, localeFlags } from '@/i18n/config'
@@ -86,10 +87,13 @@ export default function Header() {
             onClick={handleHomeNavigation} 
             aria-label={locale === 'ko' ? '무료 검색엔진 최적화 홈으로 이동' : 'Go to SEO Analysis Tool home'}
           >
-            <img 
+            <Image 
               src="/icon.png" 
               alt={locale === 'ko' ? '무료 검색엔진 최적화' : 'SEO Analysis Tool'} 
-              className="logo-icon" 
+              className="logo-icon"
+              width={32}
+              height={32}
+              priority
             />
             {locale === 'ko' ? '무료 검색엔진 최적화' : 'SEO Analysis Tool'}
           </a>

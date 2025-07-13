@@ -1,9 +1,13 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 export default function SEOGuidePage() {
   const t = useTranslations('seoGuide')
+  const params = useParams()
+  const locale = params.locale
   return (
     <div className="page-wrapper">
       <div className="container">
@@ -257,20 +261,20 @@ export default function SEOGuidePage() {
               {t('conclusion.description')}
             </p>
             <div className="action-buttons">
-              <a 
-                href="/" 
+              <Link 
+                href={`/${locale}`}
                 className="btn btn-primary"
               >
                 <span className="icon">🔍</span>
                 {t('conclusion.analyzeButton')}
-              </a>
-              <a 
-                href="/faq" 
+              </Link>
+              <Link 
+                href={`/${locale}/faq`}
                 className="btn btn-outline"
               >
                 <span className="icon">❓</span>
                 {t('conclusion.faqButton')}
-              </a>
+              </Link>
             </div>
           </div>
         </div>

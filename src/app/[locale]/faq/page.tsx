@@ -2,10 +2,14 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 
 
 export default function FAQPage() {
   const t = useTranslations('faq')
+  const params = useParams()
+  const locale = params.locale
   const [activeCategory, setActiveCategory] = useState('all')
   const [openFAQ, setOpenFAQ] = useState<number | null>(null)
   
@@ -14,7 +18,7 @@ export default function FAQPage() {
 
   const filteredFAQs = activeCategory === 'all' 
     ? faqs 
-    : faqs.filter(faq => faq.category === activeCategory)
+    : faqs.filter((faq: any) => faq.category === activeCategory)
 
   const toggleFAQ = (id: number) => {
     setOpenFAQ(openFAQ === id ? null : id)
@@ -67,7 +71,7 @@ export default function FAQPage() {
         {/* FAQ 리스트 */}
         <div className="analysis-section">
           <div className="faq-list">
-            {filteredFAQs.map((faq, index) => (
+            {filteredFAQs.map((faq: any, index: number) => (
               <div key={faq.id} className="faq-list__item">
                 <div className="tech-seo-card">
                   <button
@@ -127,9 +131,9 @@ export default function FAQPage() {
                 <p className="site-info-card__description">
                   {t('additionalHelp.seoGuide.description')}
                 </p>
-                <a href="/seo-guide" className="btn btn-outline">
+                <Link href={`/${locale}/seo-guide`} className="btn btn-outline">
                   {t('additionalHelp.seoGuide.button')}
-                </a>
+                </Link>
               </div>
             </div>
             <div className="site-info-card">
@@ -141,9 +145,9 @@ export default function FAQPage() {
                 <p className="site-info-card__description">
                   {t('additionalHelp.analysis.description')}
                 </p>
-                <a href="/" className="btn btn-outline">
+                <Link href={`/${locale}`} className="btn btn-outline">
                   {t('additionalHelp.analysis.button')}
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -159,20 +163,20 @@ export default function FAQPage() {
               {t('ctaDescription')}
             </p>
             <div className="action-buttons">
-              <a 
-                href="/" 
+              <Link 
+                href={`/${locale}`}
                 className="btn btn-primary"
               >
                 <span className="icon">🔍</span>
                 {t('ctaAnalyze')}
-              </a>
-              <a 
-                href="/about" 
+              </Link>
+              <Link 
+                href={`/${locale}/about`}
                 className="btn btn-outline"
               >
                 <span className="icon">ℹ️</span>
                 {t('ctaAbout')}
-              </a>
+              </Link>
             </div>
           </div>
         </div>
