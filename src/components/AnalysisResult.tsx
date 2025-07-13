@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import FeedbackModal from './FeedbackModal'
 import SeoDetailModal from './SeoDetailModal'
 
@@ -81,6 +82,8 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
   const [showFeedback, setShowFeedback] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
+  const t = useTranslations('analysis')
+
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'good'
@@ -89,9 +92,91 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
   }
 
   const getScoreText = (score: number) => {
-    if (score >= 80) return '매우 좋아요! 😊'
-    if (score >= 60) return '괜찮아요! 😐'
-    return '개선이 필요해요 😔'
+    if (score >= 80) return t('scoreText.excellent')
+    if (score >= 60) return t('scoreText.good')
+    return t('scoreText.needsImprovement')
+  }
+
+  const getCategoryDescription = (categoryId: string, status: string) => {
+    // Get category descriptions from translations
+    const categoryDescriptions = t.raw('categoryDescriptions') as Record<string, Record<string, string>>
+    
+    // Check if the category description exists
+    if (categoryDescriptions[categoryId] && categoryDescriptions[categoryId][status]) {
+      return categoryDescriptions[categoryId][status]
+    }
+    
+    console.warn(`Missing translation for category: ${categoryId}, status: ${status}`)
+    // If translation key doesn't exist, return a generic message based on status
+    if (status === 'good') return t('scoreText.excellent')
+    if (status === 'warning') return t('scoreText.good') 
+    return t('scoreText.needsImprovement')
+  }
+
+  const translateBusinessData = (text: string) => {
+    // Try to translate business types and target audience data
+    try {
+      const key = `businessTypes.${text}`
+      return t(key)
+    } catch {
+      // If no translation exists, return the original text
+      return text
+    }
+  }
+
+  const translateCategoryName = (categoryName: string) => {
+    // Map category names to their translation keys
+    const categoryKeyMap: Record<string, string> = {
+      // Korean names from seo-analyzer
+      '페이지 제목': 'categoryNames.title',
+      '메타 설명': 'categoryNames.description', 
+      '콘텐츠 품질': 'categoryNames.content',
+      '소셜 미디어': 'categoryNames.socialMedia',
+      '구조화된 데이터': 'categoryNames.structuredData',
+      '기술적 요소': 'categoryNames.technical',
+      '보안 (HTTPS)': 'categoryNames.https',
+      '링크 구조': 'categoryNames.links',
+      '키워드 최적화': 'categoryNames.keywords',
+      '시맨틱 마크업': 'categoryNames.semanticMarkup',
+      '로봇 크롤링': 'categoryNames.robots',
+      '사이트맵': 'categoryNames.sitemap',
+      '사이트 속도 (PageSpeed 측정)': 'categoryNames.pageSpeed',
+      '모바일 친화도': 'categoryNames.mobileFriendly',
+      '이미지 최적화': 'categoryNames.images',
+      
+      // English names from seo-analyzer  
+      'Page Title': 'categoryNames.title',
+      'Meta Description': 'categoryNames.description',
+      'Content Quality': 'categoryNames.content', 
+      'Social Media': 'categoryNames.socialMedia',
+      'Structured Data': 'categoryNames.structuredData',
+      'Technical Elements': 'categoryNames.technical',
+      'Security (HTTPS)': 'categoryNames.https',
+      'Link Structure': 'categoryNames.links',
+      'Keyword Optimization': 'categoryNames.keywords',
+      'Semantic Markup': 'categoryNames.semanticMarkup',
+      'Robot Crawling': 'categoryNames.robots',
+      'Sitemap': 'categoryNames.sitemap',
+      'Site Speed (PageSpeed)': 'categoryNames.pageSpeed',
+      'Mobile Friendliness': 'categoryNames.mobileFriendly',
+      'Image Optimization': 'categoryNames.images'
+    }
+    
+    const translationKey = categoryKeyMap[categoryName]
+    
+    
+    if (translationKey) {
+      try {
+        console.log(`Translating category: ${categoryName} -> ${translationKey}`)
+        return t(translationKey)
+      } catch (error) {
+        console.warn(`Missing translation for key: ${translationKey}`)
+        return categoryName
+      }
+    }
+    
+    // If no mapping found, return original name  
+    return categoryName
   }
 
   const getStatusIcon = (status: string) => {
@@ -110,103 +195,104 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
     switch (categoryId) {
       case 'title':
         return {
-          label: '현재 페이지 제목',
-          value: data.siteInfo.title || '제목 없음',
+          label: t('currentValues.pageTitle'),
+          value: data.siteInfo.title || t('currentValues.noTitle'),
           length: data.siteInfo.title?.length || 0,
           detail: data.siteInfo.title?.length ? 
-            `권장 길이: 30-60자 (현재: ${data.siteInfo.title.length}자)` : 
-            '페이지 제목이 설정되지 않았습니다.'
+            t('currentValues.titleLengthDetail', { current: data.siteInfo.title.length }) : 
+            t('currentValues.noTitleSet')
         }
       case 'description':
         return {
-          label: '현재 메타 설명',
-          value: data.siteInfo.description || '설명 없음',
+          label: t('currentValues.metaDescription'),
+          value: data.siteInfo.description || t('currentValues.noDescription'),
           length: data.siteInfo.description?.length || 0,
           detail: data.siteInfo.description?.length ? 
-            `권장 길이: 120-160자 (현재: ${data.siteInfo.description.length}자)` : 
-            '메타 설명이 설정되지 않았습니다.'
+            t('currentValues.descriptionLengthDetail', { current: data.siteInfo.description.length }) : 
+            t('currentValues.noDescriptionSet')
         }
       case 'mobile':
         return {
-          label: '모바일 뷰포트 설정',
-          value: data.siteInfo.technicalInfo.hasViewport ? '설정됨' : '설정되지 않음',
+          label: t('currentValues.mobileViewport'),
+          value: data.siteInfo.technicalInfo.hasViewport ? t('currentValues.viewportSet') : t('currentValues.viewportNotSet'),
           detail: data.siteInfo.technicalInfo.hasViewport ? 
-            '모바일 기기에서 적절히 표시됩니다.' : 
-            '모바일 기기에서 제대로 표시되지 않을 수 있습니다.'
+            t('currentValues.mobileProperDisplay') : 
+            t('currentValues.mobileNotProperDisplay')
         }
       case 'speed':
         const speedCategory = data.categories.find(cat => cat.id === 'speed')
         const speedScore = speedCategory?.score || 0
         return {
-          label: '사이트 속도 (페이지 열리는 시간)',
-          value: speedScore >= 80 ? '⚡ 매우 빠름' : speedScore >= 60 ? '🚶 보통 속도' : '🐌 느림',
+          label: t('currentValues.siteSpeed'),
+          value: speedScore >= 80 ? t('currentValues.veryFast') : speedScore >= 60 ? t('currentValues.averageSpeed') : t('currentValues.slowSpeed'),
           detail: speedScore >= 80 ? 
-            '⚡ 웹사이트가 매우 빠르게 열려요! 방문자들이 기다리지 않고 바로 볼 수 있어서 좋습니다.' : 
+            t('currentValues.speedVeryFastDetail') : 
             speedScore >= 60 ? 
-            '🚶 웹사이트 속도가 보통이에요. 조금 더 빠르게 만들면 방문자들이 더 만족할 거예요.' : 
-            '🐌 웹사이트가 너무 느려요. 방문자들이 기다리다 지쳐서 다른 사이트로 갈 수 있어요. 속도 개선이 꼭 필요해요!'
+            t('currentValues.speedAverageDetail') : 
+            t('currentValues.speedSlowDetail')
         }
       case 'images':
         return {
-          label: '이미지 분석',
-          value: `총 ${data.siteInfo.technicalInfo.imageCount}개`,
-          detail: `이미지 최적화 상태를 확인해보세요.`
+          label: t('currentValues.imageAnalysis'),
+          value: t('currentValues.totalImages', { count: data.siteInfo.technicalInfo.imageCount }),
+          detail: t('currentValues.imageOptimizationCheck')
         }
       case 'content':
         return {
-          label: '콘텐츠 길이',
-          value: `${data.siteInfo.technicalInfo.wordCount.toLocaleString()}단어`,
+          label: t('currentValues.contentLength'),
+          value: t('currentValues.words', { count: data.siteInfo.technicalInfo.wordCount.toLocaleString() }),
           detail: data.siteInfo.technicalInfo.wordCount >= 300 ? 
-            '충분한 콘텐츠 양입니다.' : 
-            '더 많은 콘텐츠가 SEO에 도움이 될 수 있습니다.'
+            t('currentValues.sufficientContent') : 
+            t('currentValues.moreContentNeeded')
         }
       case 'social':
         return {
-          label: '소셜 미디어 최적화',
-          value: `Open Graph: ${data.siteInfo.socialTags.hasOpenGraph ? '설정됨' : '미설정'}, Twitter: ${data.siteInfo.socialTags.hasTwitterCard ? '설정됨' : '미설정'}`,
+          label: t('currentValues.socialMediaOptimization'),
+          value: `${data.siteInfo.socialTags.hasOpenGraph ? t('currentValues.openGraphSet') : t('currentValues.openGraphNotSet')}, ${data.siteInfo.socialTags.hasTwitterCard ? t('currentValues.twitterSet') : t('currentValues.twitterNotSet')}`,
           detail: (data.siteInfo.socialTags.hasOpenGraph && data.siteInfo.socialTags.hasTwitterCard) ? 
-            '소셜 미디어에서 멋지게 공유됩니다!' : 
-            '소셜 미디어 공유 설정을 추가하면 더 많은 방문자를 얻을 수 있어요.'
+            t('currentValues.socialOptimized') : 
+            t('currentValues.socialNeedsImprovement')
         }
       case 'structured':
         return {
-          label: '구글에게 사이트 설명하기',
-          value: data.siteInfo.technicalInfo.hasStructuredData ? '✅ 구글이 잘 이해함' : '❌ 구글이 헷갈림',
+          label: t('currentValues.googleExplanation'),
+          value: data.siteInfo.technicalInfo.hasStructuredData ? t('currentValues.googleUnderstands') : t('currentValues.googleConfused'),
           detail: data.siteInfo.technicalInfo.hasStructuredData ? 
-            '✅ 구글이 여러분 사이트가 무엇인지 정확히 알고 있어요! 검색 결과에 별점, 가격, 리뷰 등이 예쁘게 나올 수 있어요.' : 
-            '❌ 구글이 여러분 사이트가 뭘 파는지, 어떤 서비스인지 잘 모르겠어해요. 구글에게 친절하게 설명해주면 검색 결과에서 더 눈에 띄게 나와요!',
+            t('currentValues.structuredDataGood') : 
+            t('currentValues.structuredDataBad'),
           explanation: data.siteInfo.technicalInfo.hasStructuredData ? 
-            '구조화 데이터(Schema.org)가 잘 설정되어 있어요! 이것은 마치 구글에게 "우리 사이트는 카페야, 여기 전화번호야, 여기 주소야" 하고 친절하게 설명해주는 것과 같아요.' : 
-            '구조화 데이터(Schema.org)가 없어요. 이것은 마치 가게 간판 없이 장사하는 것과 같아요. 구글에게 "우리는 ○○ 업체야, 연락처는 이거야" 하고 설명해주면 검색 결과에서 더 잘 보여요!'
+            t('currentValues.structuredDataExplanation') : 
+            t('currentValues.structuredDataMissing')
         }
       case 'technical':
         return {
-          label: '기술적 SEO',
-          value: `모바일: ${data.siteInfo.technicalInfo.hasViewport ? '✓' : '✗'}, 구조화데이터: ${data.siteInfo.technicalInfo.hasStructuredData ? '✓' : '✗'}`,
-          detail: '기술적 SEO는 검색엔진이 사이트를 제대로 읽을 수 있게 도와줍니다.'
+          label: t('currentValues.technicalSeo'),
+          value: `${t('currentValues.mobile')}: ${data.siteInfo.technicalInfo.hasViewport ? '✓' : '✗'}, ${t('currentValues.structuredData')}: ${data.siteInfo.technicalInfo.hasStructuredData ? '✓' : '✗'}`,
+          detail: t('currentValues.technicalSeoDescription')
         }
       case 'links':
         const totalLinks = data.siteInfo.technicalInfo.linkCount
-        const internalLinks = data.siteInfo.technicalInfo.internalLinkCount || 0
-        const externalLinks = data.siteInfo.technicalInfo.externalLinkCount || 0
+        // These properties might not exist, so we'll use fallback values
+        const internalLinks = (data.siteInfo.technicalInfo as any).internalLinkCount || 0
+        const externalLinks = (data.siteInfo.technicalInfo as any).externalLinkCount || 0
         
         return {
-          label: '링크 구조',
-          value: `총 ${totalLinks}개 링크 발견`,
-          detail: `내부 링크: ${internalLinks}개, 외부 링크: ${externalLinks}개`,
+          label: t('linkAnalysis.linkStructure'),
+          value: t('linkAnalysis.totalLinksFound', { count: totalLinks }),
+          detail: `${t('linkAnalysis.internalLinks', { count: internalLinks })}, ${t('linkAnalysis.externalLinks', { count: externalLinks })}`,
           linkBreakdown: {
             total: totalLinks,
             internal: internalLinks,
             external: externalLinks,
             analysis: (internalLinks >= 2 && externalLinks >= 1) ? 
-              '✅ 우수한 링크 구조입니다! 내부 링크로 사용자가 사이트를 더 오래 탐색하게 하고, 외부 링크로 신뢰도를 높이고 있어요.' :
+              t('linkAnalysis.excellentStructure') :
               (internalLinks >= 1 || externalLinks >= 1) ? 
-              '⚠️ 링크 구조가 아쉬워요. 내부 링크(2개 이상)와 외부 링크(1개 이상)를 적절히 섞어서 사용하면 SEO에 더 좋아요.' :
-              '❌ 링크가 거의 없어요. 관련된 내부 페이지나 신뢰할 수 있는 외부 사이트로의 링크를 추가해주세요.',
+              t('linkAnalysis.averageStructure') :
+              t('linkAnalysis.poorStructure'),
             recommendations: [
-              internalLinks < 2 ? '내부 링크를 더 추가해보세요 (관련 페이지, 카테고리, 이전 글 등)' : '',
-              externalLinks < 1 ? '신뢰할 수 있는 외부 사이트로의 링크를 추가해보세요' : '',
-              totalLinks > 50 ? '링크가 너무 많아요. 중요한 링크만 남겨두세요' : ''
+              internalLinks < 2 ? t('linkAnalysis.internalLinksNeeded') : '',
+              externalLinks < 1 ? t('linkAnalysis.externalLinksNeeded') : '',
+              totalLinks > 50 ? t('linkAnalysis.tooManyLinks') : ''
             ].filter(Boolean)
           }
         }
@@ -215,13 +301,13 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
         const semantic = data.siteInfo.semanticMarkup
         
         return {
-          label: '시멘틱 마크업 (HTML 구조)',
-          value: `${semantic.semanticScore}점`,
+          label: t('semanticMarkup.semanticStructure'),
+          value: t('semanticMarkup.points', { score: semantic.semanticScore }),
           detail: semantic.semanticScore >= 80 ? 
-            '✅ 시멘틱 마크업이 잘 구성되어 있어요! 검색엔진과 스크린 리더가 쉽게 이해할 수 있습니다.' :
+            t('semanticMarkup.wellStructured') :
             semantic.semanticScore >= 60 ?
-            '⚠️ 시멘틱 마크업이 부분적으로 구성되어 있어요. 몇 가지 개선사항이 있습니다.' :
-            '❌ 시멘틱 마크업이 부족해요. 검색엔진 최적화와 접근성 향상이 필요합니다.',
+            t('semanticMarkup.partiallyStructured') :
+            t('semanticMarkup.needsImprovement'),
           semanticDetails: {
             elements: {
               header: semantic.hasHeader,
@@ -252,6 +338,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
   const mainCategories = data.categories.filter(cat => cat.id !== 'images')
   const optionalCategories = data.categories.filter(cat => cat.id === 'images')
   
+  
   const goodCategories = mainCategories.filter(cat => cat.status === 'good')
   const warningCategories = mainCategories.filter(cat => cat.status === 'warning')
   const dangerCategories = mainCategories.filter(cat => cat.status === 'danger')
@@ -277,12 +364,12 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
       const result = await response.json()
 
       if (!response.ok) {
-        throw new Error(result.error || '피드백 전송 실패')
+        throw new Error(result.error || t('errorMessages.feedbackSendFailed'))
       }
 
-      console.log('피드백 전송 성공:', result.message)
+      console.log(t('errorMessages.feedbackSendSuccess'), result.message)
     } catch (error) {
-      console.error('피드백 전송 오류:', error)
+      console.error(t('errorMessages.feedbackSendError'), error)
       throw error
     }
   }
@@ -298,7 +385,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
             </div>
             <div>
               <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: 'var(--spacing-xs)' }}>
-                SEO 분석 완료!
+                {t('analysisComplete')}
               </h1>
               <p style={{ fontSize: '1rem', opacity: '0.9', wordBreak: 'break-all' }}>
                 {data.url}
@@ -328,7 +415,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                 {getScoreText(data.overallScore)}
               </div>
               <div className="analysis-section__subtitle" style={{ color: 'rgba(255, 255, 255, 0.8)', marginTop: 'var(--spacing-sm)' }}>
-                💡 완벽한 100점은 필요하지 않아요! 70점 이상이면 훌륭한 SEO입니다.
+                {t('scoreExplanation')}
               </div>
             </div>
             
@@ -339,19 +426,19 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                   <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#10B981' }}>
                     {goodCategories.length}
                   </div>
-                  <div style={{ fontSize: '0.875rem', opacity: '0.8' }}>우수</div>
+                  <div style={{ fontSize: '0.875rem', opacity: '0.8' }}>{t('categoryStatus.excellent')}</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#F59E0B' }}>
                     {warningCategories.length}
                   </div>
-                  <div style={{ fontSize: '0.875rem', opacity: '0.8' }}>보통</div>
+                  <div style={{ fontSize: '0.875rem', opacity: '0.8' }}>{t('categoryStatus.average')}</div>
                 </div>
                 <div style={{ textAlign: 'center', flex: 1 }}>
                   <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#EF4444' }}>
                     {dangerCategories.length}
                   </div>
-                  <div style={{ fontSize: '0.875rem', opacity: '0.8' }}>개선필요</div>
+                  <div style={{ fontSize: '0.875rem', opacity: '0.8' }}>{t('categoryStatus.needsWork')}</div>
                 </div>
               </div>
               
@@ -416,7 +503,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                   textAlign: 'center', 
                   marginTop: 'var(--spacing-sm)' 
                 }}>
-                  총 {mainCategories.length}개 주요 항목 중 {goodCategories.length}개 우수, {warningCategories.length}개 보통, {dangerCategories.length}개 개선필요
+                  {t('categoryBreakdown', { total: mainCategories.length, excellent: goodCategories.length, average: warningCategories.length, needsWork: dangerCategories.length })}
                 </div>
               </div>
               
@@ -428,14 +515,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                 fontSize: '0.875rem',
                 lineHeight: '1.4'
               }}>
-                💡 <strong>핵심 요약:</strong> 
-                {dangerCategories.length > 0 
-                  ? `${dangerCategories.length}개 항목의 우선 개선이 필요하며, ` 
-                  : '주요 문제는 없으나, '}
-                {warningCategories.length > 0 
-                  ? `${warningCategories.length}개 항목을 보완하면 ` 
-                  : ''}
-                더 좋은 검색 결과를 얻을 수 있습니다.
+                {t('summaryText', { dangerCount: dangerCategories.length, warningCount: warningCategories.length })}
               </div>
             </div>
           </div>
@@ -450,7 +530,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
               🔍
             </div>
             <h2 className="analysis-section__header-title">
-              사이트 분석 정보
+              {t('siteAnalysisInfo')}
             </h2>
           </div>
           
@@ -461,29 +541,29 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                 <div className="site-info-card__icon gradient-bg--info">
                   🏢
                 </div>
-                <div className="site-info-card__title">웹사이트 기본 정보</div>
+                <div className="site-info-card__title">{t('websiteBasicInfo')}</div>
               </div>
               <div className="site-info-card__content">
                 <div className="site-info-item">
-                  <div className="site-info-item__label">🌐 도메인 주소</div>
+                  <div className="site-info-item__label">{t('domainAddress')}</div>
                   <div className="site-info-item__value">{data.siteInfo.domain}</div>
                 </div>
                 
                 <div className="site-info-item site-info-item--highlight">
-                  <div className="site-info-item__label">🏷 추정 업종</div>
+                  <div className="site-info-item__label">{t('estimatedIndustry')}</div>
                   <div className="site-info-item__value site-info-item__value--primary">
-                    {data.siteInfo.estimated.industry}
+                    {translateBusinessData(data.siteInfo.estimated.industry)}
                   </div>
-                  <div className="site-info-item__description">AI가 분석한 사업 분야입니다</div>
+                  <div className="site-info-item__description">{t('aiAnalyzedBusiness')}</div>
                 </div>
                 
                 <div className="site-info-item">
-                  <div className="site-info-item__label">👥 주요 고객층</div>
-                  <div className="site-info-item__value">{data.siteInfo.estimated.targetAudience}</div>
+                  <div className="site-info-item__label">{t('targetAudience')}</div>
+                  <div className="site-info-item__value">{translateBusinessData(data.siteInfo.estimated.targetAudience)}</div>
                 </div>
                 
                 <div className="site-info-item">
-                  <div className="site-info-item__label">🌍 사용 언어</div>
+                  <div className="site-info-item__label">{t('language')}</div>
                   <div className="site-info-item__value">{data.siteInfo.language}</div>
                 </div>
               </div>
@@ -495,56 +575,56 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                 <div className="tech-seo-card__icon gradient-bg--secondary">
                   ⚙️
                 </div>
-                <div className="tech-seo-card__title">기술적 SEO 분석</div>
+                <div className="tech-seo-card__title">{t('technicalSeoAnalysis')}</div>
               </div>
               <div className="tech-seo-card__content">
                 <div className="tech-seo-item">
-                  <div className="tech-seo-item__label">📝 콘텐츠 양</div>
-                  <div className="tech-seo-item__value">{data.siteInfo.technicalInfo.wordCount.toLocaleString()}단어</div>
+                  <div className="tech-seo-item__label">📝 {t('techSeo.contentAmount')}</div>
+                  <div className="tech-seo-item__value">{t('techSeo.words', { count: data.siteInfo.technicalInfo.wordCount.toLocaleString() })}</div>
                   <div className="tech-seo-item__status">
-                    {data.siteInfo.technicalInfo.wordCount >= 300 ? '✓ 충분한 콘텐츠' : '⚠ 더 많은 콘텐츠 필요'}
+                    {data.siteInfo.technicalInfo.wordCount >= 300 ? t('techSeo.sufficientContent') : t('techSeo.moreContentNeeded')}
                   </div>
                 </div>
                 
                 <div className="tech-seo-item">
-                  <div className="tech-seo-item__label">🖼 이미지 & 📎 링크</div>
+                  <div className="tech-seo-item__label">🖼 {t('techSeo.imagesAndLinks')}</div>
                   <div className="tech-seo-item__value">
-                    이미지 {data.siteInfo.technicalInfo.imageCount}개, 링크 {data.siteInfo.technicalInfo.linkCount}개
+                    {t('techSeo.imageCount', { count: data.siteInfo.technicalInfo.imageCount })}, {t('techSeo.linkCount', { count: data.siteInfo.technicalInfo.linkCount })}
                   </div>
                 </div>
                 
                 <div className="tech-seo-item">
-                  <div className="tech-seo-item__label">📱 모바일 최적화</div>
+                  <div className="tech-seo-item__label">📱 {t('techSeo.mobileOptimization')}</div>
                   <div className={`tech-seo-item__status-row ${data.siteInfo.technicalInfo.hasViewport ? 'tech-seo-item__status-row--success' : 'tech-seo-item__status-row--danger'}`}>
                     <span className={`tech-seo-icon ${data.siteInfo.technicalInfo.hasViewport ? 'tech-seo-icon--success' : 'tech-seo-icon--danger'}`}>
                       {data.siteInfo.technicalInfo.hasViewport ? '✓' : '×'}
                     </span>
                     <span className="tech-seo-item__value">
-                      {data.siteInfo.technicalInfo.hasViewport ? '뷰포트 설정됨' : '뷰포트 미설정'}
+                      {data.siteInfo.technicalInfo.hasViewport ? t('techSeo.viewportSet') : t('techSeo.viewportNotSet')}
                     </span>
                   </div>
                   <div className="tech-seo-item__description">
-                    {data.siteInfo.technicalInfo.hasViewport ? '핸드폰에서 잘 보입니다' : '핸드폰에서 작게 보일 수 있어요'}
+                    {data.siteInfo.technicalInfo.hasViewport ? t('techSeo.mobileGoodDisplay') : t('techSeo.mobileSmallDisplay')}
                   </div>
                 </div>
                 
                 <div className="tech-seo-item tech-seo-item--structured">
-                  <div className="tech-seo-item__label">🔍 구글에게 사이트 설명하기 (구조화 데이터)</div>
+                  <div className="tech-seo-item__label">🔍 {t('techSeo.googleSiteExplanation')}</div>
                   <div className={`tech-seo-item__status-row ${data.siteInfo.technicalInfo.hasStructuredData ? 'tech-seo-item__status-row--success' : 'tech-seo-item__status-row--danger'}`}>
                     <span className={`tech-seo-icon ${data.siteInfo.technicalInfo.hasStructuredData ? 'tech-seo-icon--success' : 'tech-seo-icon--danger'}`}>
                       {data.siteInfo.technicalInfo.hasStructuredData ? '✓' : '×'}
                     </span>
                     <span className="tech-seo-item__value">
-                      {data.siteInfo.technicalInfo.hasStructuredData ? '구글이 잘 이해함' : '구글이 헷갈림'}
+                      {data.siteInfo.technicalInfo.hasStructuredData ? t('techSeo.googleUnderstands') : t('techSeo.googleConfused')}
                     </span>
                   </div>
                   <div className="tech-seo-item__description">
                     {data.siteInfo.technicalInfo.hasStructuredData ? 
-                      '✅ Schema.org 마크업이 있어서 구글이 사이트를 정확히 파악해요! 검색 결과에 별점, 가격, 운영시간 등이 예쁘게 나올 수 있어요.' : 
-                      '❌ 구조화 데이터가 없어요. 마치 가게 간판 없이 장사하는 것과 같아요. 구글에게 "우리는 ○○ 업체야, 연락처는 이거야" 하고 설명해주면 검색 결과에서 더 잘 보여요!'}
+                      t('techSeo.structuredDataGood') : 
+                      t('techSeo.structuredDataBad')}
                   </div>
                   <div className="tech-seo-item__tip">
-                    💡 <strong>구조화 데이터란?</strong> 구글에게 "우리 사이트는 카페야, 주소는 여기야, 전화번호는 이거야" 하고 친절하게 설명해주는 코드예요
+                    💡 <strong>{t('ui.structuredDataTipLabel')}</strong> {t('techSeo.structuredDataTip')}
                   </div>
                 </div>
               </div>
@@ -554,8 +634,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           <div className="p-md gradient-bg--info" style={{ borderRadius: 'var(--radius-lg)' }}>
             <p className="font-sm">
               <span className="icon icon--info">💡</span>
-              <strong>분석 신뢰도:</strong> 이 정보들은 실제 웹페이지를 분석해서 얻은 결과입니다. 
-              더 정확한 분석을 위해서는 Google Analytics나 Search Console 데이터와 함께 참고하세요.
+              <strong>{t('ui.analysisReliability')}</strong>
             </p>
           </div>
         </div>
@@ -568,7 +647,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
             📊
           </div>
           <h2 className="analysis-section__header-title">
-            상세 분석 결과 - 클릭해서 자세히 보기
+            {t('detailedResults')}
           </h2>
         </div>
         
@@ -578,7 +657,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
             📊
           </div>
           <h2 className="analysis-section__header-title">
-            주요 SEO 분석 결과 (점수 반영)
+            {t('mainSeoResults')}
           </h2>
         </div>
         
@@ -599,8 +678,8 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                     {getStatusIcon(category.status)}
                   </div>
                   <div className="seo-card__info">
-                    <h3 className="seo-card__title">{category.name}</h3>
-                    <div className="seo-card__score">{category.score}점</div>
+                    <h3 className="seo-card__title">{translateCategoryName(category.name)}</h3>
+                    <div className="seo-card__score">{category.score}{t('ui.points')}</div>
                   </div>
                 </div>
                 
@@ -609,18 +688,21 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                     <div className="seo-card__current-value">
                       {currentValue.value}
                       {currentValue.length !== undefined && (
-                        <span className="seo-card__current-length">({currentValue.length}자)</span>
+                        <span className="seo-card__current-length">{t('ui.charactersCount', { length: currentValue.length })}</span>
                       )}
                     </div>
                   </div>
                 )}
                 
                 <div className="seo-card__description">
-                  {category.description.length > 60 ? category.description.substring(0, 60) + '...' : category.description}
+                  {(() => {
+                    const desc = getCategoryDescription(category.id, category.status)
+                    return desc.length > 60 ? desc.substring(0, 60) + '...' : desc
+                  })()}
                 </div>
                 
                 <div className="seo-card__action">
-                  <span className="seo-card__action-text">자세히 보기</span>
+                  <span className="seo-card__action-text">{t('ui.viewDetails')}</span>
                   <span className="seo-card__action-arrow">→</span>
                 </div>
               </div>
@@ -637,10 +719,10 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
               📋
             </div>
             <h2 className="analysis-section__header-title">
-              추가 분석 결과 (참고용)
+              {t('additionalResults')}
             </h2>
             <p className="analysis-section__subtitle">
-              💡 이 항목들은 점수에 포함되지 않습니다. 광고 등으로 인해 정확하지 않을 수 있어요.
+              {t('additionalResultsNote')}
             </p>
           </div>
           
@@ -662,10 +744,10 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                     </div>
                     <div className="seo-card__info">
                       <h3 className="seo-card__title">
-                        {category.name}
-                        <span className="seo-card__optional-badge">참고용</span>
+                        {translateCategoryName(category.name)}
+                        <span className="seo-card__optional-badge">{t('referenceOnly')}</span>
                       </h3>
-                      <div className="seo-card__score">{category.score}점</div>
+                      <div className="seo-card__score">{category.score}{t('ui.points')}</div>
                     </div>
                   </div>
                   
@@ -675,18 +757,21 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
                       <div className="seo-card__current-value">
                         {currentValue.value}
                         {currentValue.length !== undefined && (
-                          <span className="seo-card__current-length">({currentValue.length}자)</span>
+                          <span className="seo-card__current-length">{t('ui.charactersCount', { length: currentValue.length })}</span>
                         )}
                       </div>
                     </div>
                   )}
                   
                   <div className="seo-card__description">
-                    {category.description.length > 60 ? category.description.substring(0, 60) + '...' : category.description}
+                    {(() => {
+                      const desc = getCategoryDescription(category.id, category.status)
+                      return desc.length > 60 ? desc.substring(0, 60) + '...' : desc
+                    })()}
                   </div>
                   
                   <div className="seo-card__action">
-                    <span className="seo-card__action-text">자세히 보기</span>
+                    <span className="seo-card__action-text">{t('ui.viewDetails')}</span>
                     <span className="seo-card__action-arrow">→</span>
                   </div>
                 </div>
@@ -704,14 +789,14 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
               🤖
             </div>
             <h2 className="analysis-section__header-title">
-              AI 맞춤 조언
+              {t('aiCustomAdvice')}
             </h2>
           </div>
           
           <div className="mb-lg">
             <h3 className="font-lg mb-sm">
               <span className="icon icon--info">📋</span>
-              전체적인 평가
+              {t('overallEvaluation')}
             </h3>
             <div className="p-md" style={{ backgroundColor: 'var(--color-gray-100)', borderRadius: 'var(--radius-md)' }}>
               <p className="font-md">{data.aiAdvice.overallAdvice}</p>
@@ -721,7 +806,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           <div className="mb-lg">
             <h3 className="font-lg mb-sm">
               <span className="icon icon--warning">🎯</span>
-              우선순위 개선 작업
+              {t('priorityActions')}
             </h3>
             <div className="flex flex-col gap-sm">
               {data.aiAdvice.priorityActions.map((action, index) => (
@@ -735,11 +820,11 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
             </div>
           </div>
           
-          {data.businessType && data.businessType !== '기타' && (
+          {data.businessType && data.businessType !== 'other' && (
             <div className="mb-lg">
               <h3 className="font-lg mb-sm">
                 <span className="icon icon--warning">💡</span>
-                {data.businessType} 특화 팁
+                {t('ui.specializedTips', { businessType: data.businessType })}
               </h3>
               <div className="flex flex-col gap-sm">
                 {data.aiAdvice.industrySpecificTips.map((tip, index) => (
@@ -755,7 +840,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           <div className="mb-lg">
             <h3 className="font-lg mb-sm">
               <span className="icon icon--success">🏆</span>
-              예상 결과
+              {t('ui.expectedResultsTitle')}
             </h3>
             <div className="p-md gradient-bg" style={{ borderRadius: 'var(--radius-lg)' }}>
               <p className="font-md">{data.aiAdvice.expectedResults}</p>
@@ -772,13 +857,11 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
               🏷
             </div>
             <h2 className="analysis-section__header-title">
-              AI 추천 키워드
+              {t('ui.aiRecommendedKeywords')}
             </h2>
           </div>
           <p className="font-md text-secondary mb-md">
-            {data.siteType && `${data.siteType} 유형의 `}
-            {data.businessType && data.businessType !== '기타' && `${data.businessType} 업종에 `}
-            적합한 키워드들이에요. 이런 단어들로 고객들이 검색할 가능성이 높아요!
+            {t('ui.keywordDescription', { siteType: data.siteType || '', businessType: data.businessType || '' })}
           </p>
           <div className="flex flex-wrap gap-sm">
             {data.keywordSuggestions.map((keyword, index) => (
@@ -806,18 +889,18 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
           className="btn btn-primary btn-lg"
         >
           <span className="icon icon--primary">🔍</span>
-          다른 사이트 분석하기
+          {t('analyzeOtherSite')}
         </button>
         <button 
           onClick={() => setShowFeedback(true)}
           className="btn btn-outline btn-lg"
         >
           <span className="icon icon--info">💬</span>
-          서비스 평가하기
+          {t('evaluateService')}
         </button>
         {/* <button className="btn btn-outline btn-lg">
           <span className="icon icon--secondary">💾</span>
-          결과 저장하기
+          Save Results
         </button> */}
       </div>
       
@@ -826,7 +909,7 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         category={data.categories.find(cat => cat.id === selectedCategory) || null}
-        currentValue={selectedCategory ? getCurrentValue(selectedCategory) : undefined}
+        currentValue={selectedCategory ? getCurrentValue(selectedCategory) || undefined : undefined}
         siteInfo={data.siteInfo}
       />
 

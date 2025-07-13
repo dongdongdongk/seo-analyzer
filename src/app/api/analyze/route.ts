@@ -4,7 +4,7 @@ import { analyzeSEO } from '@/lib/seo-analyzer'
 // POST 요청 처리 (SEO 분석 시작)
 export async function POST(request: NextRequest) {
   try {
-    const { url } = await request.json()
+    const { url, locale = 'ko' } = await request.json()
     
     // URL 유효성 검사
     if (!url || typeof url !== 'string') {
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 실제 SEO 분석 실행
-    const analysisResult = await analyzeSEO(url)
+    const analysisResult = await analyzeSEO(url, locale)
     
     return NextResponse.json({
       success: true,

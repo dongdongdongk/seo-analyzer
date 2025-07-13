@@ -28,6 +28,7 @@
     "@types/react-dom": "^19.1.6",
     "cheerio": "^1.1.0",
     "next": "^15.3.5",
+    "next-intl": "^4.3.4",
     "nodemailer": "^7.0.5",
     "openai": "^5.8.3",
     "puppeteer": "^24.12.1",

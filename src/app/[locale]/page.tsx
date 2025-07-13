@@ -1,14 +1,21 @@
 'use client'
 
 import { useState } from 'react'
+import { useLocale } from 'next-intl'
+import { useParams } from 'next/navigation'
 import AnalysisForm from '@/components/AnalysisForm'
 import AnalysisProgress from '@/components/AnalysisProgress'
 import AnalysisResult from '@/components/AnalysisResult'
 
 export default function HomePage() {
+  const locale = useLocale()
+  const params = useParams()
   const [currentStep, setCurrentStep] = useState<'form' | 'progress' | 'result'>('form')
   const [analysisData, setAnalysisData] = useState<any>(null)
   const [websiteUrl, setWebsiteUrl] = useState('')
+  
+  // URL에서 직접 locale 가져오기
+  const actualLocale = params.locale as string || locale
 
   const handleAnalysisStart = async (url: string) => {
     setWebsiteUrl(url)
@@ -21,7 +28,7 @@ export default function HomePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, locale: actualLocale }),
       })
       
       const result = await response.json()

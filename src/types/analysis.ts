@@ -73,6 +73,7 @@ export interface AnalysisResult {
 
 export interface AnalysisRequest {
   url: string
+  locale?: string
 }
 
 export interface AnalysisResponse {

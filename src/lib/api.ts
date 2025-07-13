@@ -5,14 +5,14 @@ import { AnalysisRequest, AnalysisResponse } from '@/types/analysis'
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api'
 
 // SEO 분석 API 호출
-export async function analyzeSEO(url: string): Promise<AnalysisResponse> {
+export async function analyzeSEO(url: string, locale: string = 'ko'): Promise<AnalysisResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/analyze`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ url } as AnalysisRequest),
+      body: JSON.stringify({ url, locale } as AnalysisRequest),
     })
 
     if (!response.ok) {

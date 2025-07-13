@@ -3,6 +3,53 @@ import type { AnalysisResult, SEOCategory } from '@/types/analysis'
 import { runPageSpeedAnalysis, convertPageSpeedToSEOCategory, createFallbackSpeedAnalysis, createFallbackMobileAnalysis } from './pagespeed-analyzer'
 import { generatePersonalizedAdvice, generateKeywordSuggestions } from './openai-analyzer'
 
+// Translation utility that loads messages dynamically
+let cachedMessages: Record<string, any> = {}
+
+async function getMessages(locale: string = 'ko') {
+  if (!cachedMessages[locale]) {
+    try {
+      // Dynamic import of messages based on locale
+      if (locale === 'en') {
+        const messages = await import('../../messages/en.json')
+        cachedMessages[locale] = messages.default || messages
+      } else {
+        const messages = await import('../../messages/ko.json')
+        cachedMessages[locale] = messages.default || messages
+      }
+    } catch (error) {
+      // Fallback to empty object if translation loading fails
+      cachedMessages[locale] = {}
+    }
+  }
+  return cachedMessages[locale]
+}
+
+// Translation function that mimics next-intl behavior
+function createTranslationFunction(messages: any, namespace: string) {
+  return (key: string, params?: Record<string, any>) => {
+    const keys = key.split('.')
+    let value = messages[namespace]
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object') {
+        value = value[k]
+      } else {
+        return key // Return key if translation not found
+      }
+    }
+    
+    if (typeof value === 'string' && params) {
+      // Simple parameter replacement
+      return value.replace(/\{(\w+)\}/g, (match, paramKey) => {
+        return params[paramKey] !== undefined ? String(params[paramKey]) : match
+      })
+    }
+    
+    return value || key
+  }
+}
+
 // SEO 분석 인터페이스
 interface PageData {
   title: string
@@ -56,16 +103,19 @@ interface PageData {
 }
 
 // 웹페이지 HTML 가져오기
-export async function fetchPageHTML(url: string): Promise<string> {
+export async function fetchPageHTML(url: string, locale: string = 'ko'): Promise<string> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   try {
     // URL 유효성 검사
     try {
       new URL(url)
     } catch {
-      throw new Error('올바른 URL 형식이 아닙니다.')
+      throw new Error(t('errors.invalidUrl'))
     }
     
-    console.log('페이지 가져오기 시작:', url)
+    console.log(t('console.fetchingPage'), url)
     
     const response = await fetch(url, {
       headers: {
@@ -73,30 +123,30 @@ export async function fetchPageHTML(url: string): Promise<string> {
       }
     })
     
-    console.log('응답 상태:', response.status, response.statusText)
+    console.log(t('console.responseStatus'), response.status, response.statusText)
     
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      throw new Error(t('errors.httpError', { status: response.status, statusText: response.statusText }))
     }
     
     const html = await response.text()
-    console.log('HTML 길이:', html.length)
+    console.log(t('console.htmlLength'), html.length)
     
     return html
   } catch (error) {
-    console.error('페이지 가져오기 실패:', error)
-    console.error('실패한 URL:', url)
+    console.error(t('console.fetchError'), error)
+    console.error(t('console.failedUrl'), url)
     
     if (error instanceof Error) {
-      throw new Error(`웹페이지를 가져올 수 없습니다: ${error.message}`)
+      throw new Error(t('errors.fetchFailed', { message: error.message }))
     } else {
-      throw new Error('웹페이지를 가져올 수 없습니다. URL을 확인해주세요.')
+      throw new Error(t('errors.fetchGeneric'))
     }
   }
 }
 
 // HTML 파싱 및 데이터 추출
-export function parsePageData(html: string, url: string): PageData {
+export async function parsePageData(html: string, url: string, locale: string = 'ko'): Promise<PageData> {
   const $ = cheerio.load(html)
 
   // 기본 광고 제거 (간단 버전)
@@ -171,10 +221,10 @@ export function parsePageData(html: string, url: string): PageData {
   const wordCount = textContent.split(' ').filter(word => word.length > 0).length
   
   // 콘텐츠 품질 분석
-  const contentQuality = analyzeContentQuality(textContent, h1Tags, h2Tags, title, description)
+  const contentQuality = await analyzeContentQuality(textContent, h1Tags, h2Tags, title, description, locale)
   
   // 시멘틱 마크업 분석
-  const semanticMarkup = analyzeSemanticMarkup($)
+  const semanticMarkup = await analyzeSemanticMarkup(html, locale)
   
   return {
     title,
@@ -197,7 +247,13 @@ export function parsePageData(html: string, url: string): PageData {
 }
 
 // 시멘틱 마크업 분석
-function analyzeSemanticMarkup($: cheerio.CheerioAPI) {
+async function analyzeSemanticMarkup(html: string, locale: string = 'ko') {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
+  const $ = cheerio.load(html)
+  
+  console.log(t('semanticAnalysis.analyzing'))
   const issues: string[] = []
   const suggestions: string[] = []
   
@@ -213,7 +269,10 @@ function analyzeSemanticMarkup($: cheerio.CheerioAPI) {
   
   // 헤딩 구조 분석
   const headings = $('h1, h2, h3, h4, h5, h6').toArray()
-  const headingLevels = headings.map(h => parseInt(h.tagName.charAt(1)))
+  const headingLevels = headings.map(h => {
+    const element = h as any
+    return parseInt(element.tagName?.charAt(1) || '0')
+  })
   const headingStructure = analyzeHeadingStructure(headingLevels)
   
   // ARIA 속성 개수
@@ -246,46 +305,46 @@ function analyzeSemanticMarkup($: cheerio.CheerioAPI) {
   
   // 이슈 및 제안 생성
   if (!hasHeader) {
-    issues.push('페이지에 <header> 요소가 없습니다')
-    suggestions.push('페이지 상단에 <header> 태그를 추가하여 헤더 영역을 명확히 구분하세요')
+    issues.push(`${t('semanticAnalysis.elements.header')} 요소가 없습니다`)
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.useSemanticTags')
   }
   
   if (!hasNav) {
-    issues.push('페이지에 <nav> 요소가 없습니다')
-    suggestions.push('네비게이션 메뉴를 <nav> 태그로 감싸서 탐색 영역을 명확히 표시하세요')
+    issues.push(`${t('semanticAnalysis.elements.nav')} 요소가 없습니다`)
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.useSemanticTags')
   }
   
   if (!hasMain) {
-    issues.push('페이지에 <main> 요소가 없습니다')
-    suggestions.push('주요 콘텐츠 영역을 <main> 태그로 감싸서 메인 콘텐츠를 명확히 표시하세요')
+    issues.push(`${t('semanticAnalysis.elements.main')} 요소가 없습니다`)
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.useSemanticTags')
   }
   
   if (!hasFooter) {
-    issues.push('페이지에 <footer> 요소가 없습니다')
-    suggestions.push('페이지 하단에 <footer> 태그를 추가하여 푸터 영역을 명확히 구분하세요')
+    issues.push(`${t('semanticAnalysis.elements.footer')} 요소가 없습니다`)
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.useSemanticTags')
   }
   
   if (!hasH1) {
-    issues.push('페이지에 H1 태그가 없습니다')
-    suggestions.push('페이지의 주요 제목을 <h1> 태그로 설정하세요')
+    issues.push(t('semanticAnalysis.issues.missingH1'))
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.logicalHeadings')
   } else if ($('h1').length > 1) {
-    issues.push('페이지에 H1 태그가 여러 개 있습니다')
-    suggestions.push('H1 태그는 페이지당 하나만 사용하는 것이 좋습니다')
+    issues.push(t('semanticAnalysis.issues.multipleH1'))
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.logicalHeadings')
   }
   
   if (!headingStructure) {
-    issues.push('헤딩 태그의 구조가 올바르지 않습니다')
-    suggestions.push('헤딩 태그(H1~H6)를 순서대로 사용하여 논리적인 구조를 만드세요')
+    issues.push(t('semanticAnalysis.issues.illogicalHeadings'))
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.logicalHeadings')
   }
   
   if (ariaAttributes < 3) {
-    issues.push('접근성을 위한 ARIA 속성이 부족합니다')
-    suggestions.push('버튼, 링크, 폼 요소에 aria-label이나 aria-describedby 속성을 추가하세요')
+    issues.push(t('semanticAnalysis.issues.insufficientAria'))
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.addAria')
   }
   
   if (!hasSection && !hasArticle) {
-    issues.push('콘텐츠 구조를 위한 시멘틱 요소가 부족합니다')
-    suggestions.push('콘텐츠를 <section>이나 <article> 태그로 의미있게 구분하세요')
+    issues.push(t('semanticAnalysis.issues.missingSemanticTags'))
+    suggestions.push('seoAnalyzer.categories.semanticMarkup.suggestions.structureContent')
   }
   
   return {
@@ -323,7 +382,10 @@ function analyzeHeadingStructure(levels: number[]): boolean {
 }
 
 // 시멘틱 마크업 SEO 카테고리 분석
-function analyzeSemanticMarkupCategory(pageData: PageData): SEOCategory {
+async function analyzeSemanticMarkupCategory(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const semantic = pageData.semanticMarkup
   const score = semantic.semanticScore
   let status: 'good' | 'warning' | 'danger' = 'danger'
@@ -332,13 +394,13 @@ function analyzeSemanticMarkupCategory(pageData: PageData): SEOCategory {
 
   if (score >= 80) {
     status = 'good'
-    description = '시멘틱 마크업이 잘 구성되어 있습니다. 검색엔진과 스크린 리더가 콘텐츠를 쉽게 이해할 수 있습니다.'
+    description = t('semanticAnalysis.wellConfigured')
   } else if (score >= 60) {
     status = 'warning'
-    description = '시멘틱 마크업이 부분적으로 구성되어 있습니다. 몇 가지 개선사항이 있습니다.'
+    description = t('categories.semanticMarkup.description')
   } else {
     status = 'danger'
-    description = '시멘틱 마크업이 부족합니다. 검색엔진 최적화와 접근성 향상을 위해 개선이 필요합니다.'
+    description = t('categories.semanticMarkup.poorStructure')
   }
 
   // 구체적인 제안사항 추가
@@ -348,18 +410,18 @@ function analyzeSemanticMarkupCategory(pageData: PageData): SEOCategory {
 
   // 긍정적인 피드백도 추가
   if (semantic.hasMain) {
-    suggestions.push('✅ 메인 콘텐츠 영역이 잘 구분되어 있습니다')
+    suggestions.push(t('semanticAnalysis.positiveFeedback.mainContent'))
   }
   if (semantic.hasHeader && semantic.hasFooter) {
-    suggestions.push('✅ 헤더와 푸터 영역이 명확하게 구분되어 있습니다')
+    suggestions.push(t('semanticAnalysis.positiveFeedback.headerFooter'))
   }
   if (semantic.headingStructure) {
-    suggestions.push('✅ 헤딩 태그 구조가 논리적으로 잘 구성되어 있습니다')
+    suggestions.push(t('semanticAnalysis.positiveFeedback.headingStructure'))
   }
 
   return {
     id: 'semantic-markup',
-    name: '시멘틱 마크업',
+    name: t('categories.semanticMarkup.name'),
     status,
     score,
     description,
@@ -368,15 +430,19 @@ function analyzeSemanticMarkupCategory(pageData: PageData): SEOCategory {
 }
 
 // 콘텐츠 품질 분석
-function analyzeContentQuality(
+async function analyzeContentQuality(
   content: string,
   h1Tags: string[],
   h2Tags: string[],
   title: string,
-  description: string
-): PageData['contentQuality'] {
+  description: string,
+  locale: string = 'ko'
+): Promise<PageData['contentQuality']> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   // description 변수 사용 (TypeScript 경고 해결)
-  console.debug('분석 중인 페이지 설명:', description.slice(0, 50) + '...')
+  console.debug(t('console.analyzing'), description.slice(0, 50) + '...')
   
   // 읽기 쉬움 점수 (간단한 버전)
   const sentences = content.split(/[.!?]+/).filter(s => s.trim().length > 0)
@@ -420,7 +486,10 @@ async function fetchTextFile(url: string): Promise<string | null> {
 }
 
 // robots.txt 분석
-async function analyzeRobotsTxt(url: string): Promise<SEOCategory> {
+async function analyzeRobotsTxt(url: string, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const urlObj = new URL(url);
   const robotsUrl = `${urlObj.origin}/robots.txt`;
   const robotsTxt = await fetchTextFile(robotsUrl);
@@ -433,23 +502,23 @@ async function analyzeRobotsTxt(url: string): Promise<SEOCategory> {
   if (robotsTxt) {
     score = 90;
     status = 'good';
-    description = 'robots.txt 파일이 존재합니다. 검색엔진이 사이트를 크롤링하는 방법을 제어할 수 있습니다.';
-    suggestions.push('robots.txt 파일이 모든 중요한 페이지의 크롤링을 허용하는지 확인하세요.');
+    description = t('categories.robots.exists');
+    suggestions.push('seoAnalyzer.categories.robots.suggestions.allowImportant');
     if (!robotsTxt.includes('Sitemap:')) {
       score -= 10;
       status = 'warning';
-      suggestions.push('robots.txt에 사이트맵 위치를 추가하는 것이 좋습니다 (예: Sitemap: https://example.com/sitemap.xml).');
+      suggestions.push('seoAnalyzer.categories.robots.suggestions.addSitemap');
     }
   } else {
     score = 40;
     status = 'warning';
-    description = 'robots.txt 파일이 없습니다. 검색엔진 크롤링을 더 잘 제어하기 위해 추가하는 것이 좋습니다.';
-    suggestions.push('웹사이트 루트에 robots.txt 파일을 생성하세요.');
+    description = t('categories.robots.noRobotsFile');
+    suggestions.push('seoAnalyzer.categories.robots.suggestions.createRobots');
   }
 
   return {
     id: 'robots',
-    name: 'robots.txt',
+    name: t('categories.robots.name'),
     status,
     score,
     description,
@@ -458,7 +527,9 @@ async function analyzeRobotsTxt(url: string): Promise<SEOCategory> {
 }
 
 // Sitemap 분석
-async function analyzeSitemap(url: string): Promise<SEOCategory> {
+async function analyzeSitemap(url: string, locale: string = 'ko'): Promise<SEOCategory> {
+    const messages = await getMessages(locale)
+    const t = createTranslationFunction(messages, 'seoAnalyzer')
     const urlObj = new URL(url);
     // First check robots.txt for sitemap location
     const robotsUrl = `${urlObj.origin}/robots.txt`;
@@ -487,27 +558,27 @@ async function analyzeSitemap(url: string): Promise<SEOCategory> {
     if (sitemapXml) {
         score = 90;
         status = 'good';
-        description = '사이트맵이 존재합니다. 검색엔진이 사이트의 모든 페이지를 쉽게 찾을 수 있습니다.';
-        suggestions.push('사이트맵이 최신 상태인지 정기적으로 확인하세요.');
+        description = t('categories.sitemap.exists');
+        suggestions.push('seoAnalyzer.categories.sitemap.suggestions.keepUpdated');
         if(foundInRobots) {
             score = 95;
-            suggestions.push('robots.txt에 사이트맵 위치가 명시되어 있어 좋습니다.');
+            suggestions.push('seoAnalyzer.categories.sitemap.suggestions.goodInRobots');
         } else {
             score = 85;
             status = 'warning';
-            suggestions.push('robots.txt에 사이트맵 위치를 추가하는 것을 고려해보세요.');
+            suggestions.push('seoAnalyzer.categories.sitemap.suggestions.addToRobots');
         }
     } else {
         score = 30;
         status = 'danger';
-        description = '사이트맵이 없습니다. 검색엔진이 사이트의 모든 페이지를 발견하지 못할 수 있습니다.';
-        suggestions.push('sitemap.xml 파일을 생성하고 웹사이트 루트에 업로드하세요.');
-        suggestions.push('사이트맵 생성 도구를 사용하면 쉽게 만들 수 있습니다.');
+        description = t('categories.sitemap.missing');
+        suggestions.push('seoAnalyzer.categories.sitemap.suggestions.createSitemap');
+        suggestions.push('seoAnalyzer.categories.sitemap.suggestions.useTools');
     }
 
     return {
         id: 'sitemap',
-        name: '사이트맵',
+        name: t('categories.sitemap.name'),
         status,
         score,
         description,
@@ -516,34 +587,34 @@ async function analyzeSitemap(url: string): Promise<SEOCategory> {
 }
 
 // SEO 분석 실행
-export async function analyzeSEO(url: string): Promise<AnalysisResult> {
+export async function analyzeSEO(url: string, locale: string = 'ko'): Promise<AnalysisResult> {
   try {
     // 1. 페이지 HTML 가져오기 및 데이터 추출
-    const html = await fetchPageHTML(url)
-    const pageData = parsePageData(html, url)
+    const html = await fetchPageHTML(url, locale)
+    const pageData = await parsePageData(html, url, locale)
     
     // 2. 기본 SEO 분석 (확장됨)
-    const robotsAnalysis = await analyzeRobotsTxt(url);
-    const sitemapAnalysis = await analyzeSitemap(url);
+    const robotsAnalysis = await analyzeRobotsTxt(url, locale);
+    const sitemapAnalysis = await analyzeSitemap(url, locale);
 
     const basicCategories: SEOCategory[] = [
-      analyzeTitleTag(pageData),
-      analyzeMetaDescription(pageData),
-      analyzeContent(pageData),
-      analyzeSocialTags(html),
-      analyzeStructuredData(html),
-      analyzeTechnicalSEO(pageData),
-      analyzeHttpsSecurity(url),
-      analyzeLinkStructure(pageData),
-      analyzeKeywordOptimization(pageData),
-      analyzeSemanticMarkupCategory(pageData),
+      await analyzeTitleTag(pageData, locale),
+      await analyzeMetaDescription(pageData, locale),
+      await analyzeContent(pageData, locale),
+      await analyzeSocialTags(html, locale),
+      await analyzeStructuredData(html, locale),
+      await analyzeTechnicalSEO(pageData, locale),
+      await analyzeHttpsSecurity(url, locale),
+      await analyzeLinkStructure(pageData, locale),
+      await analyzeKeywordOptimization(pageData, locale),
+      await analyzeSemanticMarkupCategory(pageData, locale),
       robotsAnalysis,
       sitemapAnalysis
     ]
     
     // 선택사항 분석 (점수에 포함되지 않음)
     const optionalCategories: SEOCategory[] = [
-      analyzeImages(pageData)
+      await analyzeImages(pageData, locale)
     ]
     
     // 3. PageSpeed Insights 성능 분석
@@ -616,11 +687,11 @@ export async function analyzeSEO(url: string): Promise<AnalysisResult> {
           ...pageData,
           url,
           content: textContent
-        }),
+        }, locale),
         generateKeywordSuggestions({
           ...pageData,
           content: textContent
-        }, businessType)
+        }, businessType, locale)
       ])
       
       console.log('⚡ AI 분석 완료:', {
@@ -884,7 +955,10 @@ function detectBusinessType(pageData: any): string {
 }
 
 // 제목 태그 분석
-function analyzeTitleTag(pageData: PageData): SEOCategory {
+async function analyzeTitleTag(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const { title } = pageData
   
   let score = 0
@@ -895,32 +969,33 @@ function analyzeTitleTag(pageData: PageData): SEOCategory {
   if (!title) {
     score = 0
     status = 'danger'
-    description = '페이지 제목이 없어요! 고객이 검색할 때 찾기 어려워요.'
-    suggestions.push('페이지 제목을 추가해주세요')
-    suggestions.push('제목은 30-60자 정도가 적당해요')
+    description = t('categories.title.missing')
+    suggestions.push('seoAnalyzer.categories.title.suggestions.addKeywords')
+    suggestions.push('seoAnalyzer.categories.title.suggestions.makeAttractive')
   } else if (title.length < 30) {
     score = 60
     status = 'warning'
-    description = '제목이 조금 짧아요. 더 자세히 설명하면 고객이 더 잘 찾을 수 있어요.'
-    suggestions.push('제목을 30-60자 정도로 늘려보세요')
-    suggestions.push('고객이 검색할 만한 키워드를 추가해보세요')
+    description = t('categories.title.tooShort', { length: title.length })
+    suggestions.push('seoAnalyzer.categories.title.suggestions.addKeywords')
+    suggestions.push('seoAnalyzer.categories.title.suggestions.makeAttractive')
   } else if (title.length > 60) {
     score = 75
     status = 'warning'
-    description = '제목이 조금 길어요. 검색 결과에서 잘릴 수 있어요.'
-    suggestions.push('제목을 60자 이내로 줄여보세요')
-    suggestions.push('가장 중요한 키워드를 앞쪽에 배치해보세요')
+    description = t('categories.title.tooLong', { length: title.length })
+    suggestions.push('seoAnalyzer.categories.title.suggestions.makeAttractive')
+    suggestions.push('seoAnalyzer.categories.title.suggestions.addKeywords')
   } else {
     score = 95
     status = 'good'
-    description = '제목이 완벽해요! 고객이 검색할 때 쉽게 찾을 수 있습니다.'
-    suggestions.push('현재 제목이 적절한 길이입니다')
-    suggestions.push('키워드가 자연스럽게 포함되어 있습니다')
+    description = t('categories.title.description')
+    suggestions.push('seoAnalyzer.categories.title.suggestions.makeAttractive')
+    suggestions.push('seoAnalyzer.categories.title.suggestions.includeNumbers')
   }
+  
   
   return {
     id: 'title',
-    name: '페이지 제목',
+    name: t('categories.title.name'),
     status,
     score,
     description,
@@ -929,7 +1004,10 @@ function analyzeTitleTag(pageData: PageData): SEOCategory {
 }
 
 // 메타 설명 분석
-function analyzeMetaDescription(pageData: PageData): SEOCategory {
+async function analyzeMetaDescription(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const { description } = pageData
   
   let score = 0
@@ -940,32 +1018,32 @@ function analyzeMetaDescription(pageData: PageData): SEOCategory {
   if (!description) {
     score = 0
     status = 'danger'
-    desc = '페이지 설명이 없어요! 검색 결과에서 고객이 클릭하기 어려워요.'
-    suggestions.push('페이지 설명을 추가해주세요')
-    suggestions.push('설명은 120-160자 정도가 적당해요')
+    desc = t('categories.description.missing')
+    suggestions.push('seoAnalyzer.categories.description.suggestions.includeKeywords')
+    suggestions.push('seoAnalyzer.categories.description.suggestions.makeUnique')
   } else if (description.length < 120) {
     score = 70
     status = 'warning'
-    desc = '설명이 조금 짧아요. 더 자세히 설명하면 고객이 더 많이 클릭할 거예요.'
-    suggestions.push('설명을 120-160자 정도로 늘려보세요')
-    suggestions.push('고객이 관심 가질 만한 내용을 추가해보세요')
+    desc = t('categories.description.tooShort', { length: description.length })
+    suggestions.push('seoAnalyzer.categories.description.suggestions.includeKeywords')
+    suggestions.push('seoAnalyzer.categories.description.suggestions.showBenefit')
   } else if (description.length > 160) {
     score = 75
     status = 'warning'
-    desc = '설명이 조금 길어요. 검색 결과에서 잘릴 수 있어요.'
-    suggestions.push('설명을 160자 이내로 줄여보세요')
-    suggestions.push('가장 중요한 내용을 앞쪽에 배치해보세요')
+    desc = t('categories.description.tooLong', { length: description.length })
+    suggestions.push('seoAnalyzer.categories.description.suggestions.makeUnique')
+    suggestions.push('seoAnalyzer.categories.description.suggestions.showBenefit')
   } else {
     score = 95
     status = 'good'
-    desc = '설명이 완벽해요! 고객이 클릭하고 싶어할 내용입니다.'
-    suggestions.push('설명이 적절한 길이입니다')
-    suggestions.push('고객의 관심을 끌 수 있는 내용입니다')
+    desc = t('categories.description.description')
+    suggestions.push('seoAnalyzer.categories.description.suggestions.addAction')
+    suggestions.push('seoAnalyzer.categories.description.suggestions.includeKeywords')
   }
   
   return {
     id: 'description',
-    name: '페이지 설명',
+    name: t('categories.description.name'),
     status,
     score,
     description: desc,
@@ -974,7 +1052,10 @@ function analyzeMetaDescription(pageData: PageData): SEOCategory {
 }
 
 // 이미지 분석
-function analyzeImages(pageData: PageData): SEOCategory {
+async function analyzeImages(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const { images } = pageData
   const totalImages = images.length
   const imagesWithAlt = images.filter(img => img.alt.trim().length > 0).length
@@ -987,41 +1068,41 @@ function analyzeImages(pageData: PageData): SEOCategory {
   if (totalImages === 0) {
     score = 80
     status = 'good'
-    description = '이미지가 없어서 별도로 최적화할 것이 없어요.'
-    suggestions.push('이미지를 추가할 때는 설명을 함께 넣어주세요')
+    description = t('categories.images.description')
+    suggestions.push('seoAnalyzer.categories.images.suggestions.addAltText')
   } else {
     const altPercentage = (imagesWithAlt / totalImages) * 100
     
     if (altPercentage === 100) {
       score = 95
       status = 'good'
-      description = '모든 이미지에 설명이 있어요! 검색에서 잘 찾을 수 있습니다.'
-      suggestions.push('이미지 설명이 완벽합니다')
-      suggestions.push('검색엔진이 이미지를 잘 이해할 수 있어요')
+      description = t('categories.images.description')
+      suggestions.push('seoAnalyzer.categories.images.suggestions.addAltText')
+      suggestions.push('seoAnalyzer.categories.images.suggestions.optimizeSize')
     } else if (altPercentage >= 80) {
       score = 85
       status = 'good'
-      description = '대부분의 이미지에 설명이 있어요. 조금만 더 신경쓰면 완벽해요!'
-      suggestions.push(`${totalImages - imagesWithAlt}개 이미지에 설명을 추가해보세요`)
-      suggestions.push('이미지 설명은 간단하게 무엇인지 적어주세요')
+      description = t('categories.images.description')
+      suggestions.push(t('categories.images.noAlt', { count: totalImages - imagesWithAlt }))
+      suggestions.push('seoAnalyzer.categories.images.suggestions.addAltText')
     } else if (altPercentage >= 50) {
       score = 65
       status = 'warning'
-      description = '이미지 설명이 부족해요. 더 추가하면 검색에서 더 잘 찾을 수 있어요.'
-      suggestions.push(`${totalImages - imagesWithAlt}개 이미지에 설명을 추가해보세요`)
-      suggestions.push('이미지마다 간단한 설명을 추가해주세요')
+      description = t('categories.images.description')
+      suggestions.push(t('categories.images.noAlt', { count: totalImages - imagesWithAlt }))
+      suggestions.push('seoAnalyzer.categories.images.suggestions.addAltText')
     } else {
       score = 40
       status = 'danger'
-      description = '대부분의 이미지에 설명이 없어요. 검색에서 놓칠 수 있어요.'
-      suggestions.push(`${totalImages - imagesWithAlt}개 이미지에 설명을 추가해보세요`)
-      suggestions.push('이미지 설명은 검색에 도움이 많이 돼요')
+      description = t('categories.images.description')
+      suggestions.push(t('categories.images.noAlt', { count: totalImages - imagesWithAlt }))
+      suggestions.push('seoAnalyzer.categories.images.suggestions.addAltText')
     }
   }
   
   return {
     id: 'images',
-    name: '이미지 최적화',
+    name: t('categories.images.name'),
     status,
     score,
     description,
@@ -1029,9 +1110,11 @@ function analyzeImages(pageData: PageData): SEOCategory {
   }
 }
 
-// 헤딩 구조 분석
 // 콘텐츠 분석
-function analyzeContent(pageData: PageData): SEOCategory {
+async function analyzeContent(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const { wordCount, contentQuality } = pageData
   
   let score = 0
@@ -1042,32 +1125,33 @@ function analyzeContent(pageData: PageData): SEOCategory {
   if (wordCount < 300) {
     score = 50
     status = 'warning'
-    description = '내용이 조금 적어요. 더 자세히 설명하면 고객에게 도움이 될 거예요.'
-    suggestions.push('내용을 300단어 이상으로 늘려보세요')
-    suggestions.push('고객이 궁금해할 만한 정보를 추가해보세요')
+    description = t('categories.content.description')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.addMoreContent')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.addKeywords')
   } else if (wordCount < 600) {
     score = 75
     status = 'warning'
-    description = '내용이 적당해요. 조금 더 자세히 설명하면 더 좋을 거예요.'
-    suggestions.push('내용을 조금 더 자세히 설명해보세요')
-    suggestions.push('고객이 관심 가질 만한 정보를 추가해보세요')
+    description = t('categories.content.description')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.addMoreContent')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.addKeywords')
   } else {
     score = 90
     status = 'good'
-    description = '내용이 풍부해요! 고객이 필요한 정보를 충분히 얻을 수 있어요.'
-    suggestions.push('내용이 충분합니다')
-    suggestions.push('고객에게 도움이 되는 정보가 많아요')
+    description = t('categories.content.description')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.useHeadings')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.improveReadability')
   }
   
   // 읽기 쉬움 점수 반영
   if (contentQuality.readabilityScore < 60) {
     score -= 15
-    suggestions.push('문장을 조금 더 짧게 만들어보세요')
+    suggestions.push('seoAnalyzer.categories.content.suggestions.improveReadability')
   }
   
   // 제목 구조 반영
   if (!contentQuality.headingStructure) {
     score -= 10
+    suggestions.push('seoAnalyzer.categories.content.suggestions.useHeadings')
   }
   
   // 최종 점수 조정
@@ -1083,7 +1167,7 @@ function analyzeContent(pageData: PageData): SEOCategory {
   
   return {
     id: 'content',
-    name: '콘텐츠 품질',
+    name: t('categories.content.name'),
     status,
     score,
     description,
@@ -1092,7 +1176,10 @@ function analyzeContent(pageData: PageData): SEOCategory {
 }
 
 // 소셜 미디어 태그 분석
-function analyzeSocialTags(html: string): SEOCategory {
+async function analyzeSocialTags(html: string, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const $ = cheerio.load(html)
   
   // 필수 Open Graph 태그들
@@ -1119,14 +1206,14 @@ function analyzeSocialTags(html: string): SEOCategory {
     score += 20
     if (ogTitle.length >= 15 && ogTitle.length <= 60) score += 5 // 적절한 길이 보너스
   } else {
-    suggestions.push('og:title 태그를 추가해보세요 (페이스북 공유 제목)')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
   }
   
   if (ogDescription && ogDescription.length > 0) {
     score += 20
     if (ogDescription.length >= 50 && ogDescription.length <= 160) score += 5 // 적절한 길이 보너스
   } else {
-    suggestions.push('og:description 태그를 추가해보세요 (페이스북 공유 설명)')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
   }
   
   if (ogImage && ogImage.length > 0) {
@@ -1134,13 +1221,13 @@ function analyzeSocialTags(html: string): SEOCategory {
     // 이미지 URL이 유효한지 간단 체크
     if (ogImage.startsWith('http')) score += 5 // 절대 URL 보너스
   } else {
-    suggestions.push('og:image 태그를 추가해보세요 (공유 시 표시될 이미지)')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgImage')
   }
   
   if (ogUrl && ogUrl.length > 0) {
     score += 15
   } else {
-    suggestions.push('og:url 태그를 추가해보세요 (페이지 정확한 주소)')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
   }
   
   // 추가 최적화 점수 (총 20점)
@@ -1148,7 +1235,7 @@ function analyzeSocialTags(html: string): SEOCategory {
     score += 10
     if (twitterCard === 'summary_large_image') score += 2 // 권장 카드 타입 보너스
   } else {
-    suggestions.push('twitter:card 태그를 추가해보세요 (트위터 공유 최적화)')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addTwitterCards')
   }
   
   if (ogSiteName && ogSiteName.length > 0) {
@@ -1169,39 +1256,38 @@ function analyzeSocialTags(html: string): SEOCategory {
   // 상태 및 설명 설정
   if (score >= 85) {
     status = 'good'
-    description = '소셜 미디어 공유 최적화가 완벽해요! 페이스북, 트위터에서 예쁘게 보일 거예요.'
+    description = t('categories.socialMedia.description')
     if (suggestions.length === 0) {
-      suggestions.push('현재 소셜 미디어 설정이 완벽합니다')
-      suggestions.push('정기적으로 공유 이미지를 업데이트하세요')
+      suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.testSharing')
     }
   } else if (score >= 60) {
     status = 'warning'
-    description = '소셜 미디어 설정이 어느 정도 되어 있어요. 조금 더 보완하면 완벽할 거예요.'
+    description = t('categories.socialMedia.description')
     if (suggestions.length === 0) {
-      suggestions.push('추가 최적화를 통해 더 나은 공유 경험을 제공할 수 있어요')
+      suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
     }
   } else {
     status = 'danger'
-    description = '소셜 미디어 공유 설정이 부족해요. 페이스북이나 카카오톡에서 공유할 때 보기 안 좋을 수 있어요.'
+    description = t('categories.socialMedia.missingOg')
     if (suggestions.length === 0) {
-      suggestions.push('기본 Open Graph 태그부터 설정해보세요')
+      suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
     }
   }
   
   // 품질 관련 추가 제안
   if (ogTitle && ogTitle.length > 60) {
-    suggestions.push('공유 제목이 너무 길어요. 60자 이내로 줄여보세요')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
   }
   if (ogDescription && ogDescription.length > 160) {
-    suggestions.push('공유 설명이 너무 길어요. 160자 이내로 줄여보세요')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgTags')
   }
   if (ogImage && !ogImage.startsWith('http')) {
-    suggestions.push('공유 이미지는 절대 URL (https://)로 설정해보세요')
+    suggestions.push('seoAnalyzer.categories.socialMedia.suggestions.addOgImage')
   }
   
   return {
     id: 'social',
-    name: '소셜 미디어 최적화',
+    name: t('categories.socialMedia.name'),
     status,
     score,
     description,
@@ -1210,7 +1296,10 @@ function analyzeSocialTags(html: string): SEOCategory {
 }
 
 // 구조화 데이터 분석
-function analyzeStructuredData(html: string): SEOCategory {
+async function analyzeStructuredData(html: string, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const $ = cheerio.load(html)
   
   const ldJsonScripts = $('script[type="application/ld+json"]')
@@ -1224,21 +1313,20 @@ function analyzeStructuredData(html: string): SEOCategory {
   if (hasStructuredData) {
     score = 85
     status = 'good'
-    description = '구조화 데이터가 설정되어 있어요! 검색 결과에서 더 풍부하게 보일 수 있어요.'
-    suggestions.push('현재 구조화 데이터 설정이 좋습니다')
-    suggestions.push('Google Search Console에서 확인해보세요')
+    description = t('categories.structuredData.description')
+    suggestions.push('seoAnalyzer.categories.structuredData.suggestions.testWithTools')
   } else {
     score = 40
     status = 'warning'
-    description = '구조화 데이터가 없어요. 검색 결과에서 별점이나 가격 같은 정보를 보여줄 수 있어요.'
-    suggestions.push('Schema.org 마크업을 추가해보세요')
-    suggestions.push('비즈니스 정보 구조화 데이터를 설정하세요')
-    suggestions.push('Google 구조화 데이터 도구를 사용해보세요')
+    description = t('categories.structuredData.missing')
+    suggestions.push('seoAnalyzer.categories.structuredData.suggestions.addJsonLd')
+    suggestions.push('seoAnalyzer.categories.structuredData.suggestions.useSchema')
+    suggestions.push('seoAnalyzer.categories.structuredData.suggestions.addBusiness')
   }
   
   return {
     id: 'structured',
-    name: '구조화 데이터',
+    name: t('categories.structuredData.name'),
     status,
     score,
     description,
@@ -1247,7 +1335,10 @@ function analyzeStructuredData(html: string): SEOCategory {
 }
 
 // 기술적 SEO 분석
-function analyzeTechnicalSEO(pageData: PageData): SEOCategory {
+async function analyzeTechnicalSEO(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   let score = 0
   let issues = 0
   const suggestions: string[] = []
@@ -1255,25 +1346,25 @@ function analyzeTechnicalSEO(pageData: PageData): SEOCategory {
   // 뷰포트 설정 확인
   if (!pageData.viewport) {
     issues++
-    suggestions.push('모바일 뷰포트 설정을 추가하세요')
+    suggestions.push('seoAnalyzer.categories.technical.suggestions.addViewport')
   }
   
   // Canonical URL 확인
   if (!pageData.canonicalUrl) {
     issues++
-    suggestions.push('Canonical URL을 설정하세요')
+    suggestions.push('seoAnalyzer.categories.technical.suggestions.addCanonical')
   }
   
   // 언어 설정 확인
   if (!pageData.lang) {
     issues++
-    suggestions.push('HTML 언어 속성을 설정하세요')
+    suggestions.push('seoAnalyzer.categories.technical.suggestions.setRobots')
   }
   
   // 문자 인코딩 확인
   if (!pageData.charset) {
     issues++
-    suggestions.push('문자 인코딩을 설정하세요')
+    suggestions.push('seoAnalyzer.categories.technical.suggestions.optimizePerformance')
   }
   
   score = Math.max(20, 100 - (issues * 20))
@@ -1281,21 +1372,23 @@ function analyzeTechnicalSEO(pageData: PageData): SEOCategory {
   
   let description = ''
   if (score >= 80) {
-    description = '기술적 SEO 설정이 잘 되어 있어요! 검색엔진이 이해하기 쉬울 거예요.'
-    suggestions.push('현재 기술적 설정이 우수합니다')
+    description = t('categories.technical.description')
+    if (suggestions.length === 0) {
+      suggestions.push('seoAnalyzer.categories.technical.suggestions.addViewport')
+    }
   } else if (score >= 60) {
-    description = '기술적 SEO가 대부분 설정되어 있어요. 몇 가지만 더 보완하면 완벽할 거예요.'
+    description = t('categories.technical.description')
   } else {
-    description = '기술적 SEO 설정이 부족해요. 검색엔진이 사이트를 제대로 이해하지 못할 수 있어요.'
+    description = t('categories.technical.missingViewport')
   }
   
   return {
     id: 'technical',
-    name: '기술적 SEO',
+    name: t('categories.technical.name'),
     status,
     score,
     description,
-    suggestions: suggestions.length > 0 ? suggestions : ['현재 설정이 양호합니다']
+    suggestions: suggestions.length > 0 ? suggestions : [t('categories.technical.suggestions.addViewport')]
   }
 }
 
@@ -1510,7 +1603,10 @@ function isAffiliateImage($: cheerio.CheerioAPI, el: cheerio.Element): boolean {
 }
 
 // HTTPS 보안 분석
-function analyzeHttpsSecurity(url: string): SEOCategory {
+async function analyzeHttpsSecurity(url: string, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const isHttps = url.startsWith('https://')
   
   let score = 0
@@ -1521,21 +1617,21 @@ function analyzeHttpsSecurity(url: string): SEOCategory {
   if (isHttps) {
     score = 95
     status = 'good'
-    description = '사이트가 안전한 HTTPS로 보호되고 있어요! 고객 정보가 안전하게 전송됩니다.'
-    suggestions.push('HTTPS 보안이 적용되어 있습니다')
-    suggestions.push('SSL 인증서가 정상적으로 설치되어 있습니다')
+    description = t('categories.https.description')
+    suggestions.push('seoAnalyzer.categories.https.suggestions.enableHttps')
+    suggestions.push('seoAnalyzer.categories.https.suggestions.testSecurity')
   } else {
     score = 30
     status = 'danger'
-    description = '사이트가 HTTP로 되어 있어요. 고객 정보가 안전하지 않을 수 있고, 검색 순위에도 영향을 줄 수 있어요.'
-    suggestions.push('HTTPS로 변경해보세요')
-    suggestions.push('SSL 인증서를 설치해보세요')
-    suggestions.push('호스팅 업체에 HTTPS 설정을 문의해보세요')
+    description = t('categories.https.notSecure')
+    suggestions.push('seoAnalyzer.categories.https.suggestions.enableHttps')
+    suggestions.push('seoAnalyzer.categories.https.suggestions.redirectHttp')
+    suggestions.push('seoAnalyzer.categories.https.suggestions.updateLinks')
   }
   
   return {
     id: 'https',
-    name: 'HTTPS 보안',
+    name: t('categories.https.name'),
     status,
     score,
     description,
@@ -1544,7 +1640,10 @@ function analyzeHttpsSecurity(url: string): SEOCategory {
 }
 
 // 링크 구조 분석
-function analyzeLinkStructure(pageData: PageData): SEOCategory {
+async function analyzeLinkStructure(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const { links } = pageData
   const totalLinks = links.length
   const internalLinks = links.filter(link => !link.isExternal).length
@@ -1558,37 +1657,37 @@ function analyzeLinkStructure(pageData: PageData): SEOCategory {
   if (totalLinks === 0) {
     score = 50
     status = 'warning'
-    description = '링크가 없어요. 관련 페이지나 유용한 사이트로 연결하면 더 좋을 거예요.'
-    suggestions.push('관련 페이지로 연결하는 링크를 추가해보세요')
-    suggestions.push('유용한 외부 사이트로 연결해보세요')
+    description = t('categories.links.description')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.addInternal')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.balanceLinks')
   } else if (internalLinks >= 2 && externalLinks >= 1) {
     score = 95
     status = 'good'
-    description = '링크 구조가 완벽해요! 내부 페이지와 외부 사이트로 잘 연결되어 있습니다.'
-    suggestions.push('내부 링크와 외부 링크가 잘 균형을 이루고 있습니다')
-    suggestions.push('링크 텍스트가 명확한지 확인해보세요')
+    description = t('categories.links.description')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.useAnchorText')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.checkBroken')
   } else if (internalLinks >= 1 || externalLinks >= 1) {
     score = 75
     status = 'warning'
-    description = '링크가 있어서 좋아요! 내부 페이지와 외부 사이트로 더 연결하면 더 좋을 거예요.'
+    description = t('categories.links.description')
     if (internalLinks === 0) {
-      suggestions.push('사이트 내 다른 페이지로 연결하는 링크를 추가해보세요')
+      suggestions.push('seoAnalyzer.categories.links.suggestions.addInternal')
     }
     if (externalLinks === 0) {
-      suggestions.push('신뢰할 수 있는 외부 사이트로 연결해보세요')
+      suggestions.push('seoAnalyzer.categories.links.suggestions.balanceLinks')
     }
-    suggestions.push('관련성 있는 링크를 추가해보세요')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.useAnchorText')
   } else {
     score = 60
     status = 'warning'
-    description = '링크가 부족해요. 관련 페이지나 유용한 사이트로 연결하면 SEO에 도움이 될 거예요.'
-    suggestions.push('내부 페이지로 연결하는 링크를 추가해보세요')
-    suggestions.push('관련 있는 외부 사이트로 연결해보세요')
+    description = t('categories.links.fewInternal')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.addInternal')
+    suggestions.push('seoAnalyzer.categories.links.suggestions.balanceLinks')
   }
   
   return {
     id: 'links',
-    name: '링크 구조',
+    name: t('categories.links.name'),
     status,
     score,
     description,
@@ -1597,7 +1696,10 @@ function analyzeLinkStructure(pageData: PageData): SEOCategory {
 }
 
 // 키워드 최적화 분석
-function analyzeKeywordOptimization(pageData: PageData): SEOCategory {
+async function analyzeKeywordOptimization(pageData: PageData, locale: string = 'ko'): Promise<SEOCategory> {
+  const messages = await getMessages(locale)
+  const t = createTranslationFunction(messages, 'seoAnalyzer')
+  
   const { title, description, wordCount, h1Tags, h2Tags } = pageData
   
   let score = 0
@@ -1621,31 +1723,31 @@ function analyzeKeywordOptimization(pageData: PageData): SEOCategory {
   
   if (score >= 80) {
     status = 'good'
-    desc = '키워드 최적화가 잘 되어 있어요! 제목, 설명, 내용에 키워드가 자연스럽게 들어가 있습니다.'
-    suggestions.push('키워드가 자연스럽게 배치되어 있습니다')
-    suggestions.push('제목과 내용의 일관성이 좋습니다')
+    desc = t('categories.keywords.description')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.naturalUse')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.monitoring')
   } else if (score >= 60) {
     status = 'warning'
-    desc = '키워드 최적화가 어느 정도 되어 있어요. 조금 더 자연스럽게 키워드를 배치하면 더 좋을 거예요.'
+    desc = t('categories.keywords.description')
     if (!hasKeywordInDescription) {
-      suggestions.push('페이지 설명에 주요 키워드를 자연스럽게 포함해보세요')
+      suggestions.push('seoAnalyzer.categories.keywords.suggestions.naturalUse')
     }
     if (!hasKeywordInH1) {
-      suggestions.push('큰 제목에 주요 키워드를 포함해보세요')
+      suggestions.push('seoAnalyzer.categories.keywords.suggestions.research')
     }
-    suggestions.push('키워드를 억지로 넣지 말고 자연스럽게 사용하세요')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.longTail')
   } else {
     status = 'danger'
-    desc = '키워드 최적화가 부족해요. 제목, 설명, 내용에 일관된 키워드를 사용하면 검색에 도움이 될 거예요.'
-    suggestions.push('페이지 제목에 주요 키워드를 포함해보세요')
-    suggestions.push('페이지 설명에도 같은 키워드를 자연스럽게 사용해보세요')
-    suggestions.push('내용에 키워드를 자연스럽게 반복해보세요')
-    suggestions.push('키워드는 자연스럽게 사용하는 것이 중요해요')
+    desc = t('categories.keywords.lowDensity')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.research')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.naturalUse')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.longTail')
+    suggestions.push('seoAnalyzer.categories.keywords.suggestions.monitoring')
   }
   
   return {
     id: 'keywords',
-    name: '키워드 최적화',
+    name: t('categories.keywords.name'),
     status,
     score,
     description: desc,

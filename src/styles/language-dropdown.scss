@@ -1,0 +1,199 @@
+// Language Dropdown Styles
+.header__language-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: var(--spacing-md);
+}
+
+.header__language-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.875rem;
+  font-weight: 500;
+  min-width: 110px;
+  justify-content: space-between;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+
+    &::before {
+      left: 100%;
+    }
+
+    .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.language-flag {
+  font-size: 1.25em;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.language-text {
+  font-weight: 500;
+  white-space: nowrap;
+  letter-spacing: 0.025em;
+}
+
+.dropdown-arrow {
+  font-size: 0.7rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.8;
+  font-weight: bold;
+}
+
+.header__language-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 150px;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.875rem;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-primary);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    transform: translateX(2px);
+
+    &::before {
+      transform: scaleY(1);
+    }
+  }
+
+  &:focus {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+    outline: none;
+  }
+
+  &.active {
+    background: linear-gradient(135deg, var(--color-primary), rgba(59, 130, 246, 0.8));
+    color: white;
+    font-weight: 600;
+
+    &::before {
+      transform: scaleY(1);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    &:hover {
+      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+      transform: translateX(0);
+    }
+  }
+
+  .language-flag {
+    font-size: 1.15em;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+
+  .language-text {
+    font-weight: 500;
+    letter-spacing: 0.025em;
+  }
+}
+
+// Mobile Language Button
+.header__mobile-language-btn {
+  border-top: 1px solid var(--color-border);
+  font-weight: 600;
+  color: var(--color-primary) !important;
+  
+  &:hover {
+    background: var(--color-bg-secondary);
+    color: var(--color-primary-dark) !important;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .header__language-dropdown {
+    display: none; // Hide on mobile, use mobile button instead
+  }
+}

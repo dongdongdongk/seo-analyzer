@@ -1,0 +1,1410 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "seoGuide": "SEO Guide",
+    "language": "Language",
+    "english": "English",
+    "korean": "Korean",
+    "filename": "Filename",
+    "altText": "Alt text",
+    "size": "Size",
+    "none": "None",
+    "recommendation": "Recommendation",
+    "suggestions": "Suggestions"
+  },
+  "header": {
+    "home": "Home",
+    "about": "About",
+    "seoGuide": "SEO Guide",
+    "faq": "FAQ",
+    "menuToggle": "Toggle menu"
+  },
+  "home": {
+    "title": "What's Your Website's SEO Score?",
+    "subtitle": "Just enter your website URL and get a comprehensive SEO analysis in 3 minutes!<br />We'll explain everything in simple terms anyone can understand.",
+    "urlPlaceholder": "https://yourwebsite.com",
+    "analyzeButton": "📊 Start Free Analysis",
+    "analyzing": "Analyzing...",
+    "enterUrl": "Please enter a website URL!",
+    "validUrl": "Please enter a valid website URL! (e.g., https://example.com)",
+    "exampleTitle": "💡 Try with example URLs:",
+    "featuresTitle": "🎯 What we analyze for you",
+    "features": {
+      "title": {
+        "title": "📝 Page Title & Description",
+        "description": "Check if your title and description appear properly in search results"
+      },
+      "speed": {
+        "title": "⚡ Site Speed",
+        "description": "Measure how quickly customers can view your site without waiting"
+      },
+      "mobile": {
+        "title": "📱 Mobile Friendliness",
+        "description": "Check if your site is convenient to view on mobile devices"
+      },
+      "images": {
+        "title": "🖼️ Image Optimization",
+        "description": "Check if your images appear well in search results"
+      }
+    },
+    "moreInfoTitle": "📚 Learn More",
+    "moreInfo": {
+      "guide": {
+        "title": "📖 SEO Basics Guide",
+        "description": "New to SEO? Learn step by step from the basics!",
+        "button": "View Guide"
+      },
+      "faq": {
+        "title": "❓ Frequently Asked Questions",
+        "description": "Check FAQ for answers to common questions about our service!",
+        "button": "View FAQ"
+      },
+      "about": {
+        "title": "🎯 About Our Service",
+        "description": "Learn how this service was created!",
+        "button": "Learn More"
+      }
+    }
+  },
+  "analysis": {
+    "progressTitle": "Analyzing...",
+    "progressMessage": "We're carefully examining <strong>{url}</strong>.<br />Please wait a moment! (Takes about 2-3 minutes)",
+    "didYouKnow": "🤔 Wait! Did you know?",
+    "completionMessage": "💪 Once analysis is complete, we'll provide easy-to-follow improvement suggestions!",
+    "steps": {
+      "fetchingPage": "Fetching page information",
+      "analyzingSeo": "Analyzing SEO status",
+      "checkingSpeed": "Checking site speed",
+      "generatingAdvice": "Generating personalized advice",
+      "completed": "Analysis complete!"
+    },
+    "perfectScoreNote": "💡 Perfect 100 points isn't necessary! Above 70 points is excellent SEO.",
+    "categoryStatus": {
+      "excellent": "Excellent",
+      "average": "Average",
+      "needsWork": "Needs Work"
+    },
+    "categoryBreakdown": "Out of {total} items: {excellent} excellent, {average} average, {needsWork} need work",
+    "summaryText": "Focus on resolving {dangerCount} critical issues and {warningCount} improvements first.",
+    "siteAnalysisInfo": "Site Analysis Information",
+    "websiteBasicInfo": "Website Basic Information",
+    "domainAddress": "Domain Address",
+    "estimatedIndustry": "Estimated Industry",
+    "aiAnalyzedBusiness": "AI-analyzed business type",
+    "targetAudience": "Target Audience",
+    "businessTypes": {
+      "일반 서비스업": "General Service Business",
+      "일반 소비자 (B2C)": "General Consumer (B2C)", 
+      "기타": "Other"
+    },
+    "language": "Language",
+    "technicalSeoAnalysis": "Technical SEO Analysis",
+    "analysisReliability": "Analysis Reliability: This information is obtained from analyzing actual web pages. For more accurate analysis, please refer to Google Analytics or Search Console data.",
+    "detailedResults": "Detailed Analysis Results",
+    "mainSeoResults": "Main SEO Analysis Results",
+    "additionalResults": "Additional Analysis Results",
+    "additionalResultsNote": "The items below are for reference and do not significantly affect the overall score.",
+    "referenceOnly": "Reference Only",
+    "viewDetails": "View Details",
+    "aiCustomAdvice": "AI Custom Advice",
+    "overallEvaluation": "Overall Evaluation",
+    "specializedTips": "Specialized Tips",
+    "expectedResultsTitle": "Expected Results",
+    "analyzeOtherSite": "Analyze Another Site",
+    "evaluateService": "Evaluate Service",
+    "currentValues": {
+      "pageTitle": "Page Title",
+      "noTitle": "Title has not been set",
+      "titleLengthDetail": "Current {current} characters (Recommended: 30-60 characters)",
+      "noTitleSet": "Title is not set",
+      "metaDescription": "Meta Description",
+      "noDescription": "Description has not been set",
+      "descriptionLengthDetail": "Current {current} characters (Recommended: 120-160 characters)",
+      "noDescriptionSet": "Description is not set",
+      "mobileViewport": "Mobile Viewport Setting",
+      "viewportSet": "Set",
+      "viewportNotSet": "Not Set",
+      "mobileProperDisplay": "Displays properly on mobile devices.",
+      "mobileNotProperDisplay": "May not display properly on mobile devices.",
+      "siteSpeed": "Site Speed (Page Load Time)",
+      "veryFast": "⚡ Very Fast",
+      "averageSpeed": "🚶 Average Speed",
+      "slowSpeed": "🐌 Slow",
+      "speedVeryFastDetail": "⚡ Website loads very fast! Visitors can see it immediately without waiting, which is great.",
+      "speedAverageDetail": "🚶 Website speed is average. Making it a bit faster will make visitors more satisfied.",
+      "speedSlowDetail": "🐌 Website is too slow. Visitors might get tired of waiting and go to other sites. Speed improvement is essential!",
+      "imageAnalysis": "Image Analysis",
+      "totalImages": "Total {count}",
+      "imageOptimizationCheck": "Check image optimization status.",
+      "contentLength": "Content Length",
+      "words": "{count} words",
+      "sufficientContent": "Sufficient content amount.",
+      "moreContentNeeded": "More content could help with SEO.",
+      "socialMediaOptimization": "Social Media Optimization",
+      "openGraphSet": "Open Graph: Set",
+      "openGraphNotSet": "Open Graph: Not Set",
+      "twitterSet": "Twitter: Set",
+      "twitterNotSet": "Twitter: Not Set",
+      "socialOptimized": "Shares beautifully on social media!",
+      "socialNeedsImprovement": "Adding social media sharing settings can help you get more visitors.",
+      "googleExplanation": "Explaining Site to Google",
+      "googleUnderstands": "✅ Google understands well",
+      "googleConfused": "❌ Google is confused",
+      "structuredDataGood": "✅ Google knows exactly what your site is about! Stars, prices, reviews, etc. can appear nicely in search results.",
+      "structuredDataBad": "❌ Google doesn't really know what you sell or what services you provide. If you kindly explain to Google, you'll stand out more in search results!",
+      "technicalSeo": "Technical SEO",
+      "technicalSeoDescription": "Technical SEO helps search engines read your site properly.",
+      "structuredDataExplanation": "Schema.org structured data is well set up! This is like kindly explaining to Google 'Our site is a cafe, here's our phone number, here's our address'.",
+      "structuredDataMissing": "No structured data (Schema.org). This is like doing business without a store sign. If you tell Google 'We are a ○○ business, our contact is this', you'll show up better in search results!",
+      "mobile": "Mobile",
+      "structuredData": "Structured Data"
+    },
+    "techSeo": {
+      "contentAmount": "Content Amount",
+      "words": "{count} words",
+      "sufficientContent": "✓ Sufficient Content",
+      "moreContentNeeded": "⚠ More Content Needed",
+      "imagesAndLinks": "Images & Links",
+      "imageCount": "Images: {count}",
+      "linkCount": "Links: {count}",
+      "mobileOptimization": "Mobile Optimization",
+      "viewportSet": "Viewport Set",
+      "viewportNotSet": "Viewport Not Set",
+      "mobileGoodDisplay": "Looks good on mobile",
+      "mobileSmallDisplay": "May appear small on mobile",
+      "googleSiteExplanation": "Explaining Site to Google (Structured Data)",
+      "googleUnderstands": "Google understands well",
+      "googleConfused": "Google is confused",
+      "structuredDataGood": "✅ Schema.org markup exists so Google accurately understands your site! Stars, prices, operating hours, etc. can appear nicely in search results.",
+      "structuredDataBad": "❌ No structured data. It's like doing business without a store sign. Tell Google 'We are a ○○ business, our contact is this' and you'll show up better in search results!",
+      "structuredDataTip": "What is structured data? Code that kindly explains to Google 'Our site is a cafe, address is here, phone number is this'"
+    },
+    "linkAnalysis": {
+      "linkStructure": "Link Structure",
+      "totalLinksFound": "Total {count} links found",
+      "internalLinks": "Internal links: {count}",
+      "externalLinks": "External links: {count}",
+      "excellentStructure": "✅ Excellent link structure! Internal links make users explore your site longer, and external links increase credibility.",
+      "averageStructure": "⚠️ Link structure could be better. Using internal links (2+) and external links (1+) appropriately would be better for SEO.",
+      "poorStructure": "❌ Almost no links. Please add links to related internal pages or trustworthy external sites.",
+      "internalLinksNeeded": "Add more internal links (related pages, categories, previous posts, etc.)",
+      "externalLinksNeeded": "Add links to trustworthy external sites",
+      "tooManyLinks": "Too many links. Keep only important links"
+    },
+    "overallScore": "Overall SEO Score",
+    "scoreText": {
+      "excellent": "Excellent! 😊",
+      "good": "Good! 😐",
+      "needsImprovement": "Needs improvement 😔"
+    },
+    "viewDetails": "View Details",
+    "currentValue": "Current Value",
+    "aiAdvice": "AI Recommendations",
+    "overallAdvice": "Overall Assessment",
+    "priorityActions": "Priority Actions",
+    "industryTips": "Industry-Specific Tips",
+    "expectedResults": "Expected Results",
+    "keywordSuggestions": "Keyword Suggestions",
+    "newAnalysis": "Analyze New Site",
+    "feedback": "Leave Feedback",
+    "analysisComplete": "SEO Analysis Complete!",
+    "scoreExplanation": "💡 Perfect 100 points isn't necessary! Above 70 points is excellent SEO.",
+    "tips": [
+      "💡 SEO helps search engines find your site more easily",
+      "🎯 Good titles make customers want to click",
+      "📱 Over 60% of customers view websites on mobile",
+      "⚡ Sites that don't load within 3 seconds lose customers",
+      "🖼️ Adding descriptions to images helps search findability",
+      "📝 Page descriptions are crucial for click decisions",
+      "🔗 Links from other sites to yours improve search rankings"
+    ],
+    "errorMessages": {
+      "feedbackSendFailed": "Feedback sending failed",
+      "feedbackSendSuccess": "Feedback sent successfully:",
+      "feedbackSendError": "Feedback sending error:"
+    },
+    "ui": {
+      "viewDetails": "View Details",
+      "analysisReliability": "Analysis Reliability: This information is obtained from analyzing actual web pages. For more accurate analysis, please refer to Google Analytics or Search Console data.",
+      "specializedTips": "Specialized Tips",
+      "expectedResultsTitle": "Expected Results",
+      "keywordDescription": "AI analyzed your webpage and suggested keywords that customers are likely to search for! These keywords are tailored to match your page's language and content.",
+      "structuredDataTipLabel": "What is structured data?",
+      "charactersCount": "({length} characters)",
+      "aiRecommendedKeywords": "AI Recommended Keywords",
+      "points": " pts"
+    },
+    "categoryNames": {
+      "페이지 제목": "Page Title",
+      "페이지 설명": "Page Description",
+      "콘텐츠 품질": "Content Quality", 
+      "소셜 미디어 최적화": "Social Media Optimization",
+      "구조화 데이터": "Structured Data",
+      "기술적 SEO": "Technical SEO",
+      "HTTPS 보안": "HTTPS Security",
+      "링크 구조": "Link Structure",
+      "키워드 최적화": "Keyword Optimization",
+      "사이트맵": "Sitemap",
+      "모바일 최적화": "Mobile Optimization",
+      "사이트 속도": "Site Speed",
+      "이미지 최적화": "Image Optimization",
+      "시멘틱 마크업": "Semantic Markup",
+      "사이트 속도 (PageSpeed 측정)": "Site Speed",
+      "모바일 친화도": "Mobile Friendliness",
+      "페이지 제목 최적화": "Page Title Optimization",
+      "메타 설명": "Meta Description",
+      "콘텐츠 최적화": "Content Optimization",
+      "구조화된 데이터": "Structured Data",
+      "사이트 구조": "Site Structure",
+      "내부 링크": "Internal Links",
+      "외부 링크": "External Links",
+      "성능": "Performance",
+      "접근성": "Accessibility",
+      "보안": "Security",
+      "사이트 속도": "Site Speed",
+      "모바일 최적화": "Mobile Optimization", 
+      "페이지 제목": "Page Title",
+      "메타 설명": "Meta Description",
+      "title": "Page Title",
+      "description": "Meta Description",
+      "content": "Content Quality",
+      "socialMedia": "Social Media",
+      "structuredData": "Structured Data",
+      "technical": "Technical Elements",
+      "https": "HTTPS Security",
+      "links": "Link Structure",
+      "keywords": "Keyword Optimization",
+      "semanticMarkup": "Semantic Markup",
+      "robots": "Robots Crawling",
+      "sitemap": "Sitemap",
+      "pageSpeed": "Site Speed",
+      "mobileFriendly": "Mobile Friendliness", 
+      "images": "Image Optimization"
+    },
+    "semanticMarkup": {
+      "semanticStructure": "Semantic Markup (HTML Structure)",
+      "points": "{score} points",
+      "wellStructured": "✅ Semantic markup is well structured! Search engines and screen readers can easily understand it.",
+      "partiallyStructured": "⚠️ Semantic markup is partially structured. There are some improvements to be made.",
+      "needsImprovement": "❌ Semantic markup is lacking. Search engine optimization and accessibility improvements are needed."
+    },
+    "categoryDescriptions": {
+      "title": {
+        "good": "Perfect title! Customers can easily find you when searching.",
+        "warning": "Title could be better. Making it more attractive will get more clicks.",
+        "danger": "Title needs improvement. Change it to something customers want to click."
+      },
+      "description": {
+        "good": "Perfect description! It makes customers want to click.",
+        "warning": "Description is a bit short. More detailed descriptions will get more clicks.",
+        "danger": "Description needs to be added. Write a description that tells what the content is about."
+      },
+      "content": {
+        "good": "Content is sufficient! You're providing useful information to customers.",
+        "warning": "Content is a bit lacking. More detailed explanations will help customers.",
+        "danger": "More content is needed. Write about things customers might be curious about."
+      },
+      "social": {
+        "good": "Social media sharing optimization is perfect! It will look great on Facebook and Twitter.",
+        "warning": "Social media settings are only partially configured. Set it up to look good on all social media.",
+        "danger": "No social media sharing settings. Set it up to look good when shared on Facebook and Twitter."
+      },
+      "structured": {
+        "good": "Structured data is perfect! Information like ratings and prices can be shown in search results.",
+        "warning": "Structured data is only partially present. Providing more detailed information to Google would be better.",
+        "danger": "No structured data. Information like ratings and prices can be shown in search results."
+      },
+      "technical": {
+        "good": "Technical SEO settings are well configured! Search engines will understand easily.",
+        "warning": "Technical SEO settings have some room for improvement. A little more attention will make it perfect.",
+        "danger": "Technical SEO settings are insufficient. Configure so search engines can read properly."
+      },
+      "https": {
+        "good": "Site is protected with secure HTTPS! Customer information is transmitted safely.",
+        "warning": "HTTPS configuration has some issues. Make it completely secure.",
+        "danger": "Site is not secure! Change to HTTPS to protect customer information."
+      },
+      "links": {
+        "good": "Link structure is excellent! Customers can easily navigate your site.",
+        "warning": "No links found. Connecting to related pages or useful sites would be better.",
+        "danger": "No links found. Connecting to related pages or useful sites would be better."
+      },
+      "keywords": {
+        "good": "Keyword optimization is well done! Keywords are naturally included in title, description, and content.",
+        "warning": "Keyword usage can be improved. Try using important keywords more naturally.",
+        "danger": "Keywords are lacking. Include words that customers might search for in your content."
+      },
+      "semantic-markup": {
+        "good": "Semantic markup is perfect! Search engines and screen readers can easily understand it.",
+        "warning": "Semantic markup is partially structured. There are some improvements to be made.",
+        "danger": "Semantic markup is lacking. Search engine optimization and accessibility improvements are needed."
+      },
+      "speed": {
+        "good": "Site speed is very fast! Visitors can see it immediately without waiting.",
+        "warning": "Site speed is average. Making it a bit faster will be better.",
+        "danger": "Site is too slow. Speed improvement is essential."
+      },
+      "mobile": {
+        "good": "Mobile optimization is perfect! Looks good on mobile devices.",
+        "warning": "Mobile optimization has room for improvement. Make it more convenient.",
+        "danger": "Mobile optimization is lacking. May be difficult to view on mobile devices."
+      },
+      "images": {
+        "good": "Image optimization is well done! Can be found well in search.",
+        "warning": "Image optimization can be improved. Try adding more descriptions.",
+        "danger": "Images lack descriptions. Try adding ALT text."
+      },
+      "mobile-friendly": {
+        "good": "Mobile optimization is perfect! Looks good on mobile devices.",
+        "warning": "Mobile optimization has room for improvement. Make it more convenient.",
+        "danger": "Mobile optimization is lacking. May be difficult to view on mobile devices."
+      },
+      "performance": {
+        "good": "Site speed is very fast! Visitors can see it immediately without waiting.",
+        "warning": "Site speed is average. Making it a bit faster will be better.",
+        "danger": "Site is too slow. Speed improvement is essential."
+      },
+      "page-speed": {
+        "good": "Site speed is very fast! Visitors can see it immediately without waiting.",
+        "warning": "Site speed is average. Making it a bit faster will be better.",
+        "danger": "Site is too slow. Speed improvement is essential."
+      },
+      "robots": {
+        "good": "Robot crawling settings are perfect! Search engines can find your site well.",
+        "warning": "Robot crawling settings can be improved. Try configuring more efficiently.",
+        "danger": "Robot crawling settings are insufficient. Search engines may not find your site properly."
+      },
+      "sitemap": {
+        "good": "Sitemap is perfect! Search engines can easily find all pages.",
+        "warning": "Sitemap can be improved. Try organizing it more systematically.",
+        "danger": "Sitemap is lacking. Search engines may have difficulty finding all pages."
+      }
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Find answers to common questions about our SEO analysis service",
+    "categoriesTitle": "Questions by Category",
+    "categories": {
+      "all": "All",
+      "serviceUsage": "Service Usage",
+      "seoBasics": "SEO Basics",
+      "technicalIssues": "Technical Issues",
+      "resultInterpretation": "Result Interpretation",
+      "improvements": "Improvements",
+      "localBusiness": "Local Business"
+    },
+    "questions": [
+      {
+        "id": 1,
+        "category": "serviceUsage",
+        "question": "Is the SEO analysis service free?",
+        "answer": "Yes, it's completely free! No registration required, just enter a URL and get instant analysis results. We plan to keep it free forever."
+      },
+      {
+        "id": 2,
+        "category": "serviceUsage",
+        "question": "How long does analysis take?",
+        "answer": "Usually 2-3 minutes. Depending on your site's size and complexity, it might take a bit longer, but most analyses complete within 3 minutes."
+      },
+      {
+        "id": 3,
+        "category": "serviceUsage",
+        "question": "Can I analyze any type of website?",
+        "answer": "We can analyze most websites including personal blogs, company websites, e-commerce sites, and portfolios. However, sites requiring login or with restricted access may be difficult to analyze."
+      },
+      {
+        "id": 4,
+        "category": "seoBasics",
+        "question": "What exactly is SEO?",
+        "answer": "SEO stands for Search Engine Optimization. Simply put, it's all the activities to make your site rank higher when people search on Google or other search engines."
+      },
+      {
+        "id": 5,
+        "category": "seoBasics",
+        "question": "What should I do if my SEO score is low?",
+        "answer": "Don't worry! Just follow the improvement suggestions we provide one by one. We prioritize the most important items, so follow them step by step. You don't need a perfect 100 score."
+      },
+      {
+        "id": 6,
+        "category": "seoBasics",
+        "question": "When will I see SEO results?",
+        "answer": "SEO takes time. You might see changes in 1-2 weeks at the earliest, but typically it takes 1-3 months to see results in search rankings. Consistent improvement is most important."
+      },
+      {
+        "id": 7,
+        "category": "technicalIssues",
+        "question": "What if analysis fails or errors occur?",
+        "answer": "Try these steps: 1) Check if the URL is correct 2) Verify the site is accessible 3) Try again after a moment. If problems persist, let us know through feedback and we'll fix it quickly."
+      },
+      {
+        "id": 8,
+        "category": "technicalIssues",
+        "question": "Can I use it on mobile devices?",
+        "answer": "Yes! It works perfectly on mobile devices. You can use it conveniently on smartphones or tablets."
+      },
+      {
+        "id": 9,
+        "category": "resultInterpretation",
+        "question": "How should I interpret the analysis results?",
+        "answer": "The analysis results are designed to be easily understood by beginners. Red indicates areas that need improvement, yellow means average, and green means good condition. Each item comes with specific improvement methods."
+      },
+      {
+        "id": 10,
+        "category": "resultInterpretation",
+        "question": "Can I compare with competitors?",
+        "answer": "Currently, we only provide single-site analysis. However, we're developing a feature to compare with industry average scores. We're continuously improving for better service."
+      },
+      {
+        "id": 11,
+        "category": "improvements",
+        "question": "How should I modify titles and descriptions?",
+        "answer": "Keep titles within 30 characters and descriptions within 150 characters. Naturally include content users would be curious about and main keywords. The analysis results provide detailed current status and improvement plans."
+      },
+      {
+        "id": 12,
+        "category": "improvements",
+        "question": "How do I optimize images?",
+        "answer": "Change image file names to meaningful names and add ALT text (alternative text). Also adjust image sizes to not be too large. Detailed methods are explained in our SEO guide."
+      },
+      {
+        "id": 13,
+        "category": "improvements",
+        "question": "How can I improve site speed?",
+        "answer": "Image size optimization, removing unnecessary plugins, and using good hosting services help. If technical aspects are difficult, asking a web developer for help is also a good approach."
+      },
+      {
+        "id": 14,
+        "category": "localBusiness",
+        "question": "How do I do SEO for local businesses?",
+        "answer": "Registering with Naver Place and Google My Business is most important. Also use keywords that include location names and clearly display accurate addresses and phone numbers on your website."
+      },
+      {
+        "id": 15,
+        "category": "localBusiness",
+        "question": "Which is more important, Naver or Google?",
+        "answer": "Naver is still important in Korea, but Google's influence is also growing. It's good to optimize for both search engines. Our service analyzes based on principles that apply to both search engines."
+      }
+    ],
+    "questionCount": "There are {count} questions in total.",
+    "additionalHelp": {
+      "title": "Additional Help",
+      "seoGuide": {
+        "title": "SEO Basics Guide",
+        "description": "New to SEO? We've prepared a guide where you can learn step by step from the basics.",
+        "button": "View Guide"
+      },
+      "analysis": {
+        "title": "Try Analysis Now",
+        "description": "Practice over theory! Understand SEO by directly analyzing your own site.",
+        "button": "Start Analysis"
+      }
+    },
+    "ctaTitle": "💬 Have more questions?",
+    "ctaDescription": "If you couldn't find the answer in the FAQ, feel free to ask us anytime through feedback. We value your opinions for better service.",
+    "ctaAnalyze": "Start Analysis",
+    "ctaAbout": "Service Info"
+  },
+  "about": {
+    "title": "About Our Service",
+    "subtitle": "AI-powered SEO analysis service that anyone can understand",
+    "mission": {
+      "title": "🌟 Our Mission",
+      "description": "For everyone who gave up on SEO because it was too difficult, we created an **SEO analysis service that's easy to understand without technical jargon**."
+    },
+    "features": {
+      "title": "✨ Service Features",
+      "aiAnalysis": {
+        "title": "AI-powered Analysis",
+        "description": "Using the latest AI technology to accurately analyze your website and provide industry-specific customized advice."
+      },
+      "beginnerFriendly": {
+        "title": "Beginner-friendly",
+        "description": "We explain complex SEO terms in simple language and provide step-by-step guides that anyone can follow."
+      },
+      "fastAnalysis": {
+        "title": "Fast Analysis",
+        "description": "We provide comprehensive SEO analysis results within 3 minutes. Even the waiting time is filled with useful SEO tips!"
+      }
+    },
+    "targetUsers": {
+      "title": "Who Is This Service For?",
+      "personalBloggers": {
+        "title": "Personal Bloggers",
+        "item1": "Naver Blog, Tistory operators",
+        "item2": "WordPress blog operators", 
+        "item3": "Those who started blogging as a hobby",
+        "item4": "Those who want to increase blog visitors"
+      },
+      "smallBusiness": {
+        "title": "Small Business Owners",
+        "item1": "Cafe, restaurant operators",
+        "item2": "Beauty salon, clinic operators",
+        "item3": "Small online shopping mall operators",
+        "item4": "Local-based business operators"
+      },
+      "freelancers": {
+        "title": "Freelancers",
+        "item1": "Portfolio website operators",
+        "item2": "Those who need personal branding",
+        "item3": "Online course operators",
+        "item4": "Those in consulting business"
+      },
+      "marketingBeginners": {
+        "title": "Marketing Beginners",
+        "item1": "Junior marketers",
+        "item2": "Those who want to learn SEO",
+        "item3": "Digital marketing beginners",
+        "item4": "Company website managers"
+      }
+    },
+    "process": {
+      "title": "Analysis Process",
+      "steps": [
+        {
+          "number": "1",
+          "title": "Enter URL",
+          "description": "Just enter the website address you want to analyze."
+        },
+        {
+          "number": "2",
+          "title": "AI Analysis",
+          "description": "AI comprehensively analyzes your site's SEO status."
+        },
+        {
+          "number": "3",
+          "title": "Provide Results",
+          "description": "Present improvement plans in easy-to-understand language."
+        },
+        {
+          "number": "4",
+          "title": "Apply Improvements",
+          "description": "Follow the step-by-step guide to steadily improve."
+        }
+      ]
+    },
+    "analysisItems": {
+      "title": "Analysis Items",
+      "titleOptimization": {
+        "title": "Title Optimization",
+        "description": "Check page title appropriateness"
+      },
+      "descriptionOptimization": {
+        "title": "Description Optimization",
+        "description": "Evaluate meta description quality"
+      },
+      "imageOptimization": {
+        "title": "Image Optimization",
+        "description": "Check image SEO status"
+      },
+      "siteSpeed": {
+        "title": "Site Speed",
+        "description": "Measure loading speed performance"
+      },
+      "mobileFriendly": {
+        "title": "Mobile Friendliness",
+        "description": "Degree of mobile optimization"
+      },
+      "linkStructure": {
+        "title": "Link Structure",
+        "description": "Internal/external link analysis"
+      }
+    },
+    "team": {
+      "title": "About the Development Team",
+      "missionTitle": "Service for SEO Beginners",
+      "missionDescription1": "Have you ever given up because of complex SEO terms and technical knowledge? We experienced the same difficulties.",
+      "missionDescription2": "That's why we created it. <strong>An SEO analysis service that anyone can easily understand</strong>.",
+      "missionDescription3": "We will continue to develop for your successful online business."
+    },
+    "cta": {
+      "title": "🎯 Start Right Now!",
+      "description": "Just enter a URL and receive customized SEO analysis results within 3 minutes.",
+      "startAnalysis": "Start Analysis",
+      "viewGuide": "View SEO Guide"
+    }
+  },
+  "seoGuide": {
+    "title": "SEO Basics Guide",
+    "subtitle": "A beginner-friendly complete guide to search engine optimization",
+    "tableOfContents": "Table of Contents",
+    "sections": {
+      "whatIsSeo": {
+        "title": "What is SEO?",
+        "description": "Understanding the basics",
+        "anchor": "what-is-seo",
+        "subtitle": "What is SEO?",
+        "explanation": "Simply explained...",
+        "intro": "SEO stands for <strong>\"Search Engine Optimization\"</strong>. Simply put, it's about <strong>making your website appear higher in Google search results</strong>.",
+        "exampleTitle": "Understanding with examples",
+        "exampleContent": "If you run a cafe, the goal is to have your cafe appear on the first page of search results when people search for \"Gangnam cafe\" or \"delicious coffee\"!"
+      },
+      "whySeo": {
+        "title": "Why do you need SEO?",
+        "description": "The importance and benefits of SEO",
+        "anchor": "why-seo",
+        "subtitle": "Why do you need SEO?",
+        "benefits": {
+          "moreCustomers": {
+            "title": "More Customers",
+            "description": "The higher you rank in search results, the more people visit your website."
+          },
+          "freeMarketing": {
+            "title": "Free Marketing",
+            "description": "It's the best way to attract customers naturally without advertising costs."
+          },
+          "targetedCustomers": {
+            "title": "Targeted Customers",
+            "description": "People who really need your products or services will find you."
+          }
+        }
+      },
+      "basicElements": {
+        "title": "Basic Elements",
+        "description": "Title, description, images, etc.",
+        "anchor": "basic-elements",
+        "subtitle": "SEO Basic Elements",
+        "pageTitle": {
+          "title": "Page Title (Title Tag)",
+          "description": "The blue title that appears in search results. It's one of the most important SEO elements.",
+          "goodExample": "Good title example",
+          "goodExampleContent": "\"Gangnam Station Restaurant Cafe | Fresh Coffee Beans and Dessert Specialty\"",
+          "badExample": "Bad title example",
+          "badExampleContent": "\"Homepage\" or \"Main\""
+        },
+        "metaDescription": {
+          "title": "Page Description (Meta Description)",
+          "description": "The description text that appears below the title in search results. It's an important factor in whether people click.",
+          "tips": "Writing Tips",
+          "tip1": "Keep it concise within 150 characters",
+          "tip2": "Include main keywords",
+          "tip3": "Include content users would be curious about"
+        },
+        "imageOptimization": {
+          "title": "Image Optimization",
+          "description": "Images also affect search results. They're especially important for image search.",
+          "checklistTitle": "Image SEO Checklist",
+          "checklist1": "Describe content in Korean or English in file names",
+          "checklist2": "Write ALT text (alternative text)",
+          "checklist3": "Optimize image size (not too large)"
+        }
+      },
+      "practicalTips": {
+        "title": "Practical Tips",
+        "description": "Methods you can apply immediately",
+        "anchor": "practical-tips",
+        "subtitle": "Practical Tips You Can Apply Right Away",
+        "localBusiness": {
+          "title": "Local Business SEO",
+          "item1": "Register with Naver Place, Google My Business",
+          "item2": "Write titles with location + business type",
+          "item3": "Accurately enter address and phone number",
+          "item4": "Actively manage customer reviews"
+        },
+        "mobileOptimization": {
+          "title": "Mobile Optimization",
+          "item1": "Design that looks good on mobile phones",
+          "item2": "Fast loading speed",
+          "item3": "Easy-to-touch button sizes",
+          "item4": "Eliminate horizontal scrolling"
+        },
+        "contentWriting": {
+          "title": "Content Writing Tips",
+          "item1": "Focus on what customers are curious about",
+          "item2": "Include keywords naturally",
+          "item3": "Write new content regularly",
+          "item4": "Don't copy from other websites"
+        },
+        "linkManagement": {
+          "title": "Link Management",
+          "item1": "Create links between pages",
+          "item2": "Regularly check for broken links",
+          "item3": "Exchange links with related sites",
+          "item4": "Connect to social media"
+        }
+      }
+    },
+    "conclusion": {
+      "title": "Consistency is key to SEO!",
+      "description": "Results don't come overnight, but if you apply consistently, you'll definitely see effects. Start improving small things one by one!",
+      "analyzeButton": "Analyze My Site",
+      "faqButton": "Frequently Asked Questions"
+    }
+  },
+  "feedback": {
+    "title": "📝 Leave Feedback",
+    "subtitle": "Your feedback helps us improve our service",
+    "rating": "Rating",
+    "ratingLabels": {
+      "1": "Very Dissatisfied",
+      "2": "Dissatisfied",
+      "3": "Neutral",
+      "4": "Satisfied",
+      "5": "Very Satisfied"
+    },
+    "comment": "Comments (optional)",
+    "commentPlaceholder": "Please share your experience with our service...",
+    "helpful": "Was this analysis helpful?",
+    "yes": "Yes",
+    "no": "No",
+    "submit": "Submit Feedback",
+    "submitting": "Submitting...",
+    "thankYou": "Thank you for your feedback!",
+    "error": "An error occurred while submitting feedback."
+  },
+  "errors": {
+    "pageNotFound": "Page not found",
+    "somethingWentWrong": "Something went wrong",
+    "tryAgain": "Try again",
+    "goHome": "Go to homepage",
+    "analysisError": "Analysis failed",
+    "invalidUrl": "Invalid URL",
+    "networkError": "Network error",
+    "serverError": "Server error"
+  },
+  "metadata": {
+    "title": "Free SEO Analysis Tool - Website Optimization Check",
+    "description": "Get a comprehensive SEO analysis of your website in 3 minutes. Free tool that provides actionable recommendations to improve your search engine rankings.",
+    "keywords": "SEO analysis, website optimization, search engine optimization, free SEO tool, website checker, SEO audit",
+    "aboutTitle": "About - Free SEO Analysis Tool",
+    "aboutDescription": "Learn about our beginner-friendly AI-powered SEO analysis service designed for small businesses and bloggers.",
+    "faqTitle": "FAQ - Frequently Asked Questions | Free SEO Analysis Tool",
+    "faqDescription": "Find answers to common questions about our SEO analysis service. Learn how to use our tool and improve your website's search rankings.",
+    "guideTitle": "SEO Basics Guide | Free SEO Analysis Tool",
+    "guideDescription": "Learn SEO fundamentals step by step. A beginner-friendly guide to understanding and implementing search engine optimization."
+  },
+  "seoModal": {
+    "statusText": {
+      "good": "Good!",
+      "warning": "Average",
+      "danger": "Needs improvement",
+      "unknown": "Unknown"
+    },
+    "currentStatus": "Current Status",
+    "detailedAnalysis": "Detailed Analysis",
+    "improvementMethods": "Improvement Methods",
+    "confirmed": "Got it",
+    "title": {
+      "currentTitle": "Current Page Title",
+      "notSet": "Title has not been set",
+      "lengthInfo": "Length: {length} characters (Recommended: 30-60 characters)",
+      "optimizationTips": "Title Optimization Tips",
+      "tips": [
+        "Place main keywords at the front",
+        "Put brand name at the back",
+        "30-60 characters is optimal",
+        "Use attractive phrases that make people want to click"
+      ]
+    },
+    "description": {
+      "currentDescription": "Current Meta Description",
+      "notSet": "Meta description has not been set",
+      "lengthInfo": "Length: {length} characters (Recommended: 120-160 characters)",
+      "writingMethod": "Meta Description Writing Method",
+      "tips": [
+        "Briefly summarize page content",
+        "Include main keywords naturally",
+        "Write between 120-160 characters",
+        "Include content that makes searchers want to click"
+      ]
+    },
+    "social": {
+      "currentSettings": "Current Social Media Settings",
+      "optimizationMethod": "Social Media Optimization Method",
+      "description": "To make links look good on social media:",
+      "tips": [
+        "Add Open Graph tags (for Facebook, LinkedIn)",
+        "Add Twitter Card tags (for Twitter)",
+        "Prepare 1200x630px sized images",
+        "Write attractive titles and descriptions"
+      ]
+    },
+    "mobile": {
+      "optimizationStatus": "Mobile Optimization Status",
+      "viewportSet": "Viewport meta tag setting",
+      "properSize": "Displays at appropriate size on mobile",
+      "smallSize": "May appear small on mobile",
+      "checklist": "Mobile Optimization Checklist",
+      "checklistItems": [
+        "Add viewport meta tag",
+        "Touch-friendly button size (minimum 44px)",
+        "Easy-to-read text size (minimum 16px)",
+        "Fast loading speed",
+        "Layout that looks good in portrait mode"
+      ]
+    },
+    "structuredData": {
+      "currentStatus": "Structured Data Current Status",
+      "schemaApplied": "Schema.org markup applied",
+      "googleUnderstands": "Google accurately understands your site information",
+      "googleDoesntKnow": "Google doesn't accurately know what your site is about",
+      "whatIs": "What is Structured Data?",
+      "explanation": "Structured data (Schema.org) is special code that kindly explains your site to Google:",
+      "examples": [
+        "🏢 **Business description:** \"We are a cafe\", \"We are a hospital\"",
+        "📍 **Location info:** \"Address is here\", \"Phone number is this\"",
+        "⏰ **Operating hours:** \"Open Mon-Fri 9am-6pm\"",
+        "⭐ **Review info:** \"Customer rating 4.5 stars\"",
+        "💰 **Price info:** \"This product costs $50\""
+      ],
+      "effects": "Structured Data Application Effects",
+      "effectsDescription": "When you apply structured data, search results change like this:",
+      "normalResult": "Normal search result",
+      "normalResultTitle": "Delicious Cafe - Fresh Coffee and Desserts",
+      "normalResultDesc": "Enjoy fresh coffee and handmade desserts at Delicious Cafe...",
+      "structuredResult": "After structured data application",
+      "structuredResultRating": "⭐⭐⭐⭐⭐ 4.5 stars",
+      "structuredResultPhone": "📞 02-123-4567",
+      "structuredResultLocation": "📍 Seoul Gangnam-gu",
+      "structuredResultHours": "⏰ Open",
+      "howToImplement": "How to Apply Structured Data",
+      "implementationMethods": [
+        "WordPress: Use SEO plugins (Yoast, RankMath)",
+        "E-commerce: Apply product information schema",
+        "Local business: Apply LocalBusiness schema",
+        "Blog: Apply Article schema",
+        "Verify with Google Structured Data Testing Tool"
+      ]
+    },
+    "semanticMarkup": {
+      "currentStatus": "Semantic Markup Current Status",
+      "score": "Score: {score}/100",
+      "wellStructured": "Semantic markup is well structured! Search engines and screen readers can easily understand it.",
+      "partiallyStructured": "Semantic markup is partially structured. A few improvements will make it even better.",
+      "needsImprovement": "Semantic markup is lacking. Improvements are needed for search engine optimization and accessibility enhancement.",
+      "elementsCheck": "HTML5 Semantic Elements Check",
+      "headingStructure": "Heading Structure",
+      "accessibility": "Accessibility Attributes",
+      "accessibilityDescription": "Accessibility attributes for visually impaired and screen readers:",
+      "ariaAttributes": "ARIA attributes: {count} found",
+      "roleAttributes": "Role attributes: {count} found",
+      "recommendation": "Use at least 3 or more ARIA attributes",
+      "benefits": "Benefits of Semantic Markup",
+      "benefitsDescription": "Using semantic markup has these great benefits:",
+      "benefitsList": [
+        "Search engine optimization: Google better understands page structure",
+        "Improved accessibility: Visually impaired can easily use websites",
+        "Various device support: Screen readers, voice browsers, etc.",
+        "Easy maintenance: Clear code structure makes management easier",
+        "Future-oriented: Modern websites following web standards"
+      ],
+      "improvementSuggestions": "Improvement Suggestions"
+    },
+    "robots": {
+      "currentStatus": "robots.txt Current Status",
+      "fileExists": "robots.txt file exists",
+      "partialSetup": "robots.txt partial setup",
+      "fileNotExists": "robots.txt file not found",
+      "wellConfigured": "Search engines can systematically crawl the site",
+      "needsConfiguration": "robots.txt file can manage search engine crawling more efficiently",
+      "whatIsRobots": "What is robots.txt?",
+      "robotsDescription": "robots.txt is a guide that tells search engines \"how to navigate this site\":",
+      "robotsFunctions": [
+        "Traffic signals: Which pages are allowed and which are not",
+        "Map provision: Tells sitemap location to help find all pages easily",
+        "Efficiency increase: Allows search engines to focus on important pages",
+        "Security enhancement: Blocks access to admin or private pages"
+      ],
+      "example": "robots.txt Example",
+      "exampleDescription": "Basic robots.txt file example:",
+      "exampleMeaning": "What this configuration means:",
+      "exampleMeaningList": [
+        "All search engines can access the site",
+        "/admin/, /private/ folders are blocked from access",
+        "Sitemap location is specified so all pages can be found easily"
+      ],
+      "howToCreate": "Creating robots.txt",
+      "creationSteps": "How to create a robots.txt file:",
+      "creationStepsList": [
+        "Write in notepad: Create as a simple text file",
+        "Filename: Must be saved as \"robots.txt\"",
+        "Upload location: Website root folder (example.com/robots.txt)",
+        "Verification method: Enter \"siteaddress/robots.txt\" in browser to check",
+        "WordPress: Easy setup with SEO plugins (Yoast, RankMath)"
+      ]
+    },
+    "sitemap": {
+      "currentStatus": "Sitemap Current Status",
+      "fileExists": "Sitemap file exists",
+      "partialSetup": "Sitemap partial setup",
+      "fileNotExists": "Sitemap file not found",
+      "wellConfigured": "Search engines can systematically collect all pages of the site",
+      "needsConfiguration": "Adding a sitemap allows search engines to discover more pages",
+      "whatIsSitemap": "What is a sitemap?",
+      "sitemapDescription": "A sitemap is like a \"table of contents\" or \"building blueprint\" for your website:",
+      "sitemapFunctions": [
+        "Page list: A file that organizes addresses of all pages on the site",
+        "Update information: When each page was last modified",
+        "Importance indication: Shows which pages are more important",
+        "Quick discovery: Search engines can quickly find new pages when created"
+      ],
+      "benefits": "Benefits of Sitemap",
+      "benefitsDescription": "Having a sitemap provides these great benefits:",
+      "benefitsList": [
+        {
+          "title": "Increased Search Visibility",
+          "description": "Google can easily find all pages of your site and expose them more in search results"
+        },
+        {
+          "title": "Fast Indexing",
+          "description": "Search engines quickly collect new posts or pages when uploaded"
+        },
+        {
+          "title": "SEO Improvement",
+          "description": "Basic setting that helps improve search rankings"
+        },
+        {
+          "title": "Analytics Available",
+          "description": "Check which pages are being searched in Google Search Console"
+        }
+      ],
+      "howToCreate": "Creating Sitemap",
+      "creationSteps": "Sitemap generation methods by platform:",
+      "creationStepsList": [
+        "WordPress: Auto-generate with Yoast SEO, RankMath plugins",
+        "Tistory: Auto-generated by default (siteaddress/sitemap.xml)",
+        "Shopping malls: Auto-generation features provided by Cafe24, MakeShop, etc.",
+        "Manual creation: Use online tools like XML-Sitemaps.com",
+        "Verification method: Access \"siteaddress/sitemap.xml\" to check",
+        "Google registration: Submit sitemap address to Google Search Console"
+      ]
+    },
+    "speed": {
+      "currentStatus": "Site Speed Current Status",
+      "veryFast": "Very Fast",
+      "averageSpeed": "Average Speed",
+      "slow": "Slow",
+      "currentScore": "Current score: {score} points / 100 points",
+      "measurementData": "Measurement data:",
+      "dataExplanation": "Measurement Data Explanation",
+      "labData": "Lab Data (Test Environment Data)",
+      "fieldData": "Field Data (Real User Data - CrUX)",
+      "whyImportant": "Why Site Speed Is Important",
+      "problems": "When sites are slow, these problems occur:",
+      "improvementMethods": "Site Speed Improvement Methods",
+      "easyMethods": "Methods anyone can easily do:",
+      "labDataTitle": "🧪 Lab Data (Test Environment Data)",
+      "labDataDesc": "Data measured in Google's standard test environment\\nAccurate and comparable as measured in consistent environment\\nFCP: Time for first content to appear\\nLCP: Time for largest content to load\\nCLS: How stable the page layout is\\nTBT: Time when page doesn't respond",
+      "fieldDataTitle": "👥 Field Data (Real User Data - CrUX)",
+      "fieldDataDesc": "Speed data experienced by actual visitors\\nAverage across various devices and network environments\\nData provided only when there are enough visitors\\nMore realistic and reliable data\\nClassified as **Fast/Average/Slow**",
+      "fieldDataTip": "💡 If Field Data is available, use it based on actual user experience, otherwise use Lab Data for reference!",
+      "problemsDescription": "When sites are slow, these problems occur:",
+      "problemsList": [
+        "😤 **Visitor Bounce:** Over 50% leave if it takes more than 3 seconds",
+        "📱 **Mobile Inconvenience:** Takes even longer on phones",
+        "🔍 **Search Ranking Drop:** Google dislikes slow sites",
+        "💸 **Revenue Loss:** 1% revenue decrease for every 0.1 second delay"
+      ],
+      "improvementMethodsList": [
+        "🖼️ **Image Optimization:** Make large images smaller (WebP format recommended)",
+        "🧹 **Remove Unnecessary Plugins:** Delete unused plugins",
+        "⚡ **Cache Settings:** Use website cache plugins",
+        "🌐 **Use CDN:** Fast access from anywhere in the world",
+        "🏠 **Hosting Upgrade:** Use good hosting services"
+      ]
+    },
+    "images": {
+      "currentStatus": "Images Current Status",
+      "totalImages": "A total of {count} images were found",
+      "whatIsImageSEO": "What is Image SEO?",
+      "seoDescription": "Images can also appear in search results! To be found in Google image search:",
+      "practicalTips": "Image Optimization Practical Tips",
+      "management": "Manage each image like this:",
+      "badExample": "Bad Example",
+      "goodExample": "Good Example",
+      "altTextExplanation": [
+        "📝 **Alt text:** Text describing what the image is about",
+        "📏 **Appropriate size:** Not too big or too small",
+        "🏷️ **Meaningful filename:** \"delicious-coffee.jpg\" instead of \"image1.jpg\"",
+        "⚡ **Fast loading:** Compress to reduce file size"
+      ]
+    },
+    "content": {
+      "currentStatus": "Content Analysis Results",
+      "wordCountInfo": "A total of {count} words of content were analyzed",
+      "sufficientContent": "Sufficient content volume",
+      "insufficientContent": "Insufficient content volume",
+      "whyImportant": "Why Content Is Important",
+      "importanceDescription": "Good content is the core of SEO:",
+      "importanceList": [
+        "🎯 **Customer satisfaction:** Providing useful information makes visitors stay longer",
+        "🔍 **Google evaluation:** Google recognizes your site as valuable",
+        "📈 **Search ranking:** Better content leads to higher search rankings",
+        "💬 **Increased trust:** Shows your expertise"
+      ],
+      "howToCreate": "Creating Good Content",
+      "creationDescription": "Here's how to create content:",
+      "creationTips": [
+        "📏 **Sufficient length:** At least 300 words (more detail is better)",
+        "🎯 **Customer-focused:** Focus on what customers want to know",
+        "📱 **Easy to read:** Short sentences, appropriate line breaks",
+        "🔄 **Regular updates:** Continuously add new information",
+        "📊 **Practical information:** Specific details like prices, location, contact"
+      ]
+    },
+    "technical": {
+      "currentStatus": "Technical SEO Current Status",
+      "mobileViewport": "Mobile viewport setting",
+      "canonicalUrl": "Canonical URL setting",
+      "languageSetting": "Language setting",
+      "whatIs": "What is Technical SEO?",
+      "description": "Technical SEO consists of settings that help search engines properly read your site:",
+      "explanationList": [
+        "📱 **Mobile settings:** Making it display properly on phones",
+        "🔗 **Canonical URL:** Preventing duplicate page issues",
+        "🌍 **Language setting:** Telling what language your site is in",
+        "🤖 **Search permission:** Allowing Google to collect pages"
+      ],
+      "howToImprove": "How to Improve Technical SEO",
+      "improvementDescription": "Most of these need to be set by website administrators or developers:",
+      "improvementSteps": [
+        "🎯 **Priority 1:** Add mobile viewport meta tag",
+        "🔧 **Developer request:** Add necessary tags to HTML head section",
+        "📋 **Checklist:** Check issues in Google Search Console",
+        "⚡ **Effect:** Immediate search engine recognition improvement once set"
+      ],
+      "developerNote": "💡 If technical aspects are difficult, consult web developers or website management companies!"
+    },
+    "https": {
+      "currentStatus": "HTTPS Security Current Status",
+      "secureConnection": "HTTPS security applied",
+      "insecureConnection": "HTTP insecure connection",
+      "protectedMessage": "Site is protected with SSL certificate",
+      "unprotectedMessage": "Site is provided over insecure HTTP",
+      "whyImportant": "Why HTTPS Is Important",
+      "importanceDescription": "HTTPS is the foundation of website security:",
+      "benefitsList": [
+        "🔐 **Data encryption:** Customer information transmitted safely",
+        "🎯 **Increased trust:** Browser shows \"Secure\" indicator",
+        "📈 **SEO benefits:** Google prefers HTTPS sites",
+        "💳 **Payment security:** Essential for online payments"
+      ],
+      "howToImplement": "How to Implement HTTPS",
+      "implementationDescription": "How to switch to HTTPS:",
+      "implementationSteps": [
+        "📋 **Purchase SSL certificate:** Buy from hosting provider or SSL authority",
+        "⚙️ **Server setup:** Install SSL certificate on web server",
+        "🔄 **Redirect setup:** Automatic HTTP → HTTPS redirect",
+        "🔍 **Update internal links:** Change all links to HTTPS",
+        "🆓 **Free options:** Use Let's Encrypt or CloudFlare"
+      ]
+    },
+    "links": {
+      "currentStatus": "Link Structure Current Status",
+      "totalLinks": "A total of {count} links were found",
+      "internalLinks": "Internal links",
+      "externalLinks": "External links",
+      "importance": "Importance of Links",
+      "importanceDescription": "Links are like the road network of your website:",
+      "linkTypes": [
+        "🏠 **Internal links:** Connect to other pages within your site",
+        "🌍 **External links:** Connect to other websites",
+        "📈 **SEO effect:** Helps Google understand site structure",
+        "👥 **User experience:** Helps find related information easily"
+      ],
+      "strategy": "Effective Link Strategy",
+      "strategyDescription": "How to use links effectively:",
+      "strategyTips": [
+        "📝 **Connect related pages:** Link similar topic articles together",
+        "🎯 **Clear link text:** Use specific descriptions instead of \"click here\"",
+        "🔍 **Trustworthy external links:** Link to authoritative sites",
+        "📊 **Appropriate number:** Not too many, not too few",
+        "🆕 **Open in new window:** External links should open in new tab"
+      ]
+    },
+    "keywords": {
+      "currentStatus": "Keyword Optimization Current Status",
+      "analysisDescription": "Page keyword consistency was analyzed",
+      "excellent": "Keyword optimization excellent",
+      "average": "Keyword optimization average",
+      "poor": "Keyword optimization insufficient",
+      "whatIs": "What is Keyword Optimization?",
+      "description": "Keyword optimization makes your content easier to find in searches:",
+      "principles": [
+        "🎯 **Target keywords:** Choose words customers are likely to search",
+        "📝 **Natural usage:** Use naturally, don't force keywords in",
+        "📍 **Key locations:** Include in titles, headings, first paragraph",
+        "🔄 **Appropriate repetition:** Repeat moderately, not excessively"
+      ],
+      "tips": "Keyword Optimization Tips",
+      "tipsDescription": "Effective keyword optimization methods:",
+      "tipsList": [
+        "🎯 **Long-tail keywords:** \"Delicious cafe near Gangnam Station\" rather than just \"cafe\"",
+        "📊 **Check search volume:** Use Naver keyword tools",
+        "🏆 **Competitor analysis:** See what keywords top sites use",
+        "📱 **Local keywords:** Include location names for local businesses",
+        "🔄 **Use synonyms:** Use various expressions with the same meaning"
+      ]
+    }
+  },
+  "seoAnalyzer": {
+    "errors": {
+      "invalidUrl": "Invalid URL format.",
+      "httpError": "HTTP {status}: {statusText}",
+      "fetchFailed": "Could not fetch webpage: {message}",
+      "fetchGeneric": "Could not fetch webpage. Please check the URL.",
+      "analysisFailed": "Error occurred during analysis: {message}"
+    },
+    "console": {
+      "fetchingPage": "Starting to fetch page:",
+      "responseStatus": "Response status:",
+      "htmlLength": "HTML length:",
+      "fetchError": "Failed to fetch page:",
+      "failedUrl": "Failed URL:",
+      "analyzing": "Analyzing:",
+      "parseComplete": "Parsing complete:",
+      "foundImages": "Images found:",
+      "foundLinks": "Links found:",
+      "structuredDataFound": "Structured data found:",
+      "semanticAnalysisStart": "Starting semantic markup analysis",
+      "semanticAnalysisComplete": "Semantic markup analysis complete"
+    },
+    "categories": {
+      "title": {
+        "name": "Page Title",
+        "description": "Attractive title that encourages clicks in search results",
+        "tooShort": "Title is too short ({length} chars). 30-60 characters recommended.",
+        "tooLong": "Title is too long ({length} chars). Under 60 characters recommended.",
+        "duplicate": "Page title and H1 tag are identical. Make them slightly different for variety.",
+        "missing": "Page title is missing. This is the most important SEO element.",
+        "suggestions": {
+          "addKeywords": "Include main keywords at the beginning of the title",
+          "makeAttractive": "Use attractive expressions that make people want to click",
+          "includeNumbers": "Including specific numbers or years adds credibility",
+          "avoidDuplication": "Don't make H1 and title exactly the same"
+        }
+      },
+      "description": {
+        "name": "Meta Description",
+        "description": "Page summary shown in search results",
+        "tooShort": "Meta description is too short ({length} chars). 120-160 characters recommended.",
+        "tooLong": "Meta description is too long ({length} chars). Under 160 characters recommended.",
+        "missing": "Meta description is missing. It plays an important role in introducing the page in search results.",
+        "suggestions": {
+          "addAction": "Include action-inducing expressions (e.g., 'Check now')",
+          "includeKeywords": "Naturally include main keywords",
+          "makeUnique": "Write unique descriptions for each page",
+          "showBenefit": "Clearly state what benefits visitors will get"
+        }
+      },
+      "images": {
+        "name": "Image Optimization",
+        "description": "Image settings considering search and accessibility",
+        "noAlt": "{count} images are missing alt text.",
+        "largeImages": "{count} images are too large. This affects loading speed.",
+        "suggestions": {
+          "addAltText": "Add meaningful alt text to all images",
+          "optimizeSize": "Optimize image sizes to improve loading speed",
+          "useWebp": "Use WebP format to reduce file sizes",
+          "addTitleAttribute": "Add title attributes to important images"
+        }
+      },
+      "content": {
+        "name": "Content Quality",
+        "description": "Easy-to-read and valuable content",
+        "tooShort": "Content is too short ({words} words). Minimum 300 words recommended.",
+        "noHeadings": "No heading tags (H1-H6) found. Create structured content.",
+        "suggestions": {
+          "addMoreContent": "Add more detailed and useful information",
+          "useHeadings": "Use heading tags to structure content",
+          "improveReadability": "Make it easy to read with short sentences and paragraphs",
+          "addKeywords": "Naturally include relevant keywords"
+        }
+      },
+      "socialMedia": {
+        "name": "Social Media",
+        "description": "Information displayed when sharing on social media",
+        "missingOg": "Open Graph tags are missing. Information won't display properly when shared on social media.",
+        "missingTwitter": "Twitter Card tags are missing.",
+        "suggestions": {
+          "addOgTags": "Add Open Graph tags to optimize social media sharing",
+          "addTwitterCards": "Add Twitter Card tags",
+          "addOgImage": "Set attractive social media images",
+          "testSharing": "Test by actually sharing on social media"
+        }
+      },
+      "structuredData": {
+        "name": "Structured Data",
+        "description": "Data format that search engines can easily understand",
+        "missing": "Structured data is missing. Missing rich snippet opportunities.",
+        "suggestions": {
+          "addJsonLd": "Add structured data in JSON-LD format",
+          "useSchema": "Follow Schema.org standards",
+          "addBusiness": "Provide business information as structured data",
+          "testWithTools": "Validate with Google's structured data testing tool"
+        }
+      },
+      "technical": {
+        "name": "Technical Elements",
+        "description": "Basic technical settings of the website",
+        "missingViewport": "Missing viewport tag for mobile optimization.",
+        "missingRobots": "Search engine crawling settings are not clear.",
+        "suggestions": {
+          "addViewport": "Add viewport meta tag for mobile optimization",
+          "setRobots": "Clarify crawling policy with robots meta tag",
+          "addCanonical": "Add canonical tag specifying the standard URL",
+          "optimizePerformance": "Optimize website loading speed"
+        }
+      },
+      "https": {
+        "name": "Security (HTTPS)",
+        "description": "HTTPS settings for secure connections",
+        "notSecure": "Not using HTTPS. This is disadvantageous for security and SEO.",
+        "suggestions": {
+          "enableHttps": "Install SSL certificate and enable HTTPS",
+          "redirectHttp": "Set up automatic redirect from HTTP to HTTPS",
+          "updateLinks": "Update all internal links to HTTPS",
+          "testSecurity": "Verify SSL configuration is correct"
+        }
+      },
+      "links": {
+        "name": "Link Structure",
+        "description": "Internal and external link optimization",
+        "fewInternal": "Insufficient internal links. Strengthen connections within the site.",
+        "tooManyExternal": "Too many external links. Link juice may be dispersed.",
+        "suggestions": {
+          "addInternal": "Add internal links to related pages",
+          "useAnchorText": "Use meaningful anchor text",
+          "checkBroken": "Regularly check for broken links",
+          "balanceLinks": "Balance internal and external links"
+        }
+      },
+      "keywords": {
+        "name": "Keyword Optimization",
+        "description": "Optimization for search keywords",
+        "lowDensity": "Keyword density is low. Naturally include more keywords.",
+        "highDensity": "Keyword density is too high. Excessive repetition may result in penalties.",
+        "suggestions": {
+          "research": "Research appropriate keywords using keyword tools",
+          "naturalUse": "Use keywords naturally in context",
+          "longTail": "Also utilize long-tail keywords",
+          "monitoring": "Regularly monitor keyword rankings"
+        }
+      },
+      "semanticMarkup": {
+        "name": "Semantic Markup",
+        "description": "Semantically correct HTML structure",
+        "missingElements": "Important semantic elements are missing: {elements}",
+        "poorStructure": "Heading tag structure is not logical.",
+        "suggestions": {
+          "useSemanticTags": "Use semantic tags like header, nav, main, footer",
+          "logicalHeadings": "Use heading tags (H1~H6) in order to create logical structure",
+          "addAria": "Add ARIA attributes for accessibility",
+          "structureContent": "Structure content appropriately according to meaning"
+        }
+      },
+      "robots": {
+        "name": "Robot Crawling",
+        "description": "Settings for search engine crawlers",
+        "noRobotsFile": "robots.txt file is missing.",
+        "blockingImportant": "Important pages are being blocked by robots.txt.",
+        "exists": "Can control how search engines crawl the site.",
+        "suggestions": {
+          "createRobots": "Create robots.txt file to set crawling policy",
+          "allowImportant": "Allow crawling of important pages",
+          "blockUnnecessary": "Block crawling of unnecessary pages",
+          "testRobots": "Test that robots.txt file works correctly",
+          "addSitemap": "It's good to add sitemap location to robots.txt (e.g., Sitemap: https://example.com/sitemap.xml)."
+        }
+      },
+      "sitemap": {
+        "name": "Sitemap",
+        "description": "Site structure information for search engines",
+        "missing": "Sitemap is missing. Search engines may not be able to discover all pages on the site.",
+        "exists": "Sitemap exists. Search engines can easily find all pages on the site.",
+        "outdated": "Sitemap may be outdated.",
+        "suggestions": {
+          "createSitemap": "Create sitemap.xml file and upload it to website root.",
+          "submitToGoogle": "Submit sitemap to Google Search Console",
+          "keepUpdated": "Regularly check that sitemap is up to date.",
+          "includeImportant": "Include all important pages",
+          "useTools": "Sitemap generation tools can be used to create one easily.",
+          "goodInRobots": "Good that sitemap location is specified in robots.txt.",
+          "addToRobots": "Consider adding sitemap location to robots.txt."
+        }
+      }
+    },
+    "siteTypes": {
+      "blog": "Blog",
+      "ecommerce": "E-commerce",
+      "corporate": "Corporate Site",
+      "portfolio": "Portfolio",
+      "restaurant": "Restaurant",
+      "service": "Service Business",
+      "news": "News/Media",
+      "education": "Education",
+      "healthcare": "Healthcare",
+      "unknown": "Other"
+    },
+    "industries": {
+      "technology": "Technology/IT",
+      "retail": "Retail/Distribution",
+      "food": "Food/Cooking",
+      "fashion": "Fashion/Beauty",
+      "health": "Health/Medical",
+      "education": "Education",
+      "finance": "Finance",
+      "travel": "Travel/Tourism",
+      "realestate": "Real Estate",
+      "entertainment": "Entertainment",
+      "sports": "Sports/Fitness",
+      "automotive": "Automotive",
+      "business": "Business/Consulting",
+      "unknown": "Other Industry"
+    },
+    "targetAudiences": {
+      "consumers": "General Consumers",
+      "business": "Business Customers",
+      "professionals": "Professionals",
+      "students": "Students",
+      "seniors": "Middle-aged/Seniors",
+      "youth": "Young Adults",
+      "parents": "Parents",
+      "travelers": "Travelers",
+      "local": "Local Residents",
+      "global": "Global"
+    },
+    "competitiveness": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "semanticAnalysis": {
+      "analyzing": "Analyzing semantic markup...",
+      "elements": {
+        "header": "header tag",
+        "nav": "nav tag",
+        "main": "main tag",
+        "footer": "footer tag",
+        "section": "section tag",
+        "article": "article tag",
+        "aside": "aside tag"
+      },
+      "issues": {
+        "missingH1": "H1 tag is missing",
+        "multipleH1": "Multiple H1 tags found",
+        "illogicalHeadings": "Heading tag order is not logical",
+        "missingSemanticTags": "Basic semantic tags are missing",
+        "insufficientAria": "Insufficient ARIA attributes for accessibility"
+      },
+      "wellConfigured": "Semantic markup is well configured",
+      "positiveFeedback": {
+        "mainContent": "✅ Main content area is well defined",
+        "headerFooter": "✅ Header and footer areas are clearly separated",
+        "headingStructure": "✅ Heading tag structure is logically well organized"
+      }
+    }
+  }
+}

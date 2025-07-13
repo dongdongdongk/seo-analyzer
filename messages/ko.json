@@ -1,0 +1,1410 @@
+{
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "cancel": "취소",
+    "close": "닫기",
+    "save": "저장",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "home": "홈",
+    "about": "소개",
+    "contact": "연락처",
+    "faq": "FAQ",
+    "seoGuide": "SEO 가이드",
+    "language": "언어",
+    "english": "English",
+    "korean": "한국어",
+    "filename": "파일명",
+    "altText": "Alt 텍스트",
+    "size": "용량",
+    "none": "없음",
+    "recommendation": "권장사항",
+    "suggestions": "개선 제안"
+  },
+  "header": {
+    "home": "홈",
+    "about": "서비스 소개",
+    "seoGuide": "SEO 가이드",
+    "faq": "FAQ",
+    "menuToggle": "메뉴 열기/닫기"
+  },
+  "home": {
+    "title": "내 웹사이트 검색엔진 최적화 점수는?",
+    "subtitle": "웹사이트 주소만 입력하면 3분 만에 SEO 상태를 쉽게 확인할 수 있어요!<br />전문 용어 없이 누구나 이해할 수 있게 설명해드릴게요.",
+    "urlPlaceholder": "https://yourwebsite.com",
+    "analyzeButton": "📊 무료 분석 시작",
+    "analyzing": "분석 중...",
+    "enterUrl": "웹사이트 주소를 입력해주세요!",
+    "validUrl": "올바른 웹사이트 주소를 입력해주세요! (예: https://example.com)",
+    "exampleTitle": "💡 예시 주소로 체험해보기:",
+    "featuresTitle": "🎯 이런 것들을 확인해드려요",
+    "features": {
+      "title": {
+        "title": "📝 페이지 제목과 설명",
+        "description": "검색 결과에 나타나는 제목과 설명이 적절한지 확인해요"
+      },
+      "speed": {
+        "title": "⚡ 사이트 속도",
+        "description": "고객이 기다리지 않고 빠르게 볼 수 있는지 측정해요"
+      },
+      "mobile": {
+        "title": "📱 모바일 친화도",
+        "description": "핸드폰에서 편리하게 볼 수 있는지 확인해요"
+      },
+      "images": {
+        "title": "🖼️ 이미지 최적화",
+        "description": "사진들이 검색에 잘 나타나는지 체크해요"
+      }
+    },
+    "moreInfoTitle": "📚 더 알아보기",
+    "moreInfo": {
+      "guide": {
+        "title": "📖 SEO 기초 가이드",
+        "description": "SEO가 처음이신가요? 기초부터 차근차근 배워보세요!",
+        "button": "가이드 보기"
+      },
+      "faq": {
+        "title": "❓ 자주 묻는 질문",
+        "description": "궁금한 점이 있으시다면 FAQ를 확인해보세요!",
+        "button": "FAQ 보기"
+      },
+      "about": {
+        "title": "🎯 서비스 소개",
+        "description": "이 서비스가 어떻게 만들어졌는지 알아보세요!",
+        "button": "소개 보기"
+      }
+    }
+  },
+  "analysis": {
+    "progressTitle": "분석 중이에요...",
+    "progressMessage": "<strong>{url}</strong>를 꼼꼼히 살펴보고 있어요.<br />잠시만 기다려 주세요! (약 2-3분 소요)",
+    "didYouKnow": "🤔 잠깐! 알고 계셨나요?",
+    "completionMessage": "💪 분석이 완료되면 쉽게 따라할 수 있는 개선 방법을 알려드릴게요!",
+    "steps": {
+      "fetchingPage": "페이지 정보 가져오는 중",
+      "analyzingSeo": "SEO 상태 분석 중",
+      "checkingSpeed": "사이트 속도 확인 중",
+      "generatingAdvice": "맞춤 조언 생성 중",
+      "completed": "분석 완료!"
+    },
+    "perfectScoreNote": "💡 완벽한 100점은 필요하지 않아요! 70점 이상이면 훌륭한 SEO입니다.",
+    "categoryStatus": {
+      "excellent": "우수",
+      "average": "보통",
+      "needsWork": "개선필요"
+    },
+    "categoryBreakdown": "총 {total}개 항목 중 우수 {excellent}개, 보통 {average}개, 개선필요 {needsWork}개",
+    "summaryText": "{dangerCount}개 과제와 {warningCount}개 개선사항을 먼저 해결해보세요.",
+    "siteAnalysisInfo": "사이트 분석 정보",
+    "websiteBasicInfo": "웹사이트 기본 정보",
+    "domainAddress": "도메인 주소",
+    "estimatedIndustry": "추정 업종",
+    "aiAnalyzedBusiness": "AI가 분석한 비즈니스 유형", 
+    "targetAudience": "타겟 고객층",
+    "businessTypes": {
+      "일반 서비스업": "General Service Business",
+      "일반 소비자 (B2C)": "General Consumer (B2C)",
+      "기타": "Other"
+    },
+    "language": "언어",
+    "technicalSeoAnalysis": "기술적 SEO 분석",
+    "analysisReliability": "분석 신뢰도: 이 정보들은 실제 웹페이지를 분석해서 얻은 결과입니다. 더 정확한 분석을 위해서는 Google Analytics나 Search Console 데이터와 함께 참고하세요.",
+    "detailedResults": "상세 분석 결과",
+    "mainSeoResults": "주요 SEO 분석 결과",
+    "additionalResults": "추가 분석 결과",
+    "additionalResultsNote": "아래 항목들은 참고용이며 전체 점수에 크게 영향을 주지 않습니다.",
+    "referenceOnly": "참고용",
+    "viewDetails": "자세히 보기",
+    "aiCustomAdvice": "AI 맞춤 조언",
+    "overallEvaluation": "전체 평가",
+    "specializedTips": "{businessType} 특화 팁",
+    "expectedResultsTitle": "예상 결과",
+    "analyzeOtherSite": "다른 사이트 분석하기",
+    "evaluateService": "서비스 평가하기",
+    "currentValues": {
+      "pageTitle": "페이지 제목",
+      "noTitle": "제목이 설정되지 않았습니다",
+      "titleLengthDetail": "현재 {current}자 (배이 기가 30-60자)",
+      "noTitleSet": "제목이 설정되어 있지 않습니다",
+      "metaDescription": "메타 설명",
+      "noDescription": "설명이 설정되지 않았습니다",
+      "descriptionLengthDetail": "현재 {current}자 (배이 기가 120-160자)",
+      "noDescriptionSet": "설명이 설정되어 있지 않습니다",
+      "mobileViewport": "모바일 뷰포트 설정",
+      "viewportSet": "설정됨",
+      "viewportNotSet": "설정되지 않음",
+      "mobileProperDisplay": "모바일 기기에서 적절히 표시됩니다.",
+      "mobileNotProperDisplay": "모바일 기기에서 제대로 표시되지 않을 수 있습니다.",
+      "siteSpeed": "사이트 속도 (페이지 열리는 시간)",
+      "veryFast": "⚡ 매우 빠름",
+      "averageSpeed": "🚶 보통 속도",
+      "slowSpeed": "🐌 느림",
+      "speedVeryFastDetail": "⚡ 웹사이트가 매우 빠르게 열려요! 방문자들이 기다리지 않고 바로 볼 수 있어서 좋습니다.",
+      "speedAverageDetail": "🚶 웹사이트 속도가 보통이에요. 조금 더 빠르게 만들면 방문자들이 더 만족할 거예요.",
+      "speedSlowDetail": "🐌 웹사이트가 너무 느려요. 방문자들이 기다리다 지쳐서 다른 사이트로 갈 수 있어요. 속도 개선이 꼭 필요해요!",
+      "imageAnalysis": "이미지 분석",
+      "totalImages": "총 {count}개",
+      "imageOptimizationCheck": "이미지 최적화 상태를 확인해보세요.",
+      "contentLength": "콘텐츠 길이",
+      "words": "{count}단어",
+      "sufficientContent": "충분한 콘텐츠 양입니다.",
+      "moreContentNeeded": "더 많은 콘텐츠가 SEO에 도움이 될 수 있습니다.",
+      "socialMediaOptimization": "소셜 미디어 최적화",
+      "openGraphSet": "Open Graph: 설정됨",
+      "openGraphNotSet": "Open Graph: 미설정",
+      "twitterSet": "Twitter: 설정됨",
+      "twitterNotSet": "Twitter: 미설정",
+      "socialOptimized": "소셜 미디어에서 멋지게 공유됩니다!",
+      "socialNeedsImprovement": "소셜 미디어 공유 설정을 추가하면 더 많은 방문자를 얻을 수 있어요.",
+      "googleExplanation": "구글에게 사이트 설명하기",
+      "googleUnderstands": "✅ 구글이 잘 이해함",
+      "googleConfused": "❌ 구글이 헷갈림",
+      "structuredDataGood": "✅ 구글이 여러분 사이트가 무엇인지 정확히 알고 있어요! 검색 결과에 별점, 가격, 리뷰 등이 예쁘게 나올 수 있어요.",
+      "structuredDataBad": "❌ 구글이 여러분 사이트가 뭐을 파는지, 어떤 서비스인지 잘 모르겠어해요. 구글에게 친절하게 설명해주면 검색 결과에서 더 눈에 띠게 나와요!",
+      "technicalSeo": "기술적 SEO",
+      "technicalSeoDescription": "기술적 SEO는 검색엔진이 사이트를 제대로 읽을 수 있게 도와줍니다.",
+      "structuredDataExplanation": "구조화 데이터(Schema.org)가 잘 설정되어 있어요! 이것은 마치 구글에게 \"우리 사이트는 카페야, 여기 전화번호야, 여기 주소야\" 하고 친절하게 설명해주는 것과 같아요.",
+      "structuredDataMissing": "구조화 데이터(Schema.org)가 없어요. 이것은 마치 가게 간판 없이 장사하는 것과 같아요. 구글에게 \"우리는 ○○ 업체야, 연락처는 이거야\" 하고 설명해주면 검색 결과에서 더 잘 보여요!",
+      "mobile": "모바일",
+      "structuredData": "구조화데이터"
+    },
+    "techSeo": {
+      "contentAmount": "콘텐츠 양",
+      "words": "{count}단어",
+      "sufficientContent": "✓ 충분한 콘텐츠",
+      "moreContentNeeded": "⚠ 더 많은 콘텐츠 필요",
+      "imagesAndLinks": "이미지 & 링크",
+      "imageCount": "이미지 {count}개",
+      "linkCount": "링크 {count}개",
+      "mobileOptimization": "모바일 최적화",
+      "viewportSet": "뷰포트 설정됨",
+      "viewportNotSet": "뷰포트 미설정",
+      "mobileGoodDisplay": "핸드폰에서 잘 보입니다",
+      "mobileSmallDisplay": "핸드폰에서 작게 보일 수 있어요",
+      "googleSiteExplanation": "구글에게 사이트 설명하기 (구조화 데이터)",
+      "googleUnderstands": "구글이 잘 이해함",
+      "googleConfused": "구글이 헷갈림",
+      "structuredDataGood": "✅ Schema.org 마크업이 있어서 구글이 사이트를 정확히 파악해요! 검색 결과에 별점, 가격, 운영시간 등이 예쁘게 나올 수 있어요.",
+      "structuredDataBad": "❌ 구조화 데이터가 없어요. 마치 가게 간판 없이 장사하는 것과 같아요. 구글에게 \"우리는 ○○ 업체야, 연락처는 이거야\" 하고 설명해주면 검색 결과에서 더 잘 보여요!",
+      "structuredDataTip": "구조화 데이터란? 구글에게 \"우리 사이트는 카페야, 주소는 여기야, 전화번호는 이거야\" 하고 친절하게 설명해주는 코드예요"
+    },
+    "linkAnalysis": {
+      "linkStructure": "링크 구조",
+      "totalLinksFound": "총 {count}개 링크 발견",
+      "internalLinks": "내부 링크: {count}개",
+      "externalLinks": "외부 링크: {count}개",
+      "excellentStructure": "✅ 우수한 링크 구조입니다! 내부 링크로 사용자가 사이트를 더 오래 탐색하게 하고, 외부 링크로 신뢰도를 높이고 있어요.",
+      "averageStructure": "⚠️ 링크 구조가 아쉬워요. 내부 링크(2개 이상)와 외부 링크(1개 이상)를 적절히 섮어서 사용하면 SEO에 더 좋아요.",
+      "poorStructure": "❌ 링크가 거의 없어요. 관련된 내부 페이지나 신뢰할 수 있는 외부 사이트로의 링크를 추가해주세요.",
+      "internalLinksNeeded": "내부 링크를 더 추가해보세요 (관련 페이지, 카테고리, 이전 글 등)",
+      "externalLinksNeeded": "신뢰할 수 있는 외부 사이트로의 링크를 추가해보세요",
+      "tooManyLinks": "링크가 너무 많아요. 중요한 링크만 남겨두세요"
+    },
+    "overallScore": "전체 SEO 점수",
+    "scoreText": {
+      "excellent": "매우 좋아요! 😊",
+      "good": "괜찮아요! 😐",
+      "needsImprovement": "개선이 필요해요 😔"
+    },
+    "viewDetails": "자세히 보기",
+    "currentValue": "현재 상태",
+    "aiAdvice": "AI 맞춤 조언",
+    "overallAdvice": "전체 평가",
+    "priorityActions": "우선 개선 사항",
+    "industryTips": "업종별 특화 팁",
+    "expectedResults": "예상 결과",
+    "keywordSuggestions": "키워드 제안",
+    "newAnalysis": "새로운 사이트 분석",
+    "feedback": "피드백 남기기",
+    "analysisComplete": "SEO 분석 완료!",
+    "scoreExplanation": "💡 완벽한 100점은 필요하지 않아요! 70점 이상이면 훌륭한 SEO입니다.",
+    "tips": [
+      "💡 SEO란 검색엔진에서 내 사이트를 더 잘 찾을 수 있게 만드는 것이에요",
+      "🎯 좋은 제목은 고객이 클릭하고 싶게 만들어요",
+      "📱 요즘 고객의 60% 이상이 핸드폰으로 웹사이트를 봐요",
+      "⚡ 사이트가 3초 이내에 로딩되지 않으면 고객이 떠나요",
+      "🖼️ 이미지에 설명을 추가하면 검색에서 더 잘 찾을 수 있어요",
+      "📝 페이지 설명은 고객이 클릭할지 결정하는 중요한 요소예요",
+      "🔗 다른 사이트에서 내 사이트로 연결해주면 검색 순위가 올라가요"
+    ],
+    "errorMessages": {
+      "feedbackSendFailed": "피드백 전송 실패",
+      "feedbackSendSuccess": "피드백 전송 성공:",
+      "feedbackSendError": "피드백 전송 오류:"
+    },
+    "ui": {
+      "viewDetails": "자세히 보기",
+      "analysisReliability": "분석 신뢰도: 이 정보들은 실제 웹페이지를 분석해서 얻은 결과입니다. 더 정확한 분석을 위해서는 Google Analytics나 Search Console 데이터와 함께 참고하세요.",
+      "specializedTips": "{businessType} 특화 팁",
+      "expectedResultsTitle": "예상 결과",
+      "keywordDescription": "AI가 웹페이지를 분석하여 고객들이 검색할 가능성이 높은 키워드를 추천했어요! 페이지 언어에 맞는 적절한 키워드들로 구성되어 있습니다.",
+      "structuredDataTipLabel": "구조화 데이터란?",
+      "charactersCount": "({length}자)",
+      "aiRecommendedKeywords": "AI 추천 키워드",
+      "points": "점"
+    },
+    "categoryNames": {
+      "페이지 제목": "페이지 제목",
+      "페이지 설명": "페이지 설명", 
+      "콘텐츠 품질": "콘텐츠 품질",
+      "소셜 미디어 최적화": "소셜 미디어 최적화",
+      "구조화 데이터": "구조화 데이터",
+      "기술적 SEO": "기술적 SEO",
+      "HTTPS 보안": "HTTPS 보안",
+      "링크 구조": "링크 구조",
+      "키워드 최적화": "키워드 최적화",
+      "사이트맵": "사이트맵",
+      "모바일 최적화": "모바일 최적화",
+      "사이트 속도": "사이트 속도",
+      "이미지 최적화": "이미지 최적화",
+      "시멘틱 마크업": "시멘틱 마크업",
+      "사이트 속도 (PageSpeed 측정)": "사이트 속도",
+      "모바일 친화도": "모바일 친화도",
+      "페이지 제목 최적화": "페이지 제목 최적화",
+      "메타 설명": "메타 설명",
+      "콘텐츠 최적화": "콘텐츠 최적화",
+      "구조화된 데이터": "구조화된 데이터",
+      "사이트 구조": "사이트 구조",
+      "내부 링크": "내부 링크",
+      "외부 링크": "외부 링크",
+      "성능": "성능",
+      "접근성": "접근성",
+      "보안": "보안",
+      "사이트 속도": "사이트 속도",
+      "모바일 최적화": "모바일 최적화",
+      "페이지 제목": "페이지 제목",
+      "메타 설명": "메타 설명",
+      "title": "페이지 제목",
+      "description": "메타 설명",
+      "content": "콘텐츠 품질",
+      "socialMedia": "소셜 미디어",
+      "structuredData": "구조화된 데이터",
+      "technical": "기술적 요소",
+      "https": "보안 (HTTPS)",
+      "links": "링크 구조",
+      "keywords": "키워드 최적화",
+      "semanticMarkup": "시멘틱 마크업",
+      "robots": "로봇 크롤링",
+      "sitemap": "사이트맵",
+      "pageSpeed": "사이트 속도",
+      "mobileFriendly": "모바일 친화도",
+      "images": "이미지 최적화"
+    },
+    "semanticMarkup": {
+      "semanticStructure": "시멘틱 마크업 (HTML 구조)",
+      "points": "{score}점",
+      "wellStructured": "✅ 시멘틱 마크업이 잘 구성되어 있어요! 검색엔진과 스크린 리더가 쉽게 이해할 수 있습니다.",
+      "partiallyStructured": "⚠️ 시멘틱 마크업이 부분적으로 구성되어 있어요. 몇 가지 개선사항이 있습니다.",
+      "needsImprovement": "❌ 시멘틱 마크업이 부족해요. 검색엔진 최적화와 접근성 향상이 필요합니다."
+    },
+    "categoryDescriptions": {
+      "title": {
+        "good": "제목이 완벽해요! 고객이 검색할 때 쉽게 찾을 수 있습니다.",
+        "warning": "제목이 조금 아쉬워요. 더 매력적으로 만들면 더 많은 클릭을 받을 수 있어요.",
+        "danger": "제목을 개선해야 해요. 고객이 클릭하고 싶은 제목으로 바꿔보세요."
+      },
+      "description": {
+        "good": "설명이 완벽해요! 고객이 클릭하고 싶게 만드는 좋은 설명입니다.",
+        "warning": "설명이 조금 짧아요. 더 자세히 설명하면 고객이 더 많이 클릭할 거예요.",
+        "danger": "설명을 추가해야 해요. 어떤 내용인지 알려주는 설명을 써보세요."
+      },
+      "content": {
+        "good": "콘텐츠가 충분해요! 고객에게 유용한 정보를 잘 제공하고 있습니다.",
+        "warning": "내용이 조금 적어요. 더 자세히 설명하면 고객에게 도움이 될 거예요.",
+        "danger": "내용을 더 추가해야 해요. 고객이 궁금해할 내용들을 더 써보세요."
+      },
+      "social": {
+        "good": "소셜 미디어 공유 최적화가 완벽해요! 페이스북, 트위터에서 예쁘게 보일 거예요.",
+        "warning": "소셜 미디어 설정이 일부만 되어 있어요. 모든 소셜 미디어에서 잘 보이게 설정해보세요.",
+        "danger": "소셜 미디어 공유 설정이 없어요. 페이스북, 트위터에서 공유될 때 예쁘게 보이게 설정해보세요."
+      },
+      "structured": {
+        "good": "구조화 데이터가 완벽해요! 검색 결과에서 별점이나 가격 같은 정보를 보여줄 수 있어요.",
+        "warning": "구조화 데이터가 일부만 있어요. 더 자세한 정보를 구글에게 알려주면 더 좋아요.",
+        "danger": "구조화 데이터가 없어요. 검색 결과에서 별점이나 가격 같은 정보를 보여줄 수 있어요."
+      },
+      "technical": {
+        "good": "기술적 SEO 설정이 잘 되어 있어요! 검색엔진이 이해하기 쉬울 거예요.",
+        "warning": "기술적 SEO 설정에 개선할 점이 있어요. 조금만 더 신경쓰면 완벽할 거예요.",
+        "danger": "기술적 SEO 설정이 부족해요. 검색엔진이 제대로 읽을 수 있게 설정해보세요."
+      },
+      "https": {
+        "good": "사이트가 안전한 HTTPS로 보호되고 있어요! 고객 정보가 안전하게 전송됩니다.",
+        "warning": "HTTPS 설정에 일부 문제가 있어요. 완전히 안전하게 만들어보세요.",
+        "danger": "사이트가 안전하지 않아요! HTTPS로 변경해서 고객 정보를 보호하세요."
+      },
+      "links": {
+        "good": "링크 구조가 훌륭해요! 고객이 사이트를 쉽게 탐색할 수 있습니다.",
+        "warning": "링크가 없어요. 관련 페이지나 유용한 사이트로 연결하면 더 좋을 거예요.",
+        "danger": "링크가 없어요. 관련 페이지나 유용한 사이트로 연결하면 더 좋을 거예요."
+      },
+      "keywords": {
+        "good": "키워드 최적화가 잘 되어 있어요! 제목, 설명, 내용에 키워드가 자연스럽게 들어가 있습니다.",
+        "warning": "키워드 사용을 개선할 수 있어요. 중요한 키워드를 조금 더 자연스럽게 사용해보세요.",
+        "danger": "키워드가 부족해요. 고객이 검색할 만한 단어들을 내용에 포함시켜보세요."
+      },
+      "semantic-markup": {
+        "good": "시멘틱 마크업이 완벽해요! 검색엔진과 스크린 리더가 쉽게 이해할 수 있습니다.",
+        "warning": "시멘틱 마크업이 부분적으로 구성되어 있어요. 몇 가지 개선사항이 있습니다.",
+        "danger": "시멘틱 마크업이 부족해요. 검색엔진 최적화와 접근성 향상이 필요합니다."
+      },
+      "speed": {
+        "good": "사이트 속도가 매우 빨라요! 방문자들이 기다리지 않고 바로 볼 수 있습니다.",
+        "warning": "사이트 속도가 보통이에요. 조금 더 빠르게 만들면 더 좋을 거예요.",
+        "danger": "사이트가 너무 느려요. 속도 개선이 꼭 필요합니다."
+      },
+      "mobile": {
+        "good": "모바일 최적화가 완벽해요! 핸드폰에서 잘 보입니다.",
+        "warning": "모바일 최적화에 개선할 점이 있어요. 더 편리하게 만들어보세요.",
+        "danger": "모바일 최적화가 부족해요. 핸드폰에서 보기 어려울 수 있습니다."
+      },
+      "images": {
+        "good": "이미지 최적화가 잘 되어 있어요! 검색에서 잘 찾을 수 있습니다.",
+        "warning": "이미지 최적화를 개선할 수 있어요. 설명을 더 추가해보세요.",
+        "danger": "이미지에 설명이 부족해요. ALT 텍스트를 추가해보세요."
+      },
+      "mobile-friendly": {
+        "good": "모바일 최적화가 완벽해요! 핸드폰에서 잘 보입니다.",
+        "warning": "모바일 최적화에 개선할 점이 있어요. 더 편리하게 만들어보세요.",
+        "danger": "모바일 최적화가 부족해요. 핸드폰에서 보기 어려울 수 있습니다."
+      },
+      "performance": {
+        "good": "사이트 속도가 매우 빨라요! 방문자들이 기다리지 않고 바로 볼 수 있습니다.",
+        "warning": "사이트 속도가 보통이에요. 조금 더 빠르게 만들면 더 좋을 거예요.",
+        "danger": "사이트가 너무 느려요. 속도 개선이 꼭 필요합니다."
+      },
+      "page-speed": {
+        "good": "사이트 속도가 매우 빨라요! 방문자들이 기다리지 않고 바로 볼 수 있습니다.",
+        "warning": "사이트 속도가 보통이에요. 조금 더 빠르게 만들면 더 좋을 거예요.",
+        "danger": "사이트가 너무 느려요. 속도 개선이 꼭 필요합니다."
+      },
+      "robots": {
+        "good": "로봇 크롤링 설정이 완벽해요! 검색엔진이 사이트를 잘 찾을 수 있습니다.",
+        "warning": "로봇 크롤링 설정을 개선할 수 있어요. 더 효율적으로 설정해보세요.",
+        "danger": "로봇 크롤링 설정이 부족해요. 검색엔진이 사이트를 제대로 찾지 못할 수 있습니다."
+      },
+      "sitemap": {
+        "good": "사이트맵이 완벽해요! 검색엔진이 모든 페이지를 쉽게 찾을 수 있습니다.",
+        "warning": "사이트맵을 개선할 수 있어요. 더 체계적으로 구성해보세요.",
+        "danger": "사이트맵이 부족해요. 검색엔진이 모든 페이지를 찾기 어려울 수 있습니다."
+      }
+    }
+  },
+  "faq": {
+    "title": "자주 묻는 질문",
+    "subtitle": "SEO 분석 서비스에 대한 자주 묻는 질문과 답변을 모았습니다",
+    "categoriesTitle": "카테고리별 질문",
+    "categories": {
+      "all": "전체",
+      "serviceUsage": "서비스 이용",
+      "seoBasics": "SEO 기초",
+      "technicalIssues": "기술적 문제",
+      "resultInterpretation": "결과 해석",
+      "improvements": "개선 방법",
+      "localBusiness": "지역 비즈니스"
+    },
+    "questionCount": "총 {count}개의 질문이 있습니다.",
+    "questions": [
+      {
+        "id": 1,
+        "category": "serviceUsage",
+        "question": "SEO 분석 서비스는 무료인가요?",
+        "answer": "네, 완전 무료입니다! 회원가입도 필요 없고, URL만 입력하면 바로 분석 결과를 받아볼 수 있어요. 앞으로도 계속 무료로 제공할 예정입니다."
+      },
+      {
+        "id": 2,
+        "category": "serviceUsage",
+        "question": "분석에 얼마나 시간이 걸리나요?",
+        "answer": "보통 2-3분 정도 소요됩니다. 사이트의 크기와 복잡성에 따라 조금 더 걸릴 수 있지만, 대부분 3분 이내에 완료됩니다."
+      },
+      {
+        "id": 3,
+        "category": "serviceUsage",
+        "question": "어떤 종류의 웹사이트도 분석할 수 있나요?",
+        "answer": "대부분의 웹사이트를 분석할 수 있습니다. 개인 블로그, 회사 홈페이지, 쇼핑몰, 포트폴리오 사이트 등 모두 가능해요. 다만, 로그인이 필요한 페이지나 접근이 제한된 사이트는 분석이 어려울 수 있습니다."
+      },
+      {
+        "id": 4,
+        "category": "seoBasics",
+        "question": "SEO가 정확히 무엇인가요?",
+        "answer": "SEO는 Search Engine Optimization의 줄임말로, '검색 엔진 최적화'를 뜻합니다. 쉽게 말해서 구글이나 네이버에서 검색했을 때 우리 사이트가 더 상위에 노출되도록 하는 모든 활동을 말해요."
+      },
+      {
+        "id": 5,
+        "category": "seoBasics",
+        "question": "SEO 점수가 낮으면 어떻게 해야 하나요?",
+        "answer": "걱정하지 마세요! 분석 결과에서 제공하는 개선 방안을 하나씩 적용해보시면 됩니다. 가장 중요한 것부터 우선순위를 매겨서 알려드리니까, 차근차근 따라해보세요. 완벽한 100점을 받을 필요는 없어요."
+      },
+      {
+        "id": 6,
+        "category": "seoBasics",
+        "question": "SEO 효과는 언제부터 나타나나요?",
+        "answer": "SEO는 시간이 걸리는 작업이에요. 빠르면 1-2주, 보통은 1-3개월 정도 지나야 검색 결과에 변화가 나타납니다. 꾸준히 개선하는 것이 가장 중요해요."
+      },
+      {
+        "id": 7,
+        "category": "technicalIssues",
+        "question": "분석이 실패하거나 오류가 발생하면 어떻게 하나요?",
+        "answer": "몇 가지 확인해보세요: 1) URL이 정확한지 확인 2) 사이트가 정상적으로 접속되는지 확인 3) 잠시 후 다시 시도해보세요. 계속 문제가 생기면 피드백을 통해 알려주시면 빠르게 해결해드릴게요."
+      },
+      {
+        "id": 8,
+        "category": "technicalIssues",
+        "question": "모바일에서도 사용할 수 있나요?",
+        "answer": "네! 모바일에서도 완벽하게 작동합니다. 스마트폰이나 태블릿에서도 편리하게 사용하실 수 있어요."
+      },
+      {
+        "id": 9,
+        "category": "resultInterpretation",
+        "question": "분석 결과를 어떻게 해석해야 하나요?",
+        "answer": "분석 결과는 초보자도 쉽게 이해할 수 있도록 만들어져 있어요. 빨간색은 개선이 필요한 부분, 노란색은 보통, 초록색은 좋은 상태를 의미합니다. 각 항목마다 구체적인 개선 방법도 함께 제시해드려요."
+      },
+      {
+        "id": 10,
+        "category": "resultInterpretation",
+        "question": "경쟁사와 비교할 수 있나요?",
+        "answer": "현재는 단일 사이트 분석만 제공하고 있습니다. 하지만 업종별 평균 점수와 비교할 수 있는 기능을 개발 중이에요. 더 나은 서비스를 위해 지속적으로 개선하고 있습니다."
+      },
+      {
+        "id": 11,
+        "category": "improvements",
+        "question": "제목과 설명을 어떻게 수정해야 하나요?",
+        "answer": "제목은 30자 이내로, 설명은 150자 이내로 작성하는 것이 좋아요. 사용자가 궁금해할 내용과 주요 키워드를 자연스럽게 포함시키세요. 분석 결과에서 현재 상태와 개선 방안을 상세히 알려드립니다."
+      },
+      {
+        "id": 12,
+        "category": "improvements",
+        "question": "이미지 최적화는 어떻게 하나요?",
+        "answer": "이미지 파일명을 의미있는 이름으로 바꾸고, ALT 텍스트(대체 텍스트)를 추가해주세요. 이미지 크기도 너무 크지 않게 조정하는 것이 좋습니다. 구체적인 방법은 SEO 가이드에서 자세히 설명하고 있어요."
+      },
+      {
+        "id": 13,
+        "category": "improvements",
+        "question": "사이트 속도를 개선하려면 어떻게 해야 하나요?",
+        "answer": "이미지 크기 최적화, 불필요한 플러그인 삭제, 좋은 호스팅 서비스 이용 등이 도움이 됩니다. 기술적인 부분이 어렵다면 웹 개발자에게 도움을 요청하는 것도 좋은 방법이에요."
+      },
+      {
+        "id": 14,
+        "category": "localBusiness",
+        "question": "지역 기반 비즈니스 SEO는 어떻게 하나요?",
+        "answer": "네이버 플레이스와 구글 마이 비즈니스에 등록하는 것이 가장 중요해요. 또한 지역명을 포함한 키워드를 사용하고, 정확한 주소와 전화번호를 웹사이트에 명시하세요."
+      },
+      {
+        "id": 15,
+        "category": "localBusiness",
+        "question": "네이버와 구글 중 어느 것이 더 중요한가요?",
+        "answer": "한국에서는 네이버가 여전히 중요하지만, 구글의 영향력도 점점 커지고 있어요. 두 검색엔진 모두 고려해서 최적화하는 것이 좋습니다. 저희 서비스는 두 검색엔진 모두에 적용되는 원칙을 기반으로 분석해드려요."
+      }
+    ],
+    "additionalHelp": {
+      "title": "추가 도움말",
+      "seoGuide": {
+        "title": "SEO 기초 가이드",
+        "description": "SEO가 처음이신가요? 기초부터 차근차근 배울 수 있는 가이드를 준비했어요.",
+        "button": "가이드 보러가기"
+      },
+      "analysis": {
+        "title": "바로 분석해보기",
+        "description": "이론보다는 실전! 내 사이트를 직접 분석해보면서 SEO를 이해해보세요.",
+        "button": "분석 시작하기"
+      }
+    },
+    "ctaTitle": "💬 궁금한 점이 더 있으시나요?",
+    "ctaDescription": "FAQ에서 답을 찾지 못하셨다면, 언제든지 피드백을 통해 질문해주세요. 더 나은 서비스를 위해 여러분의 의견을 소중히 생각합니다.",
+    "ctaAnalyze": "분석 시작하기",
+    "ctaAbout": "서비스 소개"
+  },
+  "about": {
+    "title": "서비스 소개",
+    "subtitle": "초보자도 쉽게 이해할 수 있는 AI SEO 분석 서비스",
+    "mission": {
+      "title": "🌟 우리의 목표",
+      "description": "SEO가 어려워서 포기했던 모든 분들을 위해, **전문 용어 없이도 쉽게 이해할 수 있는 SEO 분석 서비스**를 만들었습니다."
+    },
+    "features": {
+      "title": "✨ 서비스 특징",
+      "aiAnalysis": {
+        "title": "AI 기반 분석",
+        "description": "최신 AI 기술을 활용하여 여러분의 웹사이트를 정확하게 분석하고, 업종별 맞춤형 조언을 제공합니다."
+      },
+      "beginnerFriendly": {
+        "title": "초보자 친화적",
+        "description": "복잡한 SEO 전문 용어를 쉬운 말로 바꿔서 설명하고, 누구나 따라할 수 있는 단계별 가이드를 제공합니다."
+      },
+      "fastAnalysis": {
+        "title": "빠른 분석",
+        "description": "3분 이내에 종합적인 SEO 분석 결과를 제공합니다. 기다리는 시간도 유익한 SEO 팁으로 채워드려요!"
+      }
+    },
+    "targetUsers": {
+      "title": "누구를 위한 서비스인가요?",
+      "personalBloggers": {
+        "title": "개인 블로거",
+        "item1": "네이버 블로그, 티스토리 운영자",
+        "item2": "워드프레스 블로그 운영자",
+        "item3": "취미로 블로그를 시작한 분",
+        "item4": "블로그 방문자를 늘리고 싶은 분"
+      },
+      "smallBusiness": {
+        "title": "소상공인",
+        "item1": "카페, 식당 운영자",
+        "item2": "미용실, 병원 운영자",
+        "item3": "작은 온라인 쇼핑몰 운영자",
+        "item4": "지역 기반 비즈니스 운영자"
+      },
+      "freelancers": {
+        "title": "프리랜서",
+        "item1": "포트폴리오 사이트 운영자",
+        "item2": "개인 브랜딩이 필요한 분",
+        "item3": "온라인 강의 운영자",
+        "item4": "컨설팅 사업을 하는 분"
+      },
+      "marketingBeginners": {
+        "title": "마케팅 초보자",
+        "item1": "신입 마케터",
+        "item2": "SEO를 배우고 싶은 분",
+        "item3": "디지털 마케팅 입문자",
+        "item4": "회사 홈페이지 담당자"
+      }
+    },
+    "process": {
+      "title": "분석 과정",
+      "steps": [
+        {
+          "number": "1",
+          "title": "URL 입력",
+          "description": "분석하고 싶은 웹사이트 주소를 입력하기만 하면 됩니다."
+        },
+        {
+          "number": "2",
+          "title": "AI 분석",
+          "description": "AI가 사이트의 SEO 상태를 종합적으로 분석합니다."
+        },
+        {
+          "number": "3",
+          "title": "결과 제공",
+          "description": "이해하기 쉬운 언어로 개선 방안을 제시합니다."
+        },
+        {
+          "number": "4",
+          "title": "개선 적용",
+          "description": "단계별 가이드를 따라 차근차근 개선해보세요."
+        }
+      ]
+    },
+    "analysisItems": {
+      "title": "분석 항목",
+      "titleOptimization": {
+        "title": "제목 최적화",
+        "description": "페이지 제목의 적절성 검사"
+      },
+      "descriptionOptimization": {
+        "title": "설명 최적화",
+        "description": "메타 설명 품질 평가"
+      },
+      "imageOptimization": {
+        "title": "이미지 최적화",
+        "description": "이미지 SEO 상태 확인"
+      },
+      "siteSpeed": {
+        "title": "사이트 속도",
+        "description": "로딩 속도 성능 측정"
+      },
+      "mobileFriendly": {
+        "title": "모바일 친화성",
+        "description": "모바일 최적화 정도"
+      },
+      "linkStructure": {
+        "title": "링크 구조",
+        "description": "내부/외부 링크 분석"
+      }
+    },
+    "team": {
+      "title": "개발진 소개",
+      "missionTitle": "SEO 초보자를 위한 서비스",
+      "missionDescription1": "복잡한 SEO 용어와 기술적 지식 때문에 포기했던 경험이 있으신가요? 저희도 같은 어려움을 겪었습니다.",
+      "missionDescription2": "그래서 만들었습니다. <strong>누구나 쉽게 이해할 수 있는 SEO 분석 서비스</strong>를요.",
+      "missionDescription3": "여러분의 성공적인 온라인 비즈니스를 위해 계속 발전해 나가겠습니다."
+    },
+    "cta": {
+      "title": "🎯 지금 바로 시작해보세요!",
+      "description": "URL 하나만 입력하면 3분 안에 맞춤형 SEO 분석 결과를 받아보실 수 있습니다.",
+      "startAnalysis": "분석 시작하기",
+      "viewGuide": "SEO 가이드 보기"
+    }
+  },
+  "seoGuide": {
+    "title": "SEO 기초 가이드",
+    "subtitle": "초보자도 쉽게 따라할 수 있는 검색엔진 최적화 완벽 가이드",
+    "tableOfContents": "목차",
+    "sections": {
+      "whatIsSeo": {
+        "title": "SEO가 뭐예요?",
+        "description": "기본 개념 이해하기",
+        "anchor": "what-is-seo",
+        "subtitle": "SEO가 뭐예요?",
+        "explanation": "쉽게 설명하면...",
+        "intro": "SEO는 <strong>\"검색 엔진 최적화\"</strong>의 줄임말이에요. 쉽게 말하면 <strong>구글에서 검색했을 때 우리 사이트가 더 위에 나오도록 하는 것</strong>입니다.",
+        "exampleTitle": "예시로 이해하기",
+        "exampleContent": "카페를 운영한다면 \"강남 카페\", \"맛있는 커피\" 같은 단어로 검색했을 때 내 카페가 검색 결과 1페이지에 나오는 것이 목표예요!"
+      },
+      "whySeo": {
+        "title": "왜 SEO가 필요한가요?",
+        "description": "SEO의 중요성과 효과",
+        "anchor": "why-seo",
+        "subtitle": "왜 SEO가 필요한가요?",
+        "benefits": {
+          "moreCustomers": {
+            "title": "더 많은 고객",
+            "description": "검색 결과 상위에 나올수록 더 많은 사람들이 우리 사이트를 방문해요."
+          },
+          "freeMarketing": {
+            "title": "무료 마케팅",
+            "description": "광고비 없이도 자연스럽게 고객을 모을 수 있는 가장 좋은 방법이에요."
+          },
+          "targetedCustomers": {
+            "title": "정확한 고객",
+            "description": "우리 상품이나 서비스를 정말 필요로 하는 사람들이 찾아와요."
+          }
+        }
+      },
+      "basicElements": {
+        "title": "기본 요소들",
+        "description": "제목, 설명, 이미지 등",
+        "anchor": "basic-elements",
+        "subtitle": "SEO 기본 요소들",
+        "pageTitle": {
+          "title": "페이지 제목 (Title Tag)",
+          "description": "검색 결과에서 파란색으로 표시되는 제목이에요. 가장 중요한 SEO 요소 중 하나입니다.",
+          "goodExample": "좋은 제목 예시",
+          "goodExampleContent": "\"강남역 맛집 카페 | 신선한 원두커피와 디저트 전문점\"",
+          "badExample": "나쁜 제목 예시",
+          "badExampleContent": "\"홈페이지\" 또는 \"메인\""
+        },
+        "metaDescription": {
+          "title": "페이지 설명 (Meta Description)",
+          "description": "검색 결과에서 제목 아래에 나오는 설명 문구예요. 사람들이 클릭할지 결정하는 중요한 요소입니다.",
+          "tips": "작성 팁",
+          "tip1": "150자 이내로 간결하게",
+          "tip2": "주요 키워드 포함",
+          "tip3": "사용자가 궁금해할 내용 포함"
+        },
+        "imageOptimization": {
+          "title": "이미지 최적화",
+          "description": "이미지도 검색 결과에 영향을 줍니다. 특히 이미지 검색에서 중요해요.",
+          "checklistTitle": "이미지 SEO 체크리스트",
+          "checklist1": "파일명에 한국어 또는 영어로 내용 설명",
+          "checklist2": "ALT 텍스트 (대체 텍스트) 작성",
+          "checklist3": "이미지 크기 최적화 (너무 크지 않게)"
+        }
+      },
+      "practicalTips": {
+        "title": "실전 팁",
+        "description": "바로 적용할 수 있는 방법",
+        "anchor": "practical-tips",
+        "subtitle": "바로 적용할 수 있는 실전 팁",
+        "localBusiness": {
+          "title": "지역 비즈니스 SEO",
+          "item1": "네이버 플레이스, 구글 마이 비즈니스 등록",
+          "item2": "지역명 + 업종명으로 제목 작성",
+          "item3": "주소, 전화번호 정확히 기입",
+          "item4": "고객 리뷰 적극 관리"
+        },
+        "mobileOptimization": {
+          "title": "모바일 최적화",
+          "item1": "휴대폰에서도 잘 보이는 디자인",
+          "item2": "빠른 로딩 속도",
+          "item3": "터치하기 쉬운 버튼 크기",
+          "item4": "가로 스크롤 없애기"
+        },
+        "contentWriting": {
+          "title": "콘텐츠 작성 팁",
+          "item1": "고객이 궁금해할 내용 위주",
+          "item2": "자연스럽게 키워드 포함",
+          "item3": "정기적으로 새 글 작성",
+          "item4": "다른 사이트에서 복사 금지"
+        },
+        "linkManagement": {
+          "title": "링크 관리",
+          "item1": "페이지 간 연결 링크 만들기",
+          "item2": "깨진 링크 정기적으로 확인",
+          "item3": "관련 사이트와 상호 링크",
+          "item4": "소셜미디어 연결하기"
+        }
+      }
+    },
+    "conclusion": {
+      "title": "SEO는 꾸준함이 핵심이에요!",
+      "description": "하루아침에 결과가 나오지 않지만, 꾸준히 적용하면 분명히 효과를 볼 수 있어요. 작은 것부터 하나씩 개선해보세요!",
+      "analyzeButton": "내 사이트 분석하기",
+      "faqButton": "자주 묻는 질문"
+    }
+  },
+  "feedback": {
+    "title": "📝 피드백 남기기",
+    "subtitle": "여러분의 피드백이 서비스 개선에 도움이 됩니다",
+    "rating": "평점",
+    "ratingLabels": {
+      "1": "매우 불만족",
+      "2": "불만족",
+      "3": "보통",
+      "4": "만족",
+      "5": "매우 만족"
+    },
+    "comment": "의견 (선택사항)",
+    "commentPlaceholder": "서비스 이용 경험을 알려주세요...",
+    "helpful": "이 분석이 도움이 되었나요?",
+    "yes": "예",
+    "no": "아니요",
+    "submit": "피드백 제출",
+    "submitting": "제출 중...",
+    "thankYou": "소중한 피드백 감사합니다!",
+    "error": "피드백 제출 중 오류가 발생했습니다."
+  },
+  "errors": {
+    "pageNotFound": "페이지를 찾을 수 없습니다",
+    "somethingWentWrong": "문제가 발생했습니다",
+    "tryAgain": "다시 시도",
+    "goHome": "홈으로 가기",
+    "analysisError": "분석 실패",
+    "invalidUrl": "잘못된 URL",
+    "networkError": "네트워크 오류",
+    "serverError": "서버 오류"
+  },
+  "metadata": {
+    "title": "무료 SEO 분석 도구 - 웹사이트 최적화 체크",
+    "description": "3분 만에 웹사이트의 종합적인 SEO 분석을 받으세요. 검색 엔진 순위 개선을 위한 실행 가능한 권장사항을 제공하는 무료 도구입니다.",
+    "keywords": "SEO 분석, 웹사이트 최적화, 검색엔진 최적화, 무료 SEO 도구, 웹사이트 체크, SEO 감사",
+    "aboutTitle": "소개 - 무료 SEO 분석 도구",
+    "aboutDescription": "소상공인과 블로거를 위해 설계된 초보자 친화적인 AI 기반 SEO 분석 서비스에 대해 알아보세요.",
+    "faqTitle": "FAQ - 자주 묻는 질문 | 무료 SEO 분석 도구",
+    "faqDescription": "SEO 분석 서비스에 대한 자주 묻는 질문과 답변을 모았습니다. 서비스 이용법, SEO 기초, 개선 방법까지 모든 궁금증을 해결해드립니다.",
+    "guideTitle": "SEO 기초 가이드 | 무료 SEO 분석 도구",
+    "guideDescription": "SEO의 기본을 단계별로 배워보세요. 검색 엔진 최적화를 이해하고 구현하는 초보자 친화적인 가이드입니다."
+  },
+  "seoModal": {
+    "statusText": {
+      "good": "좋아요!",
+      "warning": "보통이에요",
+      "danger": "개선이 필요해요",
+      "unknown": "알 수 없음"
+    },
+    "currentStatus": "현재 상태",
+    "detailedAnalysis": "상세 분석",
+    "improvementMethods": "개선 방법",
+    "confirmed": "확인했어요",
+    "title": {
+      "currentTitle": "현재 페이지 제목",
+      "notSet": "제목이 설정되지 않았습니다",
+      "lengthInfo": "길이: {length}자 (권장: 30-60자)",
+      "optimizationTips": "제목 최적화 팁",
+      "tips": [
+        "주요 키워드를 앞쪽에 배치하세요",
+        "브랜드명은 뒤쪽에 넣으세요",
+        "30-60자 사이가 가장 좋습니다",
+        "클릭하고 싶게 만드는 매력적인 문구를 사용하세요"
+      ]
+    },
+    "description": {
+      "currentDescription": "현재 메타 설명",
+      "notSet": "메타 설명이 설정되지 않았습니다",
+      "lengthInfo": "길이: {length}자 (권장: 120-160자)",
+      "writingMethod": "메타 설명 작성법",
+      "tips": [
+        "페이지 내용을 간단히 요약하세요",
+        "주요 키워드를 자연스럽게 포함하세요",
+        "120-160자 사이로 작성하세요",
+        "검색자가 클릭하고 싶게 만드는 내용을 넣으세요"
+      ]
+    },
+    "social": {
+      "currentSettings": "현재 소셜 미디어 설정",
+      "optimizationMethod": "소셜 미디어 최적화 방법",
+      "description": "소셜 미디어에서 링크가 예쁘게 보이려면:",
+      "tips": [
+        "Open Graph 태그 추가 (페이스북, 링크드인용)",
+        "Twitter Card 태그 추가 (트위터용)",
+        "1200x630px 크기의 이미지 준비",
+        "매력적인 제목과 설명 작성"
+      ]
+    },
+    "mobile": {
+      "optimizationStatus": "모바일 최적화 상태",
+      "viewportSet": "뷰포트 메타 태그 설정",
+      "properSize": "모바일에서 적절한 크기로 표시됩니다",
+      "smallSize": "모바일에서 작게 보일 수 있습니다",
+      "checklist": "모바일 최적화 체크리스트",
+      "checklistItems": [
+        "뷰포트 메타 태그 추가",
+        "터치하기 쉬운 버튼 크기 (최소 44px)",
+        "읽기 쉬운 글자 크기 (최소 16px)",
+        "빠른 로딩 속도",
+        "세로 모드에서도 잘 보이는 레이아웃"
+      ]
+    },
+    "structuredData": {
+      "currentStatus": "구조화 데이터 현재 상태",
+      "schemaApplied": "Schema.org 마크업 적용",
+      "googleUnderstands": "구글이 사이트 정보를 정확히 파악하고 있습니다",
+      "googleDoesntKnow": "구글이 사이트가 무엇인지 정확히 모르는 상태입니다",
+      "whatIs": "구조화 데이터란?",
+      "explanation": "구조화 데이터(Schema.org)는 구글에게 사이트를 친절하게 설명해주는 특별한 코드예요:",
+      "examples": [
+        "🏢 **업종 설명:** \"\uc6b0리는 카페야\", \"\uc6b0리는 병원이야\"",
+        "📍 **위치 정보:** \"주소는 여기야\", \"전화번호는 이거야\"",
+        "⏰ **운영 시간:** \"월~금 9시~18시 영업해\"",
+        "⭐ **리뷰 정보:** \"고객 평점 4.5점이야\"",
+        "💰 **가격 정보:** \"이 상품은 5만원이야\""
+      ],
+      "effects": "구조화 데이터 적용 효과",
+      "effectsDescription": "구조화 데이터를 적용하면 검색 결과가 이렇게 바뀝니다:",
+      "normalResult": "일반 검색 결과",
+      "normalResultTitle": "맛있는 카페 - 신선한 커피와 디저트",
+      "normalResultDesc": "맛있는 카페에서 신선한 커피와 수제 디저트를 즐겨보세요...",
+      "structuredResult": "구조화 데이터 적용 후",
+      "structuredResultRating": "⭐⭐⭐⭐⭐ 4.5점",
+      "structuredResultPhone": "📞 02-123-4567",
+      "structuredResultLocation": "📍 서울 강남구",
+      "structuredResultHours": "⏰ 영업중",
+      "howToImplement": "구조화 데이터 적용 방법",
+      "implementationMethods": [
+        "워드프레스: SEO 플러그인 사용 (Yoast, RankMath)",
+        "쇼핑몰: 상품 정보 스키마 적용",
+        "지역 업체: LocalBusiness 스키마 적용",
+        "블로그: Article 스키마 적용",
+        "구글 구조화 데이터 테스트 도구로 확인"
+      ]
+    },
+    "semanticMarkup": {
+      "currentStatus": "시멘틱 마크업 현재 상태",
+      "score": "점수: {score}/100",
+      "wellStructured": "시멘틱 마크업이 잘 구성되어 있습니다! 검색엔진과 스크린 리더가 쉽게 이해할 수 있어요.",
+      "partiallyStructured": "시멘틱 마크업이 부분적으로 구성되어 있습니다. 몇 가지 개선하면 더 좋아질 거예요.",
+      "needsImprovement": "시멘틱 마크업이 부족합니다. 검색엔진 최적화와 접근성 향상을 위해 개선이 필요해요.",
+      "elementsCheck": "HTML5 시멘틱 요소 체크",
+      "headingStructure": "헤딩 구조",
+      "accessibility": "접근성 속성",
+      "accessibilityDescription": "시각 장애인과 스크린 리더를 위한 접근성 속성:",
+      "ariaAttributes": "ARIA 속성: {count}개 발견",
+      "roleAttributes": "Role 속성: {count}개 발견",
+      "recommendation": "최소 3개 이상의 ARIA 속성 사용",
+      "benefits": "시멘틱 마크업의 이점",
+      "benefitsDescription": "시멘틱 마크업을 사용하면 이런 좋은 점들이 있어요:",
+      "benefitsList": [
+        "검색엔진 최적화: 구글이 페이지 구조를 더 잘 이해",
+        "접근성 향상: 시각 장애인도 쉽게 웹사이트 이용",
+        "다양한 기기 지원: 스크린 리더, 음성 브라우저 등",
+        "유지보수 용이: 코드 구조가 명확해져 관리가 쉬워짐",
+        "미래 지향적: 웹 표준을 따르는 현대적인 웹사이트"
+      ],
+      "improvementSuggestions": "개선 제안"
+    },
+    "robots": {
+      "currentStatus": "robots.txt 현재 상태",
+      "fileExists": "robots.txt 파일 존재",
+      "partialSetup": "robots.txt 부분 설정",
+      "fileNotExists": "robots.txt 파일 없음",
+      "wellConfigured": "검색엔진이 사이트를 체계적으로 크롤링할 수 있습니다",
+      "needsConfiguration": "robots.txt 파일로 검색엔진의 크롤링을 더 효율적으로 관리할 수 있습니다",
+      "whatIsRobots": "robots.txt란?",
+      "robotsDescription": "robots.txt는 검색엔진에게 \"이 사이트를 어떻게 돌아다닐지\" 알려주는 안내서입니다:",
+      "robotsFunctions": [
+        "교통신호: 어느 페이지는 가도 되고, 어느 페이지는 가면 안 되는지",
+        "지도 제공: 사이트맵 위치를 알려줘서 모든 페이지를 쉽게 찾게 도와줌",
+        "효율성 증대: 검색엔진이 중요한 페이지에 집중할 수 있게 함",
+        "보안 강화: 관리자 페이지나 개인정보 페이지 접근 차단"
+      ],
+      "example": "robots.txt 예시",
+      "exampleDescription": "기본적인 robots.txt 파일 예시:",
+      "exampleMeaning": "이 설정의 의미:",
+      "exampleMeaningList": [
+        "모든 검색엔진이 사이트에 접근 가능",
+        "/admin/, /private/ 폴더는 접근 차단",
+        "사이트맵 위치를 명시해서 모든 페이지를 쉽게 찾을 수 있게 함"
+      ],
+      "howToCreate": "robots.txt 만들기",
+      "creationSteps": "robots.txt 파일을 만드는 방법:",
+      "creationStepsList": [
+        "메모장에서 작성: 간단한 텍스트 파일로 만들기",
+        "파일명: 반드시 \"robots.txt\"로 저장",
+        "업로드 위치: 웹사이트 최상위 폴더 (example.com/robots.txt)",
+        "확인 방법: 브라우저에서 \"사이트주소/robots.txt\" 입력해서 확인",
+        "워드프레스: SEO 플러그인(Yoast, RankMath)으로 쉽게 설정"
+      ]
+    },
+    "sitemap": {
+      "currentStatus": "사이트맵 현재 상태",
+      "fileExists": "사이트맵 파일 존재",
+      "partialSetup": "사이트맵 부분 설정",
+      "fileNotExists": "사이트맵 파일 없음",
+      "wellConfigured": "검색엔진이 사이트의 모든 페이지를 체계적으로 수집할 수 있습니다",
+      "needsConfiguration": "사이트맵을 추가하면 검색엔진이 더 많은 페이지를 발견할 수 있습니다",
+      "whatIsSitemap": "사이트맵이란?",
+      "sitemapDescription": "사이트맵은 웹사이트의 \"목차\"나 \"건물 도면\"과 같습니다:",
+      "sitemapFunctions": [
+        "페이지 목록: 사이트에 있는 모든 페이지의 주소를 정리한 파일",
+        "업데이트 정보: 각 페이지가 언제 마지막으로 수정되었는지",
+        "중요도 표시: 어떤 페이지가 더 중요한지 알려줌",
+        "빠른 발견: 새 페이지를 만들면 검색엔진이 빠르게 찾을 수 있음"
+      ],
+      "benefits": "사이트맵의 장점",
+      "benefitsDescription": "사이트맵이 있으면 이런 좋은 점들이 있어요:",
+      "benefitsList": [
+        {
+          "title": "검색 노출 증가",
+          "description": "구글이 사이트의 모든 페이지를 쉽게 찾아서 검색 결과에 더 많이 노출"
+        },
+        {
+          "title": "빠른 인덱싱",
+          "description": "새 글이나 페이지를 올리면 검색엔진이 빠르게 수집"
+        },
+        {
+          "title": "SEO 개선",
+          "description": "검색 순위 향상에 도움이 되는 기본 설정"
+        },
+        {
+          "title": "분석 가능",
+          "description": "구글 서치 콘솔에서 어떤 페이지가 검색되는지 확인 가능"
+        }
+      ],
+      "howToCreate": "사이트맵 만들기",
+      "creationSteps": "플랫폼별 사이트맵 생성 방법:",
+      "creationStepsList": [
+        "워드프레스: Yoast SEO, RankMath 플러그인으로 자동 생성",
+        "티스토리: 기본적으로 자동 생성됨 (사이트주소/sitemap.xml)",
+        "쇼핑몰: 카페24, 메이크샵 등에서 자동 생성 기능 제공",
+        "직접 제작: XML-Sitemaps.com 같은 온라인 도구 활용",
+        "확인 방법: \"사이트주소/sitemap.xml\" 접속해서 확인",
+        "구글 등록: 구글 서치 콘솔에 사이트맵 주소 제출"
+      ]
+    },
+    "speed": {
+      "currentStatus": "사이트 속도 현재 상태",
+      "veryFast": "매우 빠름",
+      "averageSpeed": "보통 속도",
+      "slow": "느림",
+      "currentScore": "현재 점수: {score}점 / 100점",
+      "measurementData": "측정 데이터:",
+      "dataExplanation": "측정 데이터 설명",
+      "labData": "테스트 환경 데이터",
+      "fieldData": "실제 사용자 데이터 - CrUX",
+      "whyImportant": "사이트 속도가 중요한 이유",
+      "problems": "사이트가 느리면 이런 문제가 발생합니다:",
+      "improvementMethods": "사이트 속도 개선 방법",
+      "easyMethods": "누구나 쉽게 할 수 있는 방법들:",
+      "labDataTitle": "🧪 Lab Data (테스트 환경 데이터)",
+      "labDataDesc": "구글의 표준 테스트 환경에서 측정한 데이터\\n일정한 환경에서 측정되어 정확하고 비교 가능\\nFCP: 첫 번째 콘텐츠가 나타나는 시간\\nLCP: 가장 큰 콘텐츠가 로딩되는 시간\\nCLS: 페이지 레이아웃이 얼마나 안정적인지\\nTBT: 페이지가 응답하지 않는 시간",
+      "fieldDataTitle": "👥 Field Data (실제 사용자 데이터 - CrUX)",
+      "fieldDataDesc": "실제 방문자들이 경험한 속도 데이터\\n다양한 기기와 네트워크 환경의 평균\\n충분한 방문자가 있어야 데이터 제공\\n더 현실적이고 신뢰할 수 있는 데이터\\n**빠름/보통/느림**으로 분류",
+      "fieldDataTip": "💡 Field Data가 있으면 실제 사용자 경험을 기준으로, 없으면 Lab Data를 참고용으로 활용하세요!",
+      "problemsDescription": "사이트가 느리면 이런 문제가 발생합니다:",
+      "problemsList": [
+        "😤 **방문자 이탈:** 3초 이상 걸리면 50% 이상이 떠남",
+        "📱 **모바일 불편:** 핸드폰에서 더 오래 걸림",
+        "🔍 **검색 순위 하락:** 구글이 느린 사이트를 싫어함",
+        "💸 **매출 감소:** 0.1초 늦어질 때마다 매출 1% 감소"
+      ],
+      "improvementMethodsList": [
+        "🖼️ **이미지 최적화:** 큰 이미지를 작게 만들기 (WebP 형식 추천)",
+        "🧹 **불필요한 플러그인 제거:** 안 쓰는 플러그인 삭제",
+        "⚡ **캐싱 설정:** 웹사이트 캐시 플러그인 사용",
+        "🌐 **CDN 사용:** 전 세계 어디서든 빠르게 접속",
+        "🏠 **호스팅 업그레이드:** 좋은 호스팅 서비스 이용"
+      ]
+    },
+    "images": {
+      "currentStatus": "이미지 현재 상태",
+      "totalImages": "총 {count}개의 이미지가 발견되었습니다",
+      "whatIsImageSEO": "이미지 SEO란?",
+      "seoDescription": "이미지도 검색 결과에 나올 수 있어요! 구글 이미지 검색에서 찾아지려면:",
+      "practicalTips": "이미지 최적화 실전 팁",
+      "management": "이미지 하나하나 이렇게 관리하세요:",
+      "badExample": "나쁜 예",
+      "goodExample": "좋은 예",
+      "altTextExplanation": [
+        "📝 **Alt 텍스트:** 이미지가 뭔지 설명하는 글",
+        "📏 **적절한 크기:** 너무 크거나 작지 않게",
+        "🏷️ **의미있는 파일명:** \"image1.jpg\" 대신 \"맛있는-커피.jpg\"",
+        "⚡ **빠른 로딩:** 압축해서 용량 줄이기"
+      ]
+    },
+    "content": {
+      "currentStatus": "콘텐츠 분석 결과",
+      "wordCountInfo": "총 {count}단어의 콘텐츠가 분석되었습니다",
+      "sufficientContent": "충분한 콘텐츠 양",
+      "insufficientContent": "콘텐츠 양이 부족",
+      "whyImportant": "콘텐츠가 중요한 이유",
+      "importanceDescription": "좋은 콘텐츠는 SEO의 핵심입니다:",
+      "importanceList": [
+        "🎯 **고객 만족:** 유용한 정보를 제공하면 더 오래 머물러요",
+        "🔍 **구글 평가:** 구글이 가치 있는 사이트로 인정해요",
+        "📈 **검색 순위:** 콘텐츠가 좋을수록 상위 노출돼요",
+        "💬 **신뢰도 증가:** 전문성을 보여줄 수 있어요"
+      ],
+      "howToCreate": "좋은 콘텐츠 만들기",
+      "creationDescription": "이렇게 콘텐츠를 만들어보세요:",
+      "creationTips": [
+        "📏 **충분한 길이:** 최소 300단어 이상 (더 자세할수록 좋아요)",
+        "🎯 **고객 중심:** 고객이 궁금해할 내용을 중심으로",
+        "📱 **읽기 쉽게:** 짧은 문장, 적절한 줄바꿈",
+        "🔄 **정기 업데이트:** 새로운 정보를 꾸준히 추가",
+        "📊 **실용적 정보:** 가격, 위치, 연락처 등 구체적 정보"
+      ]
+    },
+    "technical": {
+      "currentStatus": "기술적 SEO 현재 상태",
+      "mobileViewport": "모바일 뷰포트 설정",
+      "canonicalUrl": "표준 URL 설정",
+      "languageSetting": "언어 설정",
+      "whatIs": "기술적 SEO란?",
+      "description": "기술적 SEO는 검색엔진이 사이트를 제대로 읽을 수 있게 도와주는 설정들이에요:",
+      "explanationList": [
+        "📱 **모바일 설정:** 핸드폰에서 제대로 보이게 하기",
+        "🔗 **표준 URL:** 중복 페이지 문제 방지",
+        "🌍 **언어 설정:** 어떤 언어로 된 사이트인지 알려주기",
+        "🤖 **검색 허용:** 구글이 페이지를 수집할 수 있게 하기"
+      ],
+      "howToImprove": "기술적 SEO 개선 방법",
+      "improvementDescription": "대부분 웹사이트 관리자나 개발자가 설정해야 하는 부분들이에요:",
+      "improvementSteps": [
+        "🎯 **우선순위 1:** 모바일 뷰포트 메타 태그 추가",
+        "🔧 **개발자 요청:** HTML 헤드 섹션에 필요한 태그들 추가",
+        "📋 **체크리스트:** 구글 서치 콘솔에서 문제점 확인",
+        "⚡ **효과:** 설정하면 즉시 검색엔진 인식 개선"
+      ],
+      "developerNote": "💡 기술적인 부분이 어려우시면 웹 개발자나 웹사이트 관리 업체에 문의해보세요!"
+    },
+    "https": {
+      "currentStatus": "HTTPS 보안 현재 상태",
+      "secureConnection": "HTTPS 보안 적용됨",
+      "insecureConnection": "HTTP 비보안 연결",
+      "protectedMessage": "사이트가 SSL 인증서로 보호되고 있습니다",
+      "unprotectedMessage": "사이트가 보안되지 않은 HTTP로 제공되고 있습니다",
+      "whyImportant": "HTTPS가 중요한 이유",
+      "importanceDescription": "HTTPS는 웹사이트 보안의 기본입니다:",
+      "benefitsList": [
+        "🔐 **데이터 암호화:** 고객 정보가 안전하게 전송",
+        "🎯 **신뢰도 향상:** 브라우저에서 \"안전함\" 표시",
+        "📈 **SEO 이점:** 구글이 HTTPS 사이트를 선호",
+        "💳 **결제 보안:** 온라인 결제 시 필수"
+      ],
+      "howToImplement": "HTTPS 적용 방법",
+      "implementationDescription": "HTTPS로 전환하는 방법:",
+      "implementationSteps": [
+        "📋 **SSL 인증서 구매:** 호스팅 업체나 SSL 인증기관에서 구매",
+        "⚙️ **서버 설정:** 웹 서버에 SSL 인증서 설치",
+        "🔄 **리다이렉트 설정:** HTTP → HTTPS 자동 리다이렉트",
+        "🔍 **내부 링크 수정:** 모든 링크를 HTTPS로 변경",
+        "🆓 **무료 옵션:** Let's Encrypt 또는 CloudFlare 활용"
+      ]
+    },
+    "links": {
+      "currentStatus": "링크 구조 현재 상태",
+      "totalLinks": "총 {count}개의 링크가 발견되었습니다",
+      "internalLinks": "내부 링크",
+      "externalLinks": "외부 링크",
+      "importance": "링크의 중요성",
+      "importanceDescription": "링크는 웹사이트의 도로망과 같습니다:",
+      "linkTypes": [
+        "🏠 **내부 링크:** 사이트 내 다른 페이지로 연결",
+        "🌍 **외부 링크:** 다른 웹사이트로 연결",
+        "📈 **SEO 효과:** 구글이 사이트 구조를 이해하는 데 도움",
+        "👥 **사용자 경험:** 관련 정보를 쉽게 찾을 수 있게 도움"
+      ],
+      "strategy": "효과적인 링크 전략",
+      "strategyDescription": "링크를 효과적으로 활용하는 방법:",
+      "strategyTips": [
+        "📝 **관련 페이지 연결:** 비슷한 주제의 글들을 서로 연결",
+        "🎯 **명확한 링크 텍스트:** \"여기를 클릭\" 대신 구체적인 설명",
+        "🔍 **신뢰할 수 있는 외부 링크:** 권위 있는 사이트로 연결",
+        "📊 **적절한 개수:** 너무 많지도 적지도 않게",
+        "🆕 **새 창 열기:** 외부 링크는 새 창에서 열기"
+      ]
+    },
+    "keywords": {
+      "currentStatus": "키워드 최적화 현재 상태",
+      "analysisDescription": "페이지의 키워드 일관성을 분석했습니다",
+      "excellent": "키워드 최적화 우수",
+      "average": "키워드 최적화 보통",
+      "poor": "키워드 최적화 부족",
+      "whatIs": "키워드 최적화란?",
+      "description": "키워드 최적화는 검색 시 찾아지기 쉽게 만드는 방법입니다:",
+      "principles": [
+        "🎯 **타겟 키워드:** 고객이 검색할 만한 단어 선택",
+        "📝 **자연스러운 사용:** 억지로 넣지 말고 자연스럽게",
+        "📍 **주요 위치:** 제목, 소제목, 첫 단락에 포함",
+        "🔄 **적절한 반복:** 과도하지 않게 적절히 반복"
+      ],
+      "tips": "키워드 최적화 팁",
+      "tipsDescription": "효과적인 키워드 최적화 방법:",
+      "tipsList": [
+        "🎯 **롱테일 키워드:** \"카페\" 보다 \"강남역 맛있는 카페\"",
+        "📊 **검색량 확인:** 네이버 키워드 도구 활용",
+        "🏆 **경쟁 분석:** 상위 사이트들이 어떤 키워드를 쓰는지 확인",
+        "📱 **지역 키워드:** 로컬 비즈니스는 지역명 포함",
+        "🔄 **동의어 활용:** 같은 의미의 다양한 표현 사용"
+      ]
+    }
+  },
+  "seoAnalyzer": {
+    "errors": {
+      "invalidUrl": "올바른 URL 형식이 아닙니다.",
+      "httpError": "HTTP {status}: {statusText}",
+      "fetchFailed": "웹페이지를 가져올 수 없습니다: {message}",
+      "fetchGeneric": "웹페이지를 가져올 수 없습니다. URL을 확인해주세요.",
+      "analysisFailed": "분석 중 오류가 발생했습니다: {message}"
+    },
+    "console": {
+      "fetchingPage": "페이지 가져오기 시작:",
+      "responseStatus": "응답 상태:",
+      "htmlLength": "HTML 길이:",
+      "fetchError": "페이지 가져오기 실패:",
+      "failedUrl": "실패한 URL:",
+      "analyzing": "분석 중:",
+      "parseComplete": "파싱 완료:",
+      "foundImages": "이미지 발견:",
+      "foundLinks": "링크 발견:",
+      "structuredDataFound": "구조화된 데이터 발견:",
+      "semanticAnalysisStart": "시맨틱 마크업 분석 시작",
+      "semanticAnalysisComplete": "시맨틱 마크업 분석 완료"
+    },
+    "categories": {
+      "title": {
+        "name": "페이지 제목",
+        "description": "검색 결과에서 클릭을 유도하는 매력적인 제목",
+        "tooShort": "제목이 너무 짧습니다 ({length}자). 30-60자를 권장합니다.",
+        "tooLong": "제목이 너무 깁니다 ({length}자). 60자 이하를 권장합니다.",
+        "duplicate": "페이지 제목과 H1 태그가 동일합니다. 다양성을 위해 조금 다르게 만드세요.",
+        "missing": "페이지 제목이 없습니다. SEO의 가장 중요한 요소입니다.",
+        "suggestions": {
+          "addKeywords": "주요 키워드를 제목 앞부분에 포함하세요",
+          "makeAttractive": "클릭하고 싶은 매력적인 표현을 사용하세요",
+          "includeNumbers": "구체적인 숫자나 년도를 포함하면 신뢰감을 줍니다",
+          "avoidDuplication": "H1과 제목을 완전히 같게 하지 마세요"
+        }
+      },
+      "description": {
+        "name": "메타 설명",
+        "description": "검색 결과에서 보여지는 페이지 요약",
+        "tooShort": "메타 설명이 너무 짧습니다 ({length}자). 120-160자를 권장합니다.",
+        "tooLong": "메타 설명이 너무 깁니다 ({length}자). 160자 이하를 권장합니다.",
+        "missing": "메타 설명이 없습니다. 검색 결과에서 페이지를 소개하는 중요한 역할을 합니다.",
+        "suggestions": {
+          "addAction": "행동을 유도하는 표현을 포함하세요 (예: '지금 확인하세요')",
+          "includeKeywords": "주요 키워드를 자연스럽게 포함하세요",
+          "makeUnique": "각 페이지마다 고유한 설명을 작성하세요",
+          "showBenefit": "방문자가 얻을 수 있는 이익을 명확히 하세요"
+        }
+      },
+      "images": {
+        "name": "이미지 최적화",
+        "description": "검색과 접근성을 고려한 이미지 설정",
+        "noAlt": "{count}개 이미지에 대체 텍스트(alt)가 없습니다.",
+        "largeImages": "{count}개 이미지가 너무 큽니다. 로딩 속도에 영향을 줍니다.",
+        "suggestions": {
+          "addAltText": "모든 이미지에 의미 있는 대체 텍스트를 추가하세요",
+          "optimizeSize": "이미지 크기를 최적화하여 로딩 속도를 개선하세요",
+          "useWebp": "WebP 형식을 사용하여 파일 크기를 줄이세요",
+          "addTitleAttribute": "중요한 이미지에는 title 속성도 추가하세요"
+        }
+      },
+      "content": {
+        "name": "콘텐츠 품질",
+        "description": "읽기 쉽고 가치 있는 내용",
+        "tooShort": "콘텐츠가 너무 짧습니다 ({words}단어). 최소 300단어를 권장합니다.",
+        "noHeadings": "제목 태그(H1-H6)가 없습니다. 구조화된 내용을 만드세요.",
+        "suggestions": {
+          "addMoreContent": "더 상세하고 유용한 정보를 추가하세요",
+          "useHeadings": "제목 태그를 사용하여 내용을 구조화하세요",
+          "improveReadability": "짧은 문장과 단락으로 읽기 쉽게 만드세요",
+          "addKeywords": "자연스럽게 관련 키워드를 포함하세요"
+        }
+      },
+      "socialMedia": {
+        "name": "소셜 미디어",
+        "description": "SNS 공유 시 나타나는 정보",
+        "missingOg": "Open Graph 태그가 없습니다. SNS 공유 시 정보가 제대로 표시되지 않습니다.",
+        "missingTwitter": "Twitter Card 태그가 없습니다.",
+        "suggestions": {
+          "addOgTags": "Open Graph 태그를 추가하여 SNS 공유를 최적화하세요",
+          "addTwitterCards": "Twitter Card 태그를 추가하세요",
+          "addOgImage": "매력적인 소셜 미디어용 이미지를 설정하세요",
+          "testSharing": "실제로 SNS에 공유해보며 테스트하세요"
+        }
+      },
+      "structuredData": {
+        "name": "구조화된 데이터",
+        "description": "검색엔진이 이해하기 쉬운 데이터 형태",
+        "missing": "구조화된 데이터가 없습니다. 리치 스니펫 기회를 놓치고 있습니다.",
+        "suggestions": {
+          "addJsonLd": "JSON-LD 형태의 구조화된 데이터를 추가하세요",
+          "useSchema": "Schema.org 표준을 따라 작성하세요",
+          "addBusiness": "비즈니스 정보를 구조화된 데이터로 제공하세요",
+          "testWithTools": "구글 구조화된 데이터 테스트 도구로 검증하세요"
+        }
+      },
+      "technical": {
+        "name": "기술적 요소",
+        "description": "웹사이트의 기본 기술 설정",
+        "missingViewport": "모바일 최적화를 위한 viewport 태그가 없습니다.",
+        "missingRobots": "검색엔진 크롤링 설정이 명확하지 않습니다.",
+        "suggestions": {
+          "addViewport": "viewport 메타 태그를 추가하여 모바일 최적화하세요",
+          "setRobots": "robots 메타 태그로 크롤링 정책을 명확히 하세요",
+          "addCanonical": "표준 URL을 지정하는 canonical 태그를 추가하세요",
+          "optimizePerformance": "웹사이트 로딩 속도를 최적화하세요"
+        }
+      },
+      "https": {
+        "name": "보안 (HTTPS)",
+        "description": "안전한 연결을 위한 HTTPS 설정",
+        "notSecure": "HTTPS를 사용하지 않습니다. 보안과 SEO에 불리합니다.",
+        "suggestions": {
+          "enableHttps": "SSL 인증서를 설치하고 HTTPS를 활성화하세요",
+          "redirectHttp": "HTTP에서 HTTPS로 자동 리다이렉트를 설정하세요",
+          "updateLinks": "모든 내부 링크를 HTTPS로 업데이트하세요",
+          "testSecurity": "SSL 설정이 올바른지 확인하세요"
+        }
+      },
+      "links": {
+        "name": "링크 구조",
+        "description": "내부 및 외부 링크 최적화",
+        "fewInternal": "내부 링크가 부족합니다. 사이트 내 연결을 강화하세요.",
+        "tooManyExternal": "외부 링크가 너무 많습니다. 링크 주스가 분산될 수 있습니다.",
+        "suggestions": {
+          "addInternal": "관련 페이지로의 내부 링크를 추가하세요",
+          "useAnchorText": "의미 있는 앵커 텍스트를 사용하세요",
+          "checkBroken": "깨진 링크가 없는지 정기적으로 확인하세요",
+          "balanceLinks": "내부와 외부 링크의 균형을 맞추세요"
+        }
+      },
+      "keywords": {
+        "name": "키워드 최적화",
+        "description": "검색 키워드에 맞는 최적화",
+        "lowDensity": "키워드 밀도가 낮습니다. 자연스럽게 키워드를 더 포함하세요.",
+        "highDensity": "키워드 밀도가 너무 높습니다. 과도한 반복은 페널티를 받을 수 있습니다.",
+        "suggestions": {
+          "research": "키워드 도구를 사용하여 적절한 키워드를 연구하세요",
+          "naturalUse": "키워드를 자연스럽게 문맥에 맞게 사용하세요",
+          "longTail": "롱테일 키워드도 함께 활용하세요",
+          "monitoring": "키워드 순위를 정기적으로 모니터링하세요"
+        }
+      },
+      "semanticMarkup": {
+        "name": "시맨틱 마크업",
+        "description": "의미적으로 올바른 HTML 구조",
+        "missingElements": "중요한 시맨틱 요소가 부족합니다: {elements}",
+        "poorStructure": "헤딩 태그 구조가 논리적이지 않습니다.",
+        "suggestions": {
+          "useSemanticTags": "header, nav, main, footer 등 시맨틱 태그를 사용하세요",
+          "logicalHeadings": "헤딩 태그(H1~H6)를 순서대로 사용하여 논리적인 구조를 만드세요",
+          "addAria": "접근성을 위한 ARIA 속성을 추가하세요",
+          "structureContent": "콘텐츠를 의미에 따라 적절히 구조화하세요"
+        }
+      },
+      "robots": {
+        "name": "로봇 크롤링",
+        "description": "검색엔진 크롤러를 위한 설정",
+        "noRobotsFile": "robots.txt 파일이 없습니다.",
+        "blockingImportant": "중요한 페이지가 robots.txt에 의해 차단되고 있습니다.",
+        "exists": "검색엔진이 사이트를 크롤링하는 방법을 제어할 수 있습니다.",
+        "suggestions": {
+          "createRobots": "robots.txt 파일을 생성하여 크롤링 정책을 설정하세요",
+          "allowImportant": "중요한 페이지는 크롤링을 허용하세요",
+          "blockUnnecessary": "불필요한 페이지는 크롤링을 차단하세요",
+          "testRobots": "robots.txt 파일이 올바르게 작동하는지 테스트하세요",
+          "addSitemap": "robots.txt에 사이트맵 위치를 추가하는 것이 좋습니다 (예: Sitemap: https://example.com/sitemap.xml)."
+        }
+      },
+      "sitemap": {
+        "name": "사이트맵",
+        "description": "검색엔진을 위한 사이트 구조 정보",
+        "missing": "사이트맵이 없습니다. 검색엔진이 사이트의 모든 페이지를 발견하지 못할 수 있습니다.",
+        "exists": "사이트맵이 존재합니다. 검색엔진이 사이트의 모든 페이지를 쉽게 찾을 수 있습니다.",
+        "outdated": "사이트맵이 오래되었을 수 있습니다.",
+        "suggestions": {
+          "createSitemap": "sitemap.xml 파일을 생성하고 웹사이트 루트에 업로드하세요.",
+          "submitToGoogle": "구글 서치 콘솔에 사이트맵을 제출하세요",
+          "keepUpdated": "사이트맵이 최신 상태인지 정기적으로 확인하세요.",
+          "includeImportant": "중요한 페이지들을 모두 포함하세요",
+          "useTools": "사이트맵 생성 도구를 사용하면 쉽게 만들 수 있습니다.",
+          "goodInRobots": "robots.txt에 사이트맵 위치가 명시되어 있어 좋습니다.",
+          "addToRobots": "robots.txt에 사이트맵 위치를 추가하는 것을 고려해보세요."
+        }
+      }
+    },
+    "siteTypes": {
+      "blog": "블로그",
+      "ecommerce": "쇼핑몰",
+      "corporate": "기업 사이트",
+      "portfolio": "포트폴리오",
+      "restaurant": "음식점",
+      "service": "서비스업",
+      "news": "뉴스/미디어",
+      "education": "교육",
+      "healthcare": "의료/건강",
+      "unknown": "기타"
+    },
+    "industries": {
+      "technology": "기술/IT",
+      "retail": "소매/유통",
+      "food": "음식/요리",
+      "fashion": "패션/뷰티",
+      "health": "건강/의료",
+      "education": "교육",
+      "finance": "금융",
+      "travel": "여행/관광",
+      "realestate": "부동산",
+      "entertainment": "엔터테인먼트",
+      "sports": "스포츠/피트니스",
+      "automotive": "자동차",
+      "business": "비즈니스/컨설팅",
+      "unknown": "기타 업종"
+    },
+    "targetAudiences": {
+      "consumers": "일반 소비자",
+      "business": "기업 고객",
+      "professionals": "전문가",
+      "students": "학생",
+      "seniors": "중장년층",
+      "youth": "청년층",
+      "parents": "부모",
+      "travelers": "여행객",
+      "local": "지역 주민",
+      "global": "글로벌"
+    },
+    "competitiveness": {
+      "low": "낮음",
+      "medium": "보통",
+      "high": "높음"
+    },
+    "semanticAnalysis": {
+      "analyzing": "시맨틱 마크업 분석 중...",
+      "elements": {
+        "header": "header 태그",
+        "nav": "nav 태그", 
+        "main": "main 태그",
+        "footer": "footer 태그",
+        "section": "section 태그",
+        "article": "article 태그",
+        "aside": "aside 태그"
+      },
+      "issues": {
+        "missingH1": "H1 태그가 없습니다",
+        "multipleH1": "H1 태그가 여러 개 있습니다",
+        "illogicalHeadings": "헤딩 태그 순서가 논리적이지 않습니다",
+        "missingSemanticTags": "기본적인 시맨틱 태그가 부족합니다",
+        "insufficientAria": "접근성을 위한 ARIA 속성이 부족합니다"
+      },
+      "wellConfigured": "시맨틱 마크업이 잘 구성되어 있습니다",
+      "positiveFeedback": {
+        "mainContent": "✅ 메인 콘텐츠 영역이 잘 구분되어 있습니다",
+        "headerFooter": "✅ 헤더와 푸터 영역이 명확하게 구분되어 있습니다",
+        "headingStructure": "✅ 헤딩 태그 구조가 논리적으로 잘 구성되어 있습니다"
+      }
+    }
+  }
+}
