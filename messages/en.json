@@ -406,6 +406,64 @@
       "improvements": "Improvements",
       "localBusiness": "Local Business"
     },
+    "pageSpeed": {
+      "labData": "Lab Data (Test Environment): FCP {fcp}ms, LCP {lcp}ms, CLS {cls}, TBT {tbt}ms",
+      "fieldData": "Field Data (Real Users): FCP {fcpField}, LCP {lcpField}",
+      "fieldDataInsufficient": "Field Data: Insufficient real user data (low site traffic)",
+      "categories": {
+        "fast": "Fast",
+        "average": "Average",
+        "slow": "Slow"
+      },
+      "improvements": {
+        "optimizeImages": "Image optimization (use WebP format)",
+        "lazyLoading": "Apply image lazy loading",
+        "removeUnusedCSS": "Remove unused CSS",
+        "removeUnusedJS": "Remove unused JavaScript",
+        "improveServerResponse": "Improve server response time",
+        "removeRenderBlocking": "Remove render-blocking resources",
+        "compressImages": "Image compression and optimization",
+        "checkCache": "Check cache settings",
+        "checkHosting": "Check hosting service performance",
+        "checkNetwork": "Check network connection status",
+        "basicOptimization": "Apply basic website optimization"
+      },
+      "analysis": {
+        "name": {
+          "speedPageSpeed": "Site Speed (PageSpeed Analysis)",
+          "speedSimple": "Site Speed (Simple Analysis)",
+          "mobile": "Mobile Friendliness"
+        },
+        "description": {
+          "speedGood": "Site is fast! Visitors can view it immediately without waiting.",
+          "speedAverage": "Site speed is average. Making it faster would improve visitor satisfaction.",
+          "speedPoor": "Site is slow. Visitors may leave due to waiting.",
+          "mobileGood": "Easy to view on mobile! Mobile users can use it easily.",
+          "mobileAverage": "Acceptable on mobile. Further improvement would be better.",
+          "mobilePoor": "May be difficult to view on mobile. Improvement needed for mobile users.",
+          "withFieldData": " (Based on real user data)",
+          "withoutFieldData": ""
+        },
+        "suggestions": {
+          "fieldDataScoring": "🎯 Use {source} based scoring",
+          "realUserAnalysis": "✅ Real user data based analysis (high reliability)",
+          "referenceOnly": "⚠️ Reference only - Insufficient real user data"
+        },
+        "dataSource": {
+          "fieldDataReal": "Field Data (Real Users)",
+          "fieldDataLab": "Lab Data"
+        }
+      },
+      "fallback": {
+        "speed": {
+          "description": "Could not accurately measure site speed. Here are general improvement methods."
+        },
+        "mobile": {
+          "descriptionWithViewport": "Mobile settings exist. Further optimization would be better.",
+          "descriptionWithoutViewport": "Mobile settings may be insufficient. Check settings for better mobile display."
+        }
+      }
+    },
     "questions": [
       {
         "id": 1,

@@ -45,6 +45,11 @@
     color: white;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
   }
+  
+  // 마진 제거 클래스 (특정 상황에서 margin-right 제거)
+  &--no-margin {
+    margin-right: 0;
+  }
 }
 
 .status-indicator {

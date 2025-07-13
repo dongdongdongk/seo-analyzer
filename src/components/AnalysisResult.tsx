@@ -181,10 +181,10 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'good': return <span className="icon icon--success">✓</span>
-      case 'warning': return <span className="icon icon--warning">!</span>
-      case 'danger': return <span className="icon icon--danger">×</span>
-      default: return <span className="icon icon--secondary">?</span>
+      case 'good': return <span className="icon icon--success icon--no-margin">✓</span>
+      case 'warning': return <span className="icon icon--warning icon--no-margin">!</span>
+      case 'danger': return <span className="icon icon--danger icon--no-margin">×</span>
+      default: return <span className="icon icon--secondary icon--no-margin">?</span>
     }
   }
 
@@ -377,11 +377,11 @@ export default function AnalysisResult({ data, onNewAnalysis }: AnalysisResultPr
   return (
     <div className="analysis-result">
       {/* 헤더 섹션 */}
-      <div className="analysis-section" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', marginBottom: 'var(--spacing-xl)' }}>
+      <div className="analysis-section" style={{ background: 'linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)', color: 'white', marginBottom: 'var(--spacing-xl)' }}>
         <div style={{ padding: 'var(--spacing-xl)' }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 'var(--spacing-lg)' }}>
-            <div className="logo-icon" style={{ width: '48px', height: '48px', fontSize: '1.5rem', marginRight: 'var(--spacing-md)' }}>
-              🎯
+            <div className="logo-icon" style={{ width: '48px', height: '48px', marginRight: 'var(--spacing-md)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="/icon.png" alt="SEO Analysis" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <div>
               <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: 'var(--spacing-xs)' }}>

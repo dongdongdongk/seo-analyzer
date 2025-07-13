@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
 import type { AnalysisResult, SEOCategory } from '@/types/analysis'
-import { runPageSpeedAnalysis, convertPageSpeedToSEOCategory, createFallbackSpeedAnalysis, createFallbackMobileAnalysis } from './pagespeed-analyzer'
+import { runPageSpeedAnalysis, convertPageSpeedToSEOCategory, createFallbackSpeedAnalysis, createFallbackMobileAnalysis, getErrorImprovements } from './pagespeed-analyzer'
 import { generatePersonalizedAdvice, generateKeywordSuggestions } from './openai-analyzer'
 
 // Translation utility that loads messages dynamically
@@ -622,10 +622,10 @@ export async function analyzeSEO(url: string, locale: string = 'ko'): Promise<An
     let hasFieldData = false
     let performanceImprovements: string[] = []
     try {
-      const pageSpeedResult = await runPageSpeedAnalysis(url)
+      const pageSpeedResult = await runPageSpeedAnalysis(url, locale)
       performanceCategories = [
-        convertPageSpeedToSEOCategory(pageSpeedResult, 'performance', locale),
-        convertPageSpeedToSEOCategory(pageSpeedResult, 'mobile', locale)
+        await convertPageSpeedToSEOCategory(pageSpeedResult, 'performance', locale),
+        await convertPageSpeedToSEOCategory(pageSpeedResult, 'mobile', locale)
       ]
       hasFieldData = pageSpeedResult.hasFieldData
       performanceImprovements = pageSpeedResult.improvements
@@ -633,11 +633,11 @@ export async function analyzeSEO(url: string, locale: string = 'ko'): Promise<An
       console.error('PageSpeed 분석 실패:', pageSpeedError)
       // PageSpeed 실패 시 기본 성능 분석으로 대체
       performanceCategories = [
-        createFallbackSpeedAnalysis(locale),
-        createFallbackMobileAnalysis(pageData, locale)
+        await createFallbackSpeedAnalysis(locale),
+        await createFallbackMobileAnalysis(pageData, locale)
       ]
       hasFieldData = false
-      performanceImprovements = ['기본적인 이미지 최적화', '캐시 설정 확인', '호스팅 성능 점검']
+      performanceImprovements = await getErrorImprovements(locale)
     }
     
     // 4. 모든 카테고리 합치기 (점수 계산용은 기본+성능만)

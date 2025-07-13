@@ -406,6 +406,64 @@
       "improvements": "개선 방법",
       "localBusiness": "지역 비즈니스"
     },
+    "pageSpeed": {
+      "labData": "Lab Data (테스트 환경): FCP {fcp}ms, LCP {lcp}ms, CLS {cls}, TBT {tbt}ms",
+      "fieldData": "Field Data (실제 사용자): FCP {fcpField}, LCP {lcpField}",
+      "fieldDataInsufficient": "Field Data: 실제 사용자 데이터가 충분하지 않습니다 (사이트 방문자가 적음)",
+      "categories": {
+        "fast": "빠름",
+        "average": "보통",
+        "slow": "느림"
+      },
+      "improvements": {
+        "optimizeImages": "이미지 최적화 (WebP 형식 사용)",
+        "lazyLoading": "이미지 지연 로딩 (lazy loading) 적용",
+        "removeUnusedCSS": "사용하지 않는 CSS 제거",
+        "removeUnusedJS": "사용하지 않는 JavaScript 제거",
+        "improveServerResponse": "서버 응답 시간 개선",
+        "removeRenderBlocking": "렌더링을 차단하는 리소스 제거",
+        "compressImages": "이미지 압축 및 최적화",
+        "checkCache": "캐시 설정 확인",
+        "checkHosting": "호스팅 서비스 성능 점검",
+        "checkNetwork": "네트워크 연결 상태 확인",
+        "basicOptimization": "기본적인 웹사이트 최적화 적용"
+      },
+      "analysis": {
+        "name": {
+          "speedPageSpeed": "사이트 속도 (PageSpeed 측정)",
+          "speedSimple": "사이트 속도 (간단 측정)",
+          "mobile": "모바일 친화도"
+        },
+        "description": {
+          "speedGood": "사이트가 빨라요! 고객들이 기다리지 않고 바로 볼 수 있어요.",
+          "speedAverage": "속도가 보통이에요. 조금 더 빠르게 만들면 고객들이 더 좋아할 거예요.",
+          "speedPoor": "사이트가 느려요. 고객들이 기다리다가 떠날 수 있어요.",
+          "mobileGood": "모바일에서 보기 편해요! 핸드폰 사용자들이 쉽게 이용할 수 있어요.",
+          "mobileAverage": "모바일에서 봐도 괜찮아요. 조금 더 개선하면 더 좋을 거예요.",
+          "mobilePoor": "모바일에서 보기 어려울 수 있어요. 핸드폰 사용자를 위해 개선이 필요해요.",
+          "withFieldData": " (실제 사용자 기준)",
+          "withoutFieldData": ""
+        },
+        "suggestions": {
+          "fieldDataScoring": "🎯 {source} 기준 점수 사용",
+          "realUserAnalysis": "✅ 실제 사용자 데이터 기반 분석 (신뢰도 높음)",
+          "referenceOnly": "⚠️ 참고용 - 실제 사용자 데이터 부족"
+        },
+        "dataSource": {
+          "fieldDataReal": "Field Data (실제 사용자)",
+          "fieldDataLab": "Lab Data"
+        }
+      },
+      "fallback": {
+        "speed": {
+          "description": "사이트 속도를 정확히 측정할 수 없었어요. 일반적인 개선 방법을 알려드릴게요."
+        },
+        "mobile": {
+          "descriptionWithViewport": "모바일 설정이 있어요. 조금 더 최적화하면 더 좋을 거예요.",
+          "descriptionWithoutViewport": "모바일 설정이 부족할 수 있어요. 핸드폰에서 잘 보이도록 설정을 확인해보세요."
+        }
+      }
+    },
     "questionCount": "총 {count}개의 질문이 있습니다.",
     "questions": [
       {
