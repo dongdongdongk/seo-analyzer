@@ -15,7 +15,7 @@ Disallow: /favicon.ico
 Disallow: /robots.txt
 
 # 사이트맵 위치 지정
-Sitemap: https://seo-analyzer.com/sitemap.xml
+Sitemap: https://seoanalyzer.roono.net/sitemap.xml
 
 # 크롤링 빈도 제한 (1초 대기)
 Crawl-delay: 1

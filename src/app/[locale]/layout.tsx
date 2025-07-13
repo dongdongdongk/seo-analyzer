@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { Analytics } from '@vercel/analytics/next'
 import Header from '@/components/Header'
 import StructuredData from '@/components/StructuredData'
 import { AnalysisProvider } from '@/contexts/AnalysisContext'
@@ -125,6 +126,7 @@ export default async function LocaleLayout({
             </div>
           </footer>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   )
