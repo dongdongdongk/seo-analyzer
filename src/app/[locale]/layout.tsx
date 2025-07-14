@@ -18,6 +18,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'metadata' })
   
+  // 로케일별 canonical URL 설정
+  const canonicalUrl = `/${locale}`
+  
   return {
     title: {
       default: t('title'),
@@ -35,10 +38,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     metadataBase: new URL('https://seo-analyzer.com'),
     alternates: {
-      canonical: '/',
+      canonical: canonicalUrl,
       languages: {
-        'ko-KR': '/ko',
-        'en-US': '/en',
+        'ko': '/ko',
+        'en': '/en',
+        'x-default': '/ko', // 기본 언어를 한국어로 설정
       },
     },
     openGraph: {

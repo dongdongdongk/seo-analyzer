@@ -1,13 +1,49 @@
-'use client'
-
-import { useTranslations } from 'next-intl'
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 
-export default function AboutPage() {
-  const t = useTranslations('about')
-  const params = useParams()
-  const locale = params.locale
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'about' })
+  
+  const canonicalUrl = `/${locale}/about`
+  
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'ko': '/ko/about',
+        'en': '/en/about',
+        'x-default': '/ko/about',
+      },
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('subtitle'),
+      url: `https://seo-analyzer.com${canonicalUrl}`,
+      type: 'website',
+      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
+    },
+    twitter: {
+      title: t('title'),
+      description: t('subtitle'),
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  }
+}
+
+export default async function AboutPage({ params }: Props) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'about' })
   return (
     <div className="page-wrapper">
       <div className="container">

@@ -1,13 +1,49 @@
-'use client'
-
-import { useTranslations } from 'next-intl'
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 
-export default function SEOGuidePage() {
-  const t = useTranslations('seoGuide')
-  const params = useParams()
-  const locale = params.locale
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'seoGuide' })
+  
+  const canonicalUrl = `/${locale}/seo-guide`
+  
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'ko': '/ko/seo-guide',
+        'en': '/en/seo-guide',
+        'x-default': '/ko/seo-guide',
+      },
+    },
+    openGraph: {
+      title: t('title'),
+      description: t('subtitle'),
+      url: `https://seo-analyzer.com${canonicalUrl}`,
+      type: 'website',
+      locale: locale === 'ko' ? 'ko_KR' : 'en_US',
+    },
+    twitter: {
+      title: t('title'),
+      description: t('subtitle'),
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  }
+}
+
+export default async function SEOGuidePage({ params }: Props) {
+  const { locale } = await params
+  const t = await getTranslations({ locale, namespace: 'seoGuide' })
   return (
     <div className="page-wrapper">
       <div className="container">
