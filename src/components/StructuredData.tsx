@@ -12,13 +12,13 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
       "@type": type === 'website' ? 'WebSite' : 'WebPage',
       "name": "무료 검색엔진 최적화 분석기",
       "description": "웹사이트 SEO를 3분 만에 무료로 분석하고 개선 방법을 제공합니다. 초보자도 쉽게 이해할 수 있는 검색엔진 최적화 가이드와 맞춤형 조언을 받아보세요.",
-      "url": "https://seo-analyzer.com",
+      "url": "https://seoanalyzer.roono.net",
       "inLanguage": "ko-KR",
       "isAccessibleForFree": true,
       "publisher": {
         "@type": "Organization",
         "name": "SEO 분석기 팀",
-        "url": "https://seo-analyzer.com"
+        "url": "https://seoanalyzer.roono.net"
       }
     }
 
@@ -31,7 +31,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://seo-analyzer.com/?url={search_term_string}"
+              "urlTemplate": "https://seoanalyzer.roono.net/?url={search_term_string}"
             },
             "query-input": "required name=search_term_string"
           },
@@ -59,7 +59,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           "provider": {
             "@type": "Organization",
             "name": "SEO 분석기 팀",
-            "url": "https://seo-analyzer.com"
+            "url": "https://seoanalyzer.roono.net"
           },
           "areaServed": {
             "@type": "Country",
@@ -81,7 +81,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           "@context": "https://schema.org",
           "@type": "Organization",
           "name": "SEO 분석기 팀",
-          "url": "https://seo-analyzer.com",
+          "url": "https://seoanalyzer.roono.net",
           "description": "웹사이트 SEO 분석 및 최적화 서비스를 제공하는 전문 팀",
           "contactPoint": {
             "@type": "ContactPoint",
@@ -108,7 +108,7 @@ export default function StructuredData({ type, data }: StructuredDataProps) {
           "dateModified": data?.dateModified || "2025-01-11",
           "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": data?.url || "https://seo-analyzer.com/seo-guide"
+            "@id": data?.url || "https://seoanalyzer.roono.net/seo-guide"
           }
         }
 

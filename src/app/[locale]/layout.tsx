@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     description: t('description'),
     keywords: t('keywords'),
-    authors: [{ name: 'SEO Analysis Team', url: 'https://seo-analyzer.com' }],
+    authors: [{ name: 'SEO Analysis Team', url: 'https://seoanalyzer.roono.net' }],
     creator: 'SEO Analysis Team',
     publisher: 'SEO Analyzer',
     formatDetection: {
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       address: false,
       telephone: false,
     },
-    metadataBase: new URL('https://seo-analyzer.com'),
+    metadataBase: new URL('https://seoanalyzer.roono.net'),
     alternates: {
       canonical: canonicalUrl,
       languages: {
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: 'website',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
-      url: 'https://seo-analyzer.com',
+      url: 'https://seoanalyzer.roono.net',
       title: t('title'),
       description: t('description'),
       siteName: t('title'),

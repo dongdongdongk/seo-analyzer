@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { locales } from '@/i18n/config'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://seo-analyzer.com'
+  const baseUrl = 'https://seoanalyzer.roono.net'
   
   // 기본 페이지들
   const routes = [
@@ -24,6 +24,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       locales.forEach(altLocale => {
         alternates[altLocale] = `${baseUrl}/${altLocale}${route}`
       })
+      
+      // x-default 추가
+      alternates['x-default'] = `${baseUrl}/ko${route}`
       
       sitemap.push({
         url,

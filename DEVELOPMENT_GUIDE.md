@@ -1292,7 +1292,7 @@ Crawl-delay: 1
 
 #### 1단계: 사이트맵 파일 업데이트
 1. `src/app/sitemap.xml` 파일을 열기
-2. 모든 `https://seo-analyzer.com` 부분을 실제 도메인으로 변경
+2. 모든 `https://seoanalyzer.roono.net` 부분을 실제 도메인으로 변경
 3. `lastmod` 날짜를 현재 날짜로 업데이트
 
 #### 2단계: robots.txt 파일 업데이트

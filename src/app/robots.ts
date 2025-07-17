@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         '/admin'
       ],
     },
-    sitemap: 'https://seo-analyzer.com/sitemap.xml',
+    sitemap: 'https://seoanalyzer.roono.net/sitemap.xml',
   }
 }

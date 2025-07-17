@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: t('title'),
       description: t('subtitle'),
-      url: `https://seo-analyzer.com${canonicalUrl}`,
+      url: `https://seoanalyzer.roono.net${canonicalUrl}`,
       type: 'website',
       locale: locale === 'ko' ? 'ko_KR' : 'en_US',
     },
